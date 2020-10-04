@@ -3,6 +3,10 @@
 #include "Globals.h"
 
 #include "Dependencies/SDL/include/SDL.h"
+
+#pragma comment (lib, "Dependencies/Glew/lib/Release/Win32/glew32.lib")
+#pragma comment (lib, "Dependencies/Glew/lib/Release/Win32/glew32s.lib")
+
 #pragma comment( lib, "Dependencies/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Dependencies/SDL/libx86/SDL2main.lib" )
 

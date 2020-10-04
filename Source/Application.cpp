@@ -8,21 +8,24 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	scene_intro = new ModuleSceneIntro();
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
+	editor = new ModuleEditor();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
 
 	// Main Modules
+
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
 	AddModule(audio);
-	
+	AddModule(editor);
 	// Scenes
 	AddModule(scene_intro);
 
 	// Renderer last!
+
 	AddModule(renderer3D);
 }
 
