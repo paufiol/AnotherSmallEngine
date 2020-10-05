@@ -2,6 +2,13 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "Dependencies/SDL\include\SDL_opengl.h"
+
+//#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
+//#include "Dependencies/MathGeoLib/include/MathBuildConfig.h"
+//#include "Dependencies/MathGeoLib/include/Math/float3.h"
+//#include "Dependencies/MathGeoLib/include/Algorithm/Random/LCG.h"
+//#include "Dependencies/MathGeoLib/include/MathGeoLibFwd.h"
+
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
