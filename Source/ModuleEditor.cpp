@@ -96,6 +96,11 @@ update_status ModuleEditor::Update(float dt)
 			if (ImGui::MenuItem("Close", "Alt+F4")) { return UPDATE_STOP; }
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Help")) 
+		{
+			if(ImGui::MenuItem("Gui Demo")){}
+			ImGui::EndMenu();
+		}
 		ImGui::EndMenuBar();
 		ImGui::End();
 	}
