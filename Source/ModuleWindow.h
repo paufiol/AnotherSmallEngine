@@ -21,8 +21,11 @@ public:
 	int Height() const;
 
 	void SetTitle(const char* title);
+	void SetFullScreen(bool fullscreen);
 
 public:
+	Uint32 flags;
+
 	//The window we'll be rendering to
 	SDL_Window* window;
 

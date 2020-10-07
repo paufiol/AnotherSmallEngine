@@ -18,7 +18,13 @@ public:
 	SDL_Window* window;
 	SDL_WindowFlags window_flags;
 	SDL_GLContext gl_context;
+
+
 	bool show_demo_window;
+	bool show_window_options;
+
+	bool fullscreen;
+	void RequestBrowser(const char*);
 };
 
 #endif //__ModuleEditor_H__

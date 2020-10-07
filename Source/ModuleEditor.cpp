@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleEditor.h"
+#include "ModuleWindow.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
@@ -60,7 +61,7 @@ bool ModuleEditor::Start()
 	}
 	// Our state
 	show_demo_window = true;
-
+	show_window_options = false;
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -91,14 +92,24 @@ update_status ModuleEditor::Update(float dt)
 	//Top bar menu, with an option to close the editor
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("Options"))
+
+		if (ImGui::BeginMenu("Configuration"))
 		{
-			if (ImGui::MenuItem("Close", "Alt+F4")) { return UPDATE_STOP; }
+			if (ImGui::MenuItem("Window")) { show_window_options = !show_window_options; }
+			if (ImGui::MenuItem("OpenGL")){}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Help")) 
 		{
-			if(ImGui::MenuItem("Gui Demo")){}
+			if (ImGui::MenuItem("ImGui Demo")){show_demo_window = !show_demo_window; }
+			if (ImGui::MenuItem("Documentation")){ RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/README.md");}
+			if (ImGui::MenuItem("Latest Release")) { RequestBrowser("https://github.com/paufiol/AnotherSmallEngine"); }
+			if (ImGui::MenuItem("Report a bug")) { RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues"); }
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Options"))
+		{
+			if (ImGui::MenuItem("Close", "Alt+F4")) { return UPDATE_STOP; }
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -106,11 +117,10 @@ update_status ModuleEditor::Update(float dt)
 	}
 
 	//Window with a checkbox allowing to show the demo window of ImGui
-	if (show_demo_window)
-		ImGui::ShowDemoWindow(&show_demo_window);
-	{
-		ImGui::Begin("DEMO");
-		ImGui::Checkbox("Demo Window", &show_demo_window);     
+	if (show_demo_window) { ImGui::ShowDemoWindow(&show_demo_window); }
+	if (show_window_options) {
+		ImGui::Begin("Window Options");
+		if(ImGui::Checkbox("Fullscreen",&fullscreen)){}
 
 		ImGui::End();
 	}
@@ -141,4 +151,9 @@ update_status ModuleEditor::Update(float dt)
 	SDL_GL_SwapWindow(window);
 	
 	return UPDATE_CONTINUE;
+}
+
+void ModuleEditor::RequestBrowser(const char* path)
+{
+	ShellExecuteA(0, "Open", path, 0, "", 5);
 }

@@ -9,10 +9,10 @@
 //#include "Dependencies/MathGeoLib/include/Algorithm/Random/LCG.h"
 //#include "Dependencies/MathGeoLib/include/MathGeoLibFwd.h"
 
+//#include "Dependencies/Glew/include/GL/glew.h"
+//#include "Dependencies/SDL/include/SDL_opengl.h"
 #include <gl/GL.h>
 #include <gl/GLU.h>
-
-#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), context()

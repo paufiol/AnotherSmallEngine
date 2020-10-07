@@ -78,6 +78,7 @@
     <ClInclude Include="Dependencies\ImGui\imgui.h">
       <Filter>Libraries\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="OpenGL.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
