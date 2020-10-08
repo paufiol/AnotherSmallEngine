@@ -62,6 +62,7 @@ bool ModuleEditor::Start()
 	// Our state
 	show_demo_window = true;
 	show_window_options = false;
+	show_about_window = false;
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -95,7 +96,8 @@ update_status ModuleEditor::Update(float dt)
 
 		if (ImGui::BeginMenu("Configuration"))
 		{
-			if (ImGui::MenuItem("Window")) { show_window_options = !show_window_options; }
+			if (ImGui::MenuItem("Window")) { show_window_options = !show_window_options;}
+			
 			if (ImGui::MenuItem("OpenGL")){}
 			ImGui::EndMenu();
 		}
@@ -105,6 +107,7 @@ update_status ModuleEditor::Update(float dt)
 			if (ImGui::MenuItem("Documentation")){ RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/README.md");}
 			if (ImGui::MenuItem("Latest Release")) { RequestBrowser("https://github.com/paufiol/AnotherSmallEngine"); }
 			if (ImGui::MenuItem("Report a bug")) { RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues"); }
+			if (ImGui::MenuItem("About")) { show_about_window = !show_about_window; }
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Options"))
@@ -115,13 +118,26 @@ update_status ModuleEditor::Update(float dt)
 		ImGui::EndMenuBar();
 		ImGui::End();
 	}
+	//Allocate Framerate in vecor fps_log
+	if (fps_log.size() <= 100)
+		fps_log.push_back(ImGui::GetIO().Framerate);
+	else
+		fps_log.erase(fps_log.begin());
 
-	//Window with a checkbox allowing to show the demo window of ImGui
+	//Show the demo window
 	if (show_demo_window) { ImGui::ShowDemoWindow(&show_demo_window); }
+
+	//About window
+	if (show_about_window) { 
+		ImGui::Begin("About"); 
+		ImGui::End();
+	}
+	//Window configuration
 	if (show_window_options) {
 		ImGui::Begin("Window Options");
 		if(ImGui::Checkbox("Fullscreen",&fullscreen)){}
-
+		sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size()-1]);
+		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0,title, 0.0f, 100.0f, ImVec2(310, 100));
 		ImGui::End();
 	}
 
