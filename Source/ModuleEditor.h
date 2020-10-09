@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "Timer.h"
 #include <vector>
 
 class ModuleEditor : public Module 
@@ -21,15 +22,22 @@ public:
 	SDL_GLContext gl_context;
 
 	std::vector<float> fps_log;
+	std::vector<float> ms_log;
+	Timer frame_time;
 	char title[25];
+	char label[32];
 
 
 
 	bool show_demo_window;
-	bool show_window_options;
+	bool show_configuration_window;
 	bool show_about_window;
 
+
 	bool fullscreen;
+	bool resizable;
+	bool borderless;
+	bool full_desktop;
 	void RequestBrowser(const char*);
 };
 

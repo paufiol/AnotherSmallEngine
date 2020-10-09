@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
+#include "Timer.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
@@ -61,8 +62,9 @@ bool ModuleEditor::Start()
 	}
 	// Our state
 	show_demo_window = true;
-	show_window_options = false;
+	show_configuration_window = false;
 	show_about_window = false;
+	fullscreen = false;
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
 	ImGui_ImplOpenGL3_Init(glsl_version);
@@ -84,38 +86,63 @@ bool ModuleEditor::CleanUp()
 
 update_status ModuleEditor::Update(float dt)
 {
-	
+
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(window);
 	ImGui::NewFrame();
 
+
 	//Top bar menu, with an option to close the editor
 	if (ImGui::BeginMainMenuBar())
 	{
-
-		if (ImGui::BeginMenu("Configuration"))
+		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Window")) { show_window_options = !show_window_options;}
+			if (ImGui::MenuItem("Close", "Alt+F4")) { return UPDATE_STOP; }
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Options"))
+		{
+			if (ImGui::MenuItem("Configuration")) show_configuration_window = !show_configuration_window;
 			
 			if (ImGui::MenuItem("OpenGL")){}
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Help")) 
 		{
-			if (ImGui::MenuItem("ImGui Demo")){show_demo_window = !show_demo_window; }
-			if (ImGui::MenuItem("Documentation")){ RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/README.md");}
-			if (ImGui::MenuItem("Latest Release")) { RequestBrowser("https://github.com/paufiol/AnotherSmallEngine"); }
-			if (ImGui::MenuItem("Report a bug")) { RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues"); }
-			if (ImGui::MenuItem("About")) { show_about_window = !show_about_window; }
+			if (ImGui::MenuItem("ImGui Demo"))show_demo_window = !show_demo_window; 
+			if (ImGui::MenuItem("Documentation")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/README.md");
+			if (ImGui::MenuItem("Latest Release")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine"); 
+			if (ImGui::MenuItem("Report a bug")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues"); 
+			if (ImGui::MenuItem("About")) show_about_window = !show_about_window; 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Options"))
-		{
-			if (ImGui::MenuItem("Close", "Alt+F4")) { return UPDATE_STOP; }
-			ImGui::EndMenu();
-		}
+
 		ImGui::EndMenuBar();
+		ImGui::End();
+	}
+
+	//Show the demo window
+	if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
+
+	//About window
+	if (show_about_window) { 
+		ImGui::Begin("About");
+		ImGui::Text("ASE - Another Small Engine");
+		ImGui::Text("Engine developed for academic purpouses.");
+		ImGui::Text("By Pau Fiol & Aitor Luque");
+		sprintf(label, "Github Repository (Link)");
+		if (ImGui::Selectable(label, true))	RequestBrowser("https://github.com/paufiol/AnotherSmallEngine");
+		ImGui::Separator();
+		ImGui::Text("Libraries used:");
+		ImGui::BulletText("SDL");
+		ImGui::BulletText("Glew");
+		ImGui::BulletText("OpenGL");
+		ImGui::BulletText("ImGui");
+		ImGui::BulletText("MathGeoLib");
+		ImGui::BulletText("Assimp");
+		ImGui::Separator();
+		ImGui::Text("GNU License:");
 		ImGui::End();
 	}
 	//Allocate Framerate in vecor fps_log
@@ -124,20 +151,25 @@ update_status ModuleEditor::Update(float dt)
 	else
 		fps_log.erase(fps_log.begin());
 
-	//Show the demo window
-	if (show_demo_window) { ImGui::ShowDemoWindow(&show_demo_window); }
+	//Allocate Milliseconds in vecor ms_log
+	if (ms_log.size() <= 100)
+		ms_log.push_back(frame_time.Read());
+	else
+		ms_log.erase(ms_log.begin());
 
-	//About window
-	if (show_about_window) { 
-		ImGui::Begin("About"); 
-		ImGui::End();
-	}
 	//Window configuration
-	if (show_window_options) {
-		ImGui::Begin("Window Options");
-		if(ImGui::Checkbox("Fullscreen",&fullscreen)){}
+	if (show_configuration_window) {
+		ImGui::Begin("Configuration");
+		
+		if(ImGui::Checkbox("Fullscreen",&fullscreen)){
+			if (fullscreen) SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		
+		}
+
 		sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size()-1]);
 		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0,title, 0.0f, 100.0f, ImVec2(310, 100));
+		sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
+		ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 		ImGui::End();
 	}
 
