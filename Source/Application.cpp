@@ -21,11 +21,11 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	AddModule(editor);
+	
 
 	// Scenes
 	AddModule(scene_intro);
-
+	AddModule(editor);
 	// Renderer last!
 
 	AddModule(renderer3D);

@@ -2,6 +2,7 @@
 #define __ModuleEditor_H__
 
 #include "Module.h"
+#include "Dependencies/ImGui/imgui.h"
 #include "Globals.h"
 #include "Timer.h"
 #include <vector>
@@ -17,9 +18,10 @@ public:
 	bool CleanUp() override;
 
 public:
-	SDL_Window* window;
-	SDL_WindowFlags window_flags;
-	SDL_GLContext gl_context;
+	//SDL_Window* window;
+	//SDL_WindowFlags window_flags;
+	ImGuiIO io;
+	ImVec4 clear_color;
 
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
