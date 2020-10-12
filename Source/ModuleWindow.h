@@ -23,6 +23,8 @@ public:
 	void SetTitle(const char* title);
 
 public:
+	int width;
+	int height;
 	Uint32 flags;
 
 	//The window we'll be rendering to

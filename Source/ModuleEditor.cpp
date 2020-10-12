@@ -2,6 +2,7 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "Timer.h"
+#include "ModuleRenderer3D.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
@@ -27,6 +28,7 @@ bool ModuleEditor::Start()
 
 	//Initialize glew
 	glewInit();
+	frame_time.Start();
 
 	//Set all the atributes and flags for our Gui window
 
@@ -52,6 +54,10 @@ bool ModuleEditor::Start()
 	show_about_window = false;
 	fullscreen = false;
 	clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+	window_width = App->window->width;
+	window_height = App->window->height;
+	brightness = SDL_GetWindowBrightness(App->window->window);
+	SDL_GetVersion(&version);
 	// Setup Platform/Renderer bindings
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init(0);
@@ -127,7 +133,9 @@ update_status ModuleEditor::Update(float dt)
 		ImGui::BulletText("MathGeoLib");
 		ImGui::BulletText("Assimp");
 		ImGui::Separator();
-		ImGui::Text("GNU License:");
+		ImGui::Text("GNU License:"); 
+		sprintf(label, "Click here to see the full License");
+		if (ImGui::Selectable(label, true))	RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/LICENSE.txt");
 		ImGui::End();
 	}
 	//Allocate Framerate in vecor fps_log
@@ -145,16 +153,48 @@ update_status ModuleEditor::Update(float dt)
 	//Window configuration
 	if (show_configuration_window) {
 		ImGui::Begin("Configuration");
-		
-		if(ImGui::Checkbox("Fullscreen",&fullscreen)){
-			if (fullscreen) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-		
+		if (ImGui::CollapsingHeader("Application"))
+		{
+			sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+			sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 		}
+		if (ImGui::CollapsingHeader("Window"))
+		{
+			if (ImGui::Checkbox("Fullscreen", &fullscreen))
+			{ 
+				if (fullscreen) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
+				else SDL_SetWindowFullscreen(App->window->window,SDL_WINDOW_RESIZABLE);
+			}
+			if (ImGui::Checkbox("Borderless", &borderless)) 
+			{ 
+				if (borderless) SDL_SetWindowBordered(App->window->window, SDL_FALSE);
+				else SDL_SetWindowBordered(App->window->window, SDL_TRUE);
+			}
+			if (ImGui::Checkbox("Full Desktop", &full_desktop))
+			{
+				if (full_desktop) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
+			}
 
-		sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size()-1]);
-		ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0,title, 0.0f, 100.0f, ImVec2(310, 100));
-		sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
-		ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+			ImGui::SliderInt("Width", &window_width, 350, 1500,"%d");
+			ImGui::SliderInt("Height", &window_height, 350, 1200, "%d");
+			SDL_SetWindowSize(App->window->window, window_width, window_height);
+			App->renderer3D->OnResize(window_width, window_height);
+
+			ImGui::SliderFloat("Brightness", &brightness, 0, 1, "%.3f");
+			SDL_SetWindowBrightness(App->window->window, brightness);
+
+		}
+		if (ImGui::CollapsingHeader("Hardware"))
+		{
+			ImGui::Text("SDL version %d.%d.%d", version.major, version.minor, version.patch);
+			ImGui::Separator();
+			ImGui::Text("CPUs: %d", SDL_GetCPUCount());
+			ImGui::Text("System RAM: %dGb", SDL_GetSystemRAM());
+			ImGui::Separator();
+		}
 		ImGui::End();
 	}
 

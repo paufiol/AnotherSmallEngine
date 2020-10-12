@@ -5,6 +5,7 @@
 #include "Dependencies/ImGui/imgui.h"
 #include "Globals.h"
 #include "Timer.h"
+
 #include <vector>
 
 class ModuleEditor : public Module 
@@ -22,12 +23,17 @@ public:
 	//SDL_WindowFlags window_flags;
 	ImGuiIO io;
 	ImVec4 clear_color;
+	SDL_version version;
+	
 
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
 	Timer frame_time;
 	char title[25];
 	char label[32];
+	int window_width;
+	int window_height;
+	float brightness;
 
 
 
