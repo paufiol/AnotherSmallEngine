@@ -1,19 +1,14 @@
 #include "Globals.h"
 #include "Application.h"
+#include "ModuleWindow.h"
+#include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
-#include "Dependencies/SDL\include\SDL_opengl.h"
+#include "OpenGL.h"
 
-//#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
-//#include "Dependencies/MathGeoLib/include/MathBuildConfig.h"
-//#include "Dependencies/MathGeoLib/include/Math/float3.h"
-//#include "Dependencies/MathGeoLib/include/Algorithm/Random/LCG.h"
-//#include "Dependencies/MathGeoLib/include/MathGeoLibFwd.h"
-
-//#include "Dependencies/Glew/include/GL/glew.h"
-//#include "Dependencies/SDL/include/SDL_opengl.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
+
+#pragma comment (lib, "Dependencies/Glew/libx86/Release/Win32/glew32.lib")
 
 ModuleRenderer3D::ModuleRenderer3D(bool start_enabled) : Module(start_enabled), context()
 {
@@ -105,7 +100,6 @@ bool ModuleRenderer3D::Init()
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
 	return ret;
 }
 

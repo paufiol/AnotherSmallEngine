@@ -42,20 +42,19 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	for (uint n = 0; n < primitives.Count(); n++)
+	for (uint n = 0; n < primitives.size(); n++)
+	{
 		primitives[n]->Update();
+	}
 	
 	return UPDATE_CONTINUE;
 }
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
-
-	/*
-		for (uint n = 0; n < primitives.Count(); n++)
+	for (uint n = 0; n < primitives.size(); n++)
 	{
 		primitives[n]->Render();
 	}
-	*/
 	return UPDATE_CONTINUE;
 }

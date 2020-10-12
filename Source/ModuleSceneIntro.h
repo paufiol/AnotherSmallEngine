@@ -1,6 +1,5 @@
 #pragma once
 #include "Module.h"
-#include "p2DynArray.h"
 #include "Globals.h"
 
 class Primitive;
@@ -19,5 +18,5 @@ public:
 
 private:
 
-	p2DynArray<Primitive*> primitives;
+	std::vector<Primitive*> primitives;
 };
