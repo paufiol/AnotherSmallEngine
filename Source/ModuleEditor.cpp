@@ -49,10 +49,13 @@ bool ModuleEditor::Start()
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 	// Our state
-	show_demo_window = true;
+	show_demo_window = false;
 	show_configuration_window = false;
 	show_about_window = false;
 	fullscreen = false;
+	resizable = false;
+	fullscreen = false;
+	borderless = false;
 	clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	window_width = App->window->width;
 	window_height = App->window->height;
