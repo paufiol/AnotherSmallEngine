@@ -55,6 +55,9 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -118,6 +121,9 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="ModuleImporter.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
