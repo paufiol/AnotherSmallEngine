@@ -48,7 +48,22 @@ void ModuleImporter::LoadMeshInfo(const char* file_path)
 		// Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (int i = 0; i < scene->mNumMeshes; i++)
 		{
+			MeshInfo* newMesh = new MeshInfo();
+			if (scene->mMeshes[i]->HasFaces())
+			{
+				for (uint f = 0; f < scene->mMeshes[i]->mNumFaces; ++f)
+				{
+					if (scene->mMeshes[i]->mFaces[f].mNumIndices != 3)
+					{
+						LOG("WARNING, geometery face with != 3 indices!");
+					}
+					else
+					{
+						memcpy(&newMesh->index[f * 3], scene->mMeshes[i]->mFaces[f].mIndices, 3 * sizeof(uint));
+					}
 
+				}
+			}
 		}
 		
 		aiReleaseImport(scene);

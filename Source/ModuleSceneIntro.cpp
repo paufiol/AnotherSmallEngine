@@ -90,6 +90,11 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	glDrawArrays(GL_TRIANGLES, 0, 30);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+	Plane p(vec3(0, 1, 0));
+	p.axis = true;
+	p.Render();
+
 	
 	for (uint n = 0; n < primitives.size(); n++)
 	{
