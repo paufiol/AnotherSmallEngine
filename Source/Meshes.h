@@ -3,6 +3,7 @@
 
 #include "OpenGL.h"
 #include "Globals.h"
+#include "Shaders.h"
 
 #include "Dependencies/MathGeoLib/include/MathBuildConfig.h"
 #include "Dependencies/MathGeoLib/include/MathGeoLibFwd.h"
@@ -27,13 +28,20 @@ struct Texture {
     string path;
 };
 
-class Mesh {
+class Meshes {
 public:
     vector<Vertex>       vertices;
     vector<uint>           indices;
     vector<Texture>      textures;
     uint VAO;
 
-    Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+    Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+    ~Meshes();
+    void Draw(Shaders& shader);
+
+private:
+    // render data 
+    unsigned int VBO, EBO;
+    void setupMesh();
 };
 #endif //__Meshes_H__

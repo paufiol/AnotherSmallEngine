@@ -35,7 +35,7 @@ public:
 	int window_height;
 	float brightness;
 
-
+	bool active = true;
 
 	bool show_demo_window;
 	bool show_configuration_window;

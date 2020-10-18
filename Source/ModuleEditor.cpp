@@ -121,7 +121,7 @@ update_status ModuleEditor::Update(float dt)
 
 	//About window
 	if (show_about_window) { 
-		ImGui::Begin("About");
+		ImGui::Begin("About",&active);
 		ImGui::Text("ASE - Another Small Engine");
 		ImGui::Text("Engine developed for academic purpouses.");
 		ImGui::Text("By Pau Fiol & Aitor Luque");
@@ -155,7 +155,7 @@ update_status ModuleEditor::Update(float dt)
 
 	//Window configuration
 	if (show_configuration_window) {
-		ImGui::Begin("Configuration");
+		if (!ImGui::Begin("Configuration", &active)) 
 		if (ImGui::CollapsingHeader("Application"))
 		{
 			sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
