@@ -1,13 +1,11 @@
-#include <iostream> 
+
 #include <list>
-#include <vector>
 #include "Application.h"
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
 	window = new ModuleWindow();
 	input = new ModuleInput();
-	importer = new ModuleImporter();
 	scene_intro = new ModuleSceneIntro();
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
@@ -21,7 +19,6 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 
 	AddModule(window);
 	AddModule(camera);
-	AddModule(importer);
 	AddModule(input);
 	
 

@@ -55,9 +55,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleImporter.cpp">
-      <Filter>Importers</Filter>
-    </ClCompile>
     <ClCompile Include="Shaders.cpp">
       <Filter>Importers</Filter>
     </ClCompile>
@@ -160,6 +157,9 @@
     <ClCompile Include="Dependencies\MathGeoLib\include\Geometry\Ray.cpp">
       <Filter>Dependencies\MathGeoLib\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="I_Model.cpp">
+      <Filter>Importers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -223,9 +223,6 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL.h" />
-    <ClInclude Include="ModuleImporter.h">
-      <Filter>Importers</Filter>
-    </ClInclude>
     <ClInclude Include="Meshes.h">
       <Filter>Importers</Filter>
     </ClInclude>
@@ -411,6 +408,9 @@
     </ClInclude>
     <ClInclude Include="Dependencies\MathGeoLib\include\Geometry\QuadTree.h">
       <Filter>Dependencies\MathGeoLib\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="I_Model.h">
+      <Filter>Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

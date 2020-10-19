@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
-#include "OpenGL.h"
+
 
 
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
@@ -27,6 +27,8 @@ bool ModuleSceneIntro::Start()
 
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
+	
+	LoadModel("Assets/warrior/warrior.fbx");
 
 	return ret;
 }
@@ -91,9 +93,9 @@ update_status ModuleSceneIntro::Update(float dt)
 	glDrawArrays(GL_TRIANGLES, 0, 30);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
-	Plane p(vec3(0, 1, 0));
-	p.axis = true;
-	p.Render();
+	//Plane p(vec3(0, 1, 0));
+	//p.axis = true;
+	//p.Render();
 
 	
 	for (uint n = 0; n < primitives.size(); n++)
@@ -111,4 +113,11 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 		primitives[n]->Render();
 	}
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::LoadModel(const char* path)
+{
+	model = new I_Model(path);
+	//Shaders defaultShader();
+	//model->Draw(defaultShader);
 }

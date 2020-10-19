@@ -9,6 +9,7 @@ Meshes::Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Tex
 
     setupMesh();
 }
+Meshes::~Meshes() {}
 void Meshes::Draw(Shaders& shader)
 {
     unsigned int diffuseNr = 1;
