@@ -7,6 +7,7 @@ using namespace std;
 
 class Primitive;
 
+
 class ModuleSceneIntro : public Module
 {
 public:
@@ -18,11 +19,9 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
-	void LoadModel(const char* path);
 
-
-	I_Model* model;
 private:
+
 
 	std::vector<Primitive*> primitives;
 	uint buffer;

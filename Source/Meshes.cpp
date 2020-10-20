@@ -10,7 +10,7 @@ Meshes::Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Tex
     setupMesh();
 }
 Meshes::~Meshes() {}
-void Meshes::Draw(Shaders& shader)
+void Meshes::Draw(Shaders shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;

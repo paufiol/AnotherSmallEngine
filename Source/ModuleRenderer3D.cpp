@@ -4,6 +4,9 @@
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
 #include "OpenGL.h"
+#include "Shaders.h"
+#include "Meshes.h"
+#include "I_Model.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -96,6 +99,15 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+
+
+
+		//Shaders tempShader(4, 4,
+		//	"vertex_shader.glsl", "fragment_shader.glsl");
+
+		//this->shaders.push_back(tempShader);
+
+		//LoadModel("Assets/warrior/warrior.fbx");
 	}
 
 	// Projection matrix for
@@ -125,6 +137,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
+	
+
+	//glClearColor(0.f, 0.f, 0.f, 1.f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	//for (auto& i : this->models)
+	//	i->Draw(shaders[0]);
+
+	
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -151,4 +171,13 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+}
+
+
+
+void ModuleRenderer3D::LoadModel(const char* path)
+{
+	tempModel->loadModel(path);
+
+	models.push_back(tempModel);
 }

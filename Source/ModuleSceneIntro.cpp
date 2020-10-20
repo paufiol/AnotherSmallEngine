@@ -5,6 +5,7 @@
 
 
 
+
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
 }
@@ -28,7 +29,7 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 	
-	LoadModel("Assets/warrior/warrior.fbx");
+
 
 	return ret;
 }
@@ -115,7 +116,3 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	return UPDATE_CONTINUE;
 }
 
-void ModuleSceneIntro::LoadModel(const char* path)
-{
-
-}

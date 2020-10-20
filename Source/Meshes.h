@@ -32,7 +32,7 @@ public:
 
     Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
     ~Meshes();
-    void Draw(Shaders& shader);
+    void Draw(Shaders shader);
 
 private:
     // render data 

@@ -21,10 +21,11 @@ public:
     bool gammaCorrection;
 
     I_Model(string const& path, bool gamma = false);
-    void Draw(Shaders& shader);
+    void Draw(Shaders shader);
+    void loadModel(string const& path);  // loads a model  from file and stores the meshes in the meshes vector.
 
 private:
-    void loadModel(string const& path);  // loads a model  from file and stores the meshes in the meshes vector.
+   
     void processNode(aiNode* node, const aiScene* scene); // processes each mesh located at the node 
     Meshes processMesh(aiMesh* mesh, const aiScene* scene);
     vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName); //checks all textures of a given type and loads them
