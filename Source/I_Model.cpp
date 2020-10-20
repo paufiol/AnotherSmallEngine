@@ -20,7 +20,7 @@ I_Model::I_Model(string const& path, bool gamma)
 	loadModel(path);
 }
 
-void I_Model::Draw(Shaders shader)
+void I_Model::Draw(Shaders& shader)
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
         meshes[i].Draw(shader);

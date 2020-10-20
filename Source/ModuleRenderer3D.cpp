@@ -102,12 +102,11 @@ bool ModuleRenderer3D::Init()
 
 
 
-		//Shaders tempShader(4, 4,
-		//	"vertex_shader.glsl", "fragment_shader.glsl");
+		//Shaders tempShader(4, 4,"vertex_shader.glsl", "fragment_shader.glsl");
 
 		//this->shaders.push_back(tempShader);
 
-		//LoadModel("Assets/warrior/warrior.fbx");
+		LoadModel("Assets/warrior/warrior.fbx");
 	}
 
 	// Projection matrix for
@@ -180,4 +179,8 @@ void ModuleRenderer3D::LoadModel(const char* path)
 	tempModel->loadModel(path);
 
 	models.push_back(tempModel);
+	if (!models.empty())
+	{
+		LOG("MODEL LOADED!!!");
+	}
 }

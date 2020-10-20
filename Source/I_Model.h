@@ -21,7 +21,7 @@ public:
     bool gammaCorrection;
 
     I_Model(string const& path, bool gamma = false);
-    void Draw(Shaders shader);
+    void Draw(Shaders& shader);
     void loadModel(string const& path);  // loads a model  from file and stores the meshes in the meshes vector.
 
 private:
