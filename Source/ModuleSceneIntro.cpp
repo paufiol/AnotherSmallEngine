@@ -117,7 +117,5 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 
 void ModuleSceneIntro::LoadModel(const char* path)
 {
-	model = new I_Model(path);
-	//Shaders defaultShader();
-	//model->Draw(defaultShader);
+
 }

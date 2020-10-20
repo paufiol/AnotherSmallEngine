@@ -31,7 +31,7 @@ void Meshes::Draw(Shaders& shader)
             number = std::to_string(heightNr++); // transfer unsigned int to stream
 
         // Set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(shader.ID, (name + number).c_str()), i);
+        glUniform1i(glGetUniformLocation(shader.id, (name + number).c_str()), i);
         // Bind the texture
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }

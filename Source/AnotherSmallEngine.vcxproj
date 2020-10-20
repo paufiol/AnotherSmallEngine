@@ -232,6 +232,8 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Shaders\fragment_shader.glsl" />
+    <None Include="Assets\Shaders\vertex_shader.glsl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
