@@ -456,9 +456,6 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{122b9867-7b4d-4ff7-b8ca-9b0dba9b1225}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Assets\Shaders">
-      <UniqueIdentifier>{078c85b6-90bf-403a-a29f-d7502abab60b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies\MathGeoLib\include\Math\Matrix.inl">
@@ -479,11 +476,7 @@
     <None Include="Dependencies\MathGeoLib\include\Geometry\QuadTree.inl">
       <Filter>Dependencies\MathGeoLib\Geometry</Filter>
     </None>
-    <None Include="Assets\Shaders\fragment_shader.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\vertex_shader.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
+    <None Include="fragment_shader.glsl" />
+    <None Include="vertex_shader.glsl" />
   </ItemGroup>
 </Project>

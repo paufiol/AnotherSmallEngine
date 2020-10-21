@@ -15,7 +15,7 @@ class Shaders
 public:
 	//Constructors/Destructors
 	Shaders(const int versionMajorP, const int versionMinorP,
-		char* vertexFile, char* fragmentFile, char* geometryFile = "");
+		const char* vertexFile, const char* fragmentFile, char* geometryFile = "");
 	~Shaders();
 
 	GLuint id;
@@ -34,9 +34,9 @@ private:
 	int versionMinor;
 
 	//Private functions
-	std::string loadShaderSource(char* fileName);
+	std::string loadShaderSource(const char* fileName);
 
-	GLuint loadShader(GLenum type, char* fileName);
+	GLuint loadShader(GLenum type, const char* fileName);
 
 	void linkProgram(GLuint vertexShader, GLuint geometryShader, GLuint fragmentShader);
 };

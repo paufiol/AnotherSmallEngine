@@ -1,7 +1,6 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
-#include "Timer.h"
 #include "ModuleRenderer3D.h"
 
 #include "Dependencies/ImGUI/imgui.h"

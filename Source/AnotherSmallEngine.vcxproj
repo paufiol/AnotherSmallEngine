@@ -42,11 +42,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(ProjectDir);$(LibraryPath)</LibraryPath>
-    <ReferencePath>C:\Users\aitor\Desktop\AnotherSmallEngine\Source;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>C:\Users\aitor\Desktop\AnotherSmallEngine\Source;$(LibraryPath)</LibraryPath>
-    <ReferencePath>C:\Users\aitor\Desktop\AnotherSmallEngine\Source;$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -234,14 +232,14 @@
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\fragment_shader.glsl" />
-    <None Include="Assets\Shaders\vertex_shader.glsl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_CPP.inl" />
     <None Include="Dependencies\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
     <None Include="Dependencies\MathGeoLib\include\Math\Matrix.inl" />
+    <None Include="fragment_shader.glsl" />
+    <None Include="vertex_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

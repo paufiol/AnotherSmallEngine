@@ -5,10 +5,11 @@
 
 #include "Globals.h"
 #include "Meshes.h"
-#include "Dependencies/Assimp/Assimp/include/Importer.hpp"
-#include "Dependencies/Assimp/Assimp/include/scene.h"
-#include "Dependencies/Assimp/Assimp/include/postprocess.h"
-#pragma comment (lib, "Dependencies/Assimp/Assimp/libx86/assimp.lib")
+struct	aiScene;
+struct	aiNode;
+struct	aiMesh;
+struct	aiMaterial;
+enum	aiTextureType;
 using namespace std;
 
 uint TextureFromFile(const char* path, const string& directory, bool gamma = false);
@@ -20,9 +21,9 @@ public:
     string directory;
     bool gammaCorrection;
 
-    I_Model(string const& path, bool gamma = false);
-    void Draw(Shaders& shader);
-    void loadModel(string const& path);  // loads a model  from file and stores the meshes in the meshes vector.
+    I_Model();
+    void Draw();
+    void loadModel(const char* path);  // loads a model  from file and stores the meshes in the meshes vector.
 
 private:
    

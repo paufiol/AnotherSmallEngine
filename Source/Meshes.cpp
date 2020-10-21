@@ -1,4 +1,3 @@
-#include "Globals.h"
 #include "Meshes.h"
 
 Meshes::Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
@@ -10,39 +9,21 @@ Meshes::Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Tex
     setupMesh();
 }
 Meshes::~Meshes() {}
-void Meshes::Draw(Shaders& shader)
+void Meshes::Draw()
 {
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
-    for (unsigned int i = 0; i < textures.size(); i++)
-    {
-        glActiveTexture(GL_TEXTURE0 + i); // Proper texture unit before binding
-        string number;
-        string name = textures[i].type;
-        if (name == "texture_diffuse")
-            number = std::to_string(diffuseNr++);
-        else if (name == "texture_specular")
-            number = std::to_string(specularNr++); // transfer unsigned int to stream
-        else if (name == "texture_normal")
-            number = std::to_string(normalNr++); // transfer unsigned int to stream
-        else if (name == "texture_height")
-            number = std::to_string(heightNr++); // transfer unsigned int to stream
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
-        // Set the sampler to the correct texture unit
-        glUniform1i(glGetUniformLocation(shader.id, (name + number).c_str()), i);
-        // Bind the texture
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
-    }
-
-    // Draw mesh
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);
 
-    // always good practice to set everything back to defaults once configured.
-    glActiveTexture(GL_TEXTURE0);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(0);
+
+    LOG("MODEL RENDERED");
 }
 void Meshes::setupMesh()
 {
@@ -76,4 +57,5 @@ void Meshes::setupMesh()
     glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
     glBindVertexArray(0);
+
 }

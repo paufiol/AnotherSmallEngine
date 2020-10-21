@@ -1,4 +1,3 @@
-#include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
@@ -99,15 +98,9 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
-
-
-
-		//Shaders tempShader(4, 4,"vertex_shader.glsl", "fragment_shader.glsl");
-
-		//this->shaders.push_back(tempShader);
-
-		LoadModel("Assets/warrior/warrior.fbx");
 	}
+
+	//LoadModel("Assets/warrior/warrior.FBX");
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -130,6 +123,13 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+
+	for (int i = 0; i < models.size(); ++i)
+	{
+		models[i]->Draw();
+	}
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -140,10 +140,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	//glClearColor(0.f, 0.f, 0.f, 1.f);
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	//for (auto& i : this->models)
-	//	i->Draw(shaders[0]);
 
-	
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -176,11 +173,9 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 void ModuleRenderer3D::LoadModel(const char* path)
 {
-	tempModel->loadModel(path);
 
+	I_Model* tempModel = new I_Model();
+	tempModel->loadModel(path);
 	models.push_back(tempModel);
-	if (!models.empty())
-	{
-		LOG("MODEL LOADED!!!");
-	}
+
 }

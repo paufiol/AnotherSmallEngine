@@ -1,6 +1,13 @@
 
 #include <list>
 #include "Application.h"
+#include "Module.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleSceneIntro.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
+#include "ModuleEditor.h"
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {

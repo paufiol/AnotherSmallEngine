@@ -5,40 +5,50 @@
 #include <sstream>
 #include <map>
 
+#include "Dependencies/Assimp/include/mesh.h"
+#include "Dependencies/Assimp/include/cimport.h"
+#include "Dependencies/Assimp/include/scene.h"
+#include "Dependencies/Assimp/include/postprocess.h"
 
 #include "Dependencies/MathGeoLib/include/MathBuildConfig.h"
 #include "Dependencies/MathGeoLib/include/MathGeoLibFwd.h"
 #include "Dependencies/MathGeoLib/include/MathGeoLib.h"
 
-
+#pragma comment (lib, "Dependencies/Assimp/libx86/assimp.lib")
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-I_Model::I_Model(string const& path, bool gamma)
+I_Model::I_Model()
 {
-	loadModel(path);
+
 }
 
-void I_Model::Draw(Shaders& shader)
+void I_Model::Draw()
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(shader);
+    {
+        meshes[i].Draw();
+        LOG("DRAWING MESHES");
+    }
 }
 
-void I_Model::loadModel(string const& path)
+void I_Model::loadModel(const char* path)
 {
+    LOG("Loading Model from file: %s", path);
+
     // read file via ASSIMP
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-    // check for errors
+    //Assimp::Importer importer;
+    //const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+
+    const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+    // Safecheck
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
-        cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << endl;
+        LOG("ERROR ASSIMP %s", aiGetErrorString());
         return;
     }
-    // retrieve the directory path of the filepath
-    directory = path.substr(0, path.find_last_of('/'));
+ 
 
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
@@ -47,11 +57,12 @@ void I_Model::loadModel(string const& path)
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 void I_Model::processNode(aiNode* node, const aiScene* scene)
 {
-    // process each mesh located at the current node
+
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(processMesh(mesh, scene));
+        
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++)

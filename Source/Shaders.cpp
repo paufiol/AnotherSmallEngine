@@ -1,9 +1,8 @@
-#include "Globals.h"
 #include "Shaders.h"
 
 
 Shaders::Shaders(const int versionMajorP, const int versionMinorP,
-    char* vertexFile, char* fragmentFile, char* geometryFile)
+    const char* vertexFile, const char* fragmentFile, char* geometryFile)
 {
     versionMajor = versionMajorP;
     versionMinor = versionMinorP;
@@ -29,7 +28,7 @@ Shaders::~Shaders()
     glDeleteProgram(this->id);
 }
 
-std::string Shaders::loadShaderSource(char* fileName)
+std::string Shaders::loadShaderSource(const char* fileName)
 {
     std::string temp = "";
     std::string src = "";
@@ -60,7 +59,7 @@ std::string Shaders::loadShaderSource(char* fileName)
 
     return src;
 }
-GLuint Shaders::loadShader(GLenum type, char* fileName)
+GLuint Shaders::loadShader(GLenum type, const char* fileName)
 {
     char infoLog[512];
     GLint success;

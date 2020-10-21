@@ -6,7 +6,6 @@
 
 #define MAX_LIGHTS 8
 
-class Shaders;
 class I_Model;
 
 class ModuleRenderer3D : public Module
@@ -30,13 +29,7 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
 
-	//OpenGL Context
-//const int GL_VERSION_MAJOR;
-//const int GL_VERSION_MINOR;
-
-	std::vector<Shaders> shaders;
-	std::vector<Texture*> textures;
+	//std::vector<Texture*> textures;
 	std::vector<I_Model*> models;
 
-	I_Model* tempModel;
 };
