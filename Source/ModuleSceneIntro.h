@@ -22,8 +22,6 @@ public:
 
 private:
 
-
 	std::vector<Primitive*> primitives;
-	uint buffer;
 
 };

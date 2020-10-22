@@ -25,7 +25,6 @@ void I_Model::Draw()
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
         meshes[i].Draw();
-        LOG("DRAWING MESHES");
     }
 }
 
@@ -33,11 +32,7 @@ void I_Model::loadModel(const char* path)
 {
     LOG("Loading Model from file: %s", path);
 
-    // read file via ASSIMP
-    //Assimp::Importer importer;
-    //const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-
-    const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
+    const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     // Safecheck
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
     {
@@ -56,15 +51,12 @@ void I_Model::processNode(aiNode* node, const aiScene* scene)
 	
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
-		LOG("MESH PROCESSED");
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(processMesh(mesh, scene));
-        
+		meshes.push_back(processMesh(mesh, scene)); 
     }
 
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-		LOG("NODE PROCESSED");
 		processNode(node->mChildren[i], scene);
     }
 

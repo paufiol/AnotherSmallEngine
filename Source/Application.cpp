@@ -28,7 +28,6 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(camera);
 	AddModule(input);
 	
-
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(editor);

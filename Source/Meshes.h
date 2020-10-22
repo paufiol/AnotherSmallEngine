@@ -11,6 +11,7 @@
 using namespace std;
 
 struct Vertex {
+
     vec3 Position;
 	vec3 Normal;
     vec2 TexCoords;
@@ -28,7 +29,7 @@ public:
     vector<Texture>      textures;
 
 
-    Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
+    Meshes(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
     ~Meshes();
     void Draw();
 
@@ -40,5 +41,6 @@ private:
 	uint TBO;											// Texture Buffer
 	uint IBO;
     void setupMesh();
+
 };
 #endif //__Meshes_H__

@@ -26,7 +26,7 @@ bool ModuleEditor::Start()
 	LOG("Init Editor");
 
 	//Initialize glew
-	glewInit();
+
 	frame_time.Start();
 
 	//Set all the atributes and flags for our Gui window

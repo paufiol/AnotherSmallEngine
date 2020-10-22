@@ -55,9 +55,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Shaders.cpp">
-      <Filter>Importers</Filter>
-    </ClCompile>
     <ClCompile Include="Meshes.cpp">
       <Filter>Importers</Filter>
     </ClCompile>
@@ -224,9 +221,6 @@
     </ClInclude>
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Meshes.h">
-      <Filter>Importers</Filter>
-    </ClInclude>
-    <ClInclude Include="Shaders.h">
       <Filter>Importers</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\MathGeoLib\include\MathBuildConfig.h">
@@ -476,7 +470,5 @@
     <None Include="Dependencies\MathGeoLib\include\Geometry\QuadTree.inl">
       <Filter>Dependencies\MathGeoLib\Geometry</Filter>
     </None>
-    <None Include="fragment_shader.glsl" />
-    <None Include="vertex_shader.glsl" />
   </ItemGroup>
 </Project>

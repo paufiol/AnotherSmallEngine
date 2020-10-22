@@ -1,15 +1,17 @@
 #include "Meshes.h"
 
-Meshes::Meshes(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
+Meshes::Meshes(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
+
 	VAO = 0;
 	VBO = 0;
 	NBO = 0;
 	TBO = 0;
 	IBO = 0;
+
     setupMesh();
 }
 Meshes::~Meshes() {}
@@ -31,17 +33,11 @@ void Meshes::Draw()
 }
 void Meshes::setupMesh()
 {
-   
-	LOG("SETING UP TEST");
-	// create buffers
 
-	glGenVertexArrays(1, (GLuint*)&VAO);
-
-	LOG("SETING UP TEST");
-	glBindVertexArray(VAO);
-
-
+	glGenBuffers(1, (GLuint*)&VAO);
 	glGenBuffers(1, (GLuint*)&VBO);
+
+	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 	
@@ -64,3 +60,6 @@ void Meshes::setupMesh()
 	glBindVertexArray(0);
 
 }
+
+
+
