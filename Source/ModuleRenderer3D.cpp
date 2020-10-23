@@ -102,7 +102,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
-	LoadModel("Assets/Models/BakerHouse.FBX");
+	//LoadModel("Assets/Models/BakerHouse.FBX");
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);

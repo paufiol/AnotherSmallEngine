@@ -29,7 +29,6 @@ public:
     vector<uint>          indices;
     vector<Texture>      textures;
 
-
     Meshes(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
     ~Meshes();
     void Draw();

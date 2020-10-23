@@ -1,10 +1,5 @@
 #include "I_Model.h"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <map>
-
 #include "Dependencies/Assimp/include/mesh.h"
 #include "Dependencies/Assimp/include/cimport.h"
 #include "Dependencies/Assimp/include/scene.h"
@@ -12,8 +7,8 @@
 
 #pragma comment (lib, "Dependencies/Assimp/libx86/assimp.lib")
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "stb_image.h"
 
 I_Model::I_Model()
 {
@@ -34,18 +29,15 @@ void I_Model::loadModel(const char* path)
 
     const aiScene* scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     // Safecheck
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         LOG("ERROR ASSIMP %s", aiGetErrorString());
         return;
     }
- 
-
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
 }
 
-// processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 void I_Model::processNode(aiNode* node, const aiScene* scene)
 {
 	
@@ -69,7 +61,7 @@ Meshes I_Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	vector<unsigned int> indices;
 	vector<Texture> textures;
 
-    // walk through each of the mesh's vertices
+    // vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
    
@@ -87,7 +79,7 @@ Meshes I_Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vertex.Normal.z = mesh->mNormals[i].z;
         }
         // texture coordinates
-        if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
+        if (mesh->mTextureCoords[0]) 
         {
 			vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
 			vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
@@ -98,7 +90,7 @@ Meshes I_Model::processMesh(aiMesh* mesh, const aiScene* scene)
         vertices.push_back(vertex);
 		
     }
-    // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+    // indices.
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 

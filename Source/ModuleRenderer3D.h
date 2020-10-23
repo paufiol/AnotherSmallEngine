@@ -21,7 +21,7 @@ public:
 
 	void OnResize(int width, int height);
 
-	void LoadModel(const char* path);
+	void LoadModel(const char* path); //Sends the path to the LoadModel function in the ImporterModel
 
 public:
 	Light lights[MAX_LIGHTS];

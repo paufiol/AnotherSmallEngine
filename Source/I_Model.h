@@ -1,7 +1,8 @@
 #ifndef __I_Model_H__
 #define __I_Model_H__
-#include "Globals.h"
+
 #include "Meshes.h"
+
 struct	aiScene;
 struct	aiNode;
 struct	aiMesh;

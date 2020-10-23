@@ -3,9 +3,6 @@
 #include "ModuleCamera3D.h"
 #include "Primitive.h"
 
-
-
-
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
 }
@@ -39,9 +36,9 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update(float dt)
 {
 
-	//Plane p(vec3(0, 1, 0));
-	//p.axis = true;
-	//p.Render();
+	Plane p(vec3(0, 1, 0));
+	p.axis = true;
+	p.Render();
 
 	
 	for (uint n = 0; n < primitives.size(); n++)
