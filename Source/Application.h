@@ -13,6 +13,7 @@ class ModuleSceneIntro;
 class ModuleRenderer3D;
 class ModuleEditor;
 class ModuleCamera3D;
+class ModuleFileSystem;
 
 
 
@@ -25,6 +26,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
+	ModuleFileSystem* file_system ;
 
 
 	bool debug;

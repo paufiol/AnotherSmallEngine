@@ -9,7 +9,7 @@ struct	aiMaterial;
 enum	aiTextureType;
 using namespace std;
 
-uint TextureFromFile(const char* path, const string& directory, bool gamma = false);
+
 class I_Model
 {
 public:
@@ -26,9 +26,7 @@ private:
    
     void processNode(aiNode* node, const aiScene* scene); // processes each mesh located at the node 
     Meshes processMesh(aiMesh* mesh, const aiScene* scene);
-    vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName); //checks all textures of a given type and loads them
 
-   // uint TextureFromFile(const char* path, const string& directory, bool gamma = false);
 };
 
 #endif //__I_Model_H__

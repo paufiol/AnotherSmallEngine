@@ -164,6 +164,7 @@
     <ClInclude Include="ModuleCamera3D.h" />
     <ClInclude Include="ModuleEditor.h" />
     <ClInclude Include="I_Model.h" />
+    <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="ModuleRenderer3D.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="ModuleInput.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Meshes.cpp" />
+    <ClCompile Include="ModuldeFileSystem.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
     <ClCompile Include="ModuleEditor.cpp" />
     <ClCompile Include="I_Model.cpp" />

@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleFileSystem.h"
 
 #define MAX_KEYS 300
 
@@ -104,6 +105,11 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_QUIT:
 			quit = true;
 			break;
+
+			case SDL_DROPFILE: {
+			App->file_system->ReadDropFile(e.drop.file);
+			SDL_free(e.drop.file);
+			break; }
 
 			case SDL_WINDOWEVENT:
 			{

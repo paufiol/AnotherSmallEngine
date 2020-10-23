@@ -8,6 +8,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleCamera3D.h"
 #include "ModuleEditor.h"
+#include "ModuleFileSystem.h"
 
 Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 {
@@ -17,6 +18,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	renderer3D = new ModuleRenderer3D();
 	camera = new ModuleCamera3D();
 	editor = new ModuleEditor();
+	file_system = new ModuleFileSystem();
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -27,7 +29,7 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(window);
 	AddModule(camera);
 	AddModule(input);
-	
+	AddModule(file_system);
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(editor);

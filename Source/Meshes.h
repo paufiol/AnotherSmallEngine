@@ -20,6 +20,7 @@ struct Vertex {
 struct Texture {
     uint id;
     string type;
+    string path;
 };
 
 class Meshes {
@@ -35,11 +36,12 @@ public:
 
 private:
     // render data 
-	uint VAO;											// Vertex Array
-	uint VBO;											// Vertex Buffer
-	uint NBO;											// Normal Buffer
-	uint TBO;											// Texture Buffer
-	uint IBO;
+	uint VAO = 0;											// Vertex Array
+	uint VBO = 0;											// Vertex Buffer
+	uint NBO = 0;											// Normal Buffer
+	uint TBO = 0;											// Texture Buffer
+	uint IBO = 0;
+    uint EBO = 0;
     void setupMesh();
 
 };

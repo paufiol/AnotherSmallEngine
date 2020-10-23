@@ -102,7 +102,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
-	LoadModel("Assets/warrior/warrior.FBX");
+	LoadModel("Assets/Models/BakerHouse.FBX");
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -175,9 +175,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 void ModuleRenderer3D::LoadModel(const char* path)
 {
-
 	I_Model* tempModel = new I_Model();
 	tempModel->loadModel(path);
 	models.push_back(tempModel);
-
 }
