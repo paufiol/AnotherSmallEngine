@@ -1,5 +1,5 @@
-#ifndef __Meshes_H__
-#define __Meshes_H__
+#ifndef __ResourceMesh_H__
+#define __ResourceMesh_H__
 
 #include "glmath.h"
 #include <OpenGL.h>
@@ -23,14 +23,14 @@ struct Texture {
     string path;
 };
 
-class Meshes {
+class ResourceMesh {
 public:
     vector<Vertex>       vertices;
     vector<uint>          indices;
     vector<Texture>      textures;
 
-    Meshes(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
-    ~Meshes();
+    ResourceMesh(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
+    ~ResourceMesh();
     void Draw();
 
 private:
@@ -41,7 +41,8 @@ private:
 	uint TBO = 0;											// Texture Buffer
 	uint IBO = 0;
     uint EBO = 0;
+
     void setupMesh();
 
 };
-#endif //__Meshes_H__
+#endif //__ResourceMesh_H__

@@ -3,9 +3,8 @@
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
 #include "OpenGL.h"
-#include "Shaders.h"
-#include "Meshes.h"
-#include "I_Model.h"
+#include "ResourceMesh.h"
+#include "ResourceModel.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -102,7 +101,9 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
-	//LoadModel("Assets/Models/BakerHouse.FBX");
+	LoadModel("Assets/Models/BakerHouse.FBX");
+
+
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -126,10 +127,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		lights[i].Render();
 
 
-	for (int i = 0; i < models.size(); ++i)
-	{
-		models[i]->Draw();
-	}
 
 
 	return UPDATE_CONTINUE;
@@ -138,11 +135,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	
-
-	//glClearColor(0.f, 0.f, 0.f, 1.f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
+	DrawAllModels();
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -171,11 +164,16 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-
+void ModuleRenderer3D::DrawAllModels()
+{
+	for (uint i = 0; i < models.size(); i++)
+	{
+		models[i]->Draw();
+	}
+}
 
 void ModuleRenderer3D::LoadModel(const char* path)
 {
-	I_Model* tempModel = new I_Model();
-	tempModel->loadModel(path);
+	ResourceModel* tempModel = new ResourceModel(path);
 	models.push_back(tempModel);
 }

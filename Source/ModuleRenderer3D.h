@@ -6,7 +6,8 @@
 
 #define MAX_LIGHTS 8
 
-class I_Model;
+class ResourceMesh;
+class ResourceModel;
 
 class ModuleRenderer3D : public Module
 {
@@ -21,7 +22,8 @@ public:
 
 	void OnResize(int width, int height);
 
-	void LoadModel(const char* path); //Sends the path to the LoadModel function in the ImporterModel
+	void DrawAllModels();
+	void LoadModel(const char* path);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -29,7 +31,6 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
 
-	//std::vector<Texture*> textures;
-	std::vector<I_Model*> models;
+	std::vector<ResourceModel*> models;
 
 };

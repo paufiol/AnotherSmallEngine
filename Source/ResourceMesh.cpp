@@ -1,17 +1,15 @@
-#include "Meshes.h"
+#include "ResourceMesh.h"
 
-Meshes::Meshes(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures)
+ResourceMesh::ResourceMesh(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
 
-
-
     setupMesh();
 }
-Meshes::~Meshes() {}
-void Meshes::Draw()
+ResourceMesh::~ResourceMesh() {}
+void ResourceMesh::Draw()
 {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -25,11 +23,8 @@ void Meshes::Draw()
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
 }
-void Meshes::setupMesh()
+void ResourceMesh::setupMesh()
 {
-	LOG("TESTING");
-
-
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -74,7 +69,6 @@ void Meshes::setupMesh()
 	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
 	//glBindVertexArray(0);
-	LOG("TESTING");
 }
 
 
