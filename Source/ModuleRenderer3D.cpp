@@ -28,6 +28,10 @@ bool ModuleRenderer3D::Init()
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	glewInit();
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
 
 	if(context == NULL)
 	{
@@ -101,7 +105,7 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_COLOR_MATERIAL);
 	}
 
-	LoadModel("Assets/Models/BakerHouse.FBX");
+	LoadModel("Assets/Models/warrior.FBX");
 
 
 
@@ -144,7 +148,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 	SDL_GL_DeleteContext(context);
 
 	return true;
@@ -175,5 +179,6 @@ void ModuleRenderer3D::DrawAllModels()
 void ModuleRenderer3D::LoadModel(const char* path)
 {
 	ResourceModel* tempModel = new ResourceModel(path);
+	tempModel->SetupTexture("BakerHouse.png");
 	models.push_back(tempModel);
 }

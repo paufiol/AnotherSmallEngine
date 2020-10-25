@@ -12,9 +12,9 @@ using namespace std;
 
 struct Vertex {
 
-    vec3 Position;
-	vec3 Normal;
-    vec2 TexCoords;
+    vec3 position;
+	vec3 normal;
+    vec2 texCoords;
 };
 
 struct Texture {
@@ -26,15 +26,16 @@ struct Texture {
 class ResourceMesh {
 public:
     vector<Vertex>       vertices;
-    vector<uint>          indices;
+    vector<uint>         indices;
     vector<Texture>      textures;
 
     ResourceMesh(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
     ~ResourceMesh();
-    void Draw();
+    void Draw(GLuint id);
+    void DrawNormals();
+    void DrawTexCoords();
 
 private:
-    // render data 
 	uint VAO = 0;											// Vertex Array
 	uint VBO = 0;											// Vertex Buffer
 	uint NBO = 0;											// Normal Buffer

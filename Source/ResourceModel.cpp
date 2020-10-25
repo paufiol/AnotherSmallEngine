@@ -1,4 +1,6 @@
 #include "ResourceModel.h"
+#include "ModuleFileSystem.h"
+#include "Application.h"
 
 #include "Dependencies/Assimp/include/mesh.h"
 #include "Dependencies/Assimp/include/cimport.h"
@@ -7,8 +9,7 @@
 
 #pragma comment (lib, "Dependencies/Assimp/libx86/assimp.lib")
 
-//#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
+
 
 ResourceModel::ResourceModel(const char* path)
 {
@@ -19,7 +20,7 @@ void ResourceModel::Draw()
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
-        meshes[i].Draw();
+        meshes[i].Draw(texture_ID);
     }
 }
 
@@ -66,26 +67,26 @@ ResourceMesh ResourceModel::processMesh(aiMesh* mesh, const aiScene* scene)
     {
 
         Vertex vertex;
-        vertex.Position.x = mesh->mVertices[i].x;
-        vertex.Position.y = mesh->mVertices[i].y;
-        vertex.Position.z = mesh->mVertices[i].z;
+        vertex.position.x = mesh->mVertices[i].x;
+        vertex.position.y = mesh->mVertices[i].y;
+        vertex.position.z = mesh->mVertices[i].z;
 
 
         // normals
         if (mesh->HasNormals())
         {
-            vertex.Normal.x = mesh->mNormals[i].x;
-            vertex.Normal.y = mesh->mNormals[i].y;
-            vertex.Normal.z = mesh->mNormals[i].z;
+            vertex.normal.x = mesh->mNormals[i].x;
+            vertex.normal.y = mesh->mNormals[i].y;
+            vertex.normal.z = mesh->mNormals[i].z;
         }
         // texture coordinates
         if (mesh->mTextureCoords[0])
         {
-            vertex.TexCoords.x = mesh->mTextureCoords[0][i].x;
-            vertex.TexCoords.y = mesh->mTextureCoords[0][i].y;
+            vertex.texCoords.x = mesh->mTextureCoords[0][i].x;
+            vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
         }
         else
-            vertex.TexCoords = vec2(0.0f, 0.0f);
+            vertex.texCoords = vec2(0.0f, 0.0f);
 
         vertices.push_back(vertex);
 
@@ -102,4 +103,54 @@ ResourceMesh ResourceModel::processMesh(aiMesh* mesh, const aiScene* scene)
 
     ResourceMesh tempMesh(vertices, indices, textures);
     return tempMesh;
+}
+void ResourceModel::SetCheckerImage()
+{
+    for (int i = 0; i < CHECKERS_WIDTH; i++) {
+        for (int j = 0; j < CHECKERS_HEIGHT; j++) {
+            int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+            checker_image[i][j][0] = (GLubyte)c;
+            checker_image[i][j][1] = (GLubyte)c;
+            checker_image[i][j][2] = (GLubyte)c;
+            checker_image[i][j][3] = (GLubyte)255;
+        }
+    }
+}
+void ResourceModel::SetupTexture(const char* path)
+{
+    string full_path = string(TEXTURES_FOLDER) + '/' + string(path);
+   
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    
+
+    //ILuint devil_tex;
+    //ilGenImages(1, &devil_tex);
+    //ilBindImage(devil_tex);
+    //if (ilLoadImage(full_path.c_str()) == IL_FALSE)
+    //{
+    //    //Check if the is any error
+    //    ILenum error = ilGetError();
+    //    LOG("ERROR: %s", iluErrorString(error));
+
+    //}
+    //texture_ID = ilutGLBindTexImage();
+    //LOG("Texture_ID: %d", texture_ID);
+    //ilDeleteImages(1, &devil_tex);
+
+
+    SetCheckerImage();
+
+    glEnable(GL_TEXTURE_2D);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glGenTextures(1, &texture_ID);
+    glBindTexture(GL_TEXTURE_2D, texture_ID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+        0, GL_RGBA, GL_UNSIGNED_BYTE, checker_image);
+
+
+    
 }
