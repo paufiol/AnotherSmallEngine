@@ -31,7 +31,8 @@ public:
 
     ResourceMesh(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
     ~ResourceMesh();
-    void Draw(GLuint id);
+
+    void Draw(GLuint id, GLubyte checker_image[64][64][4]);
     void DrawNormals();
     void DrawTexCoords();
 

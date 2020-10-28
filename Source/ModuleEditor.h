@@ -8,6 +8,8 @@
 
 #include <vector>
 
+#define GREEN ImVec4(0.0f, 1.0f, 0.0f, 1.0f)
+
 class ModuleEditor : public Module 
 {
 public:
@@ -15,8 +17,21 @@ public:
 	~ModuleEditor();
 
 	bool Start() override;
-	update_status Update(float dt) override;
+	update_status PreUpdate(float dt);
+	update_status Update(float dt);
+	update_status PostUpdate(float dt);
 	bool CleanUp() override;
+
+	void Docking();
+
+	const char* GetSystemCaps();
+
+
+	int GetBudget();
+	int GetUsage();
+	int GetAvailable();
+	int GetReserved();
+	std::string Caps;
 
 public:
 	//SDL_Window* window;
@@ -25,27 +40,30 @@ public:
 	ImVec4 clear_color;
 	SDL_version version;
 	
-
-	std::vector<float> fps_log;
-	std::vector<float> ms_log;
-	Timer frame_time;
 	char title[25];
 	char label[32];
 	int window_width;
 	int window_height;
 	float brightness;
 
-	bool active = true;
+	bool dockingWindow = true;
 
-	bool show_demo_window;
-	bool show_configuration_window;
-	bool show_about_window;
+	bool show_demo_window = false;
+	bool show_configuration_window = false;
+	bool show_about_window = false;
 
+	bool depthtest = false;
+	bool cullface = false;
+	bool lighting = false;
+	bool colormaterial = false;
+	bool texture2D = false;
+	bool cubemap = false;
+	bool polygonssmooth = false;
 
-	bool fullscreen;
-	bool resizable;
-	bool borderless;
-	bool full_desktop;
+	bool fullscreen = false;
+	bool resizable = false;
+	bool borderless = false;
+	bool full_desktop = false;
 	void RequestBrowser(const char*);
 };
 

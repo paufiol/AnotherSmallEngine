@@ -3,7 +3,6 @@
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
 #include "OpenGL.h"
-#include "ResourceMesh.h"
 #include "ResourceModel.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -28,10 +27,10 @@ bool ModuleRenderer3D::Init()
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	glewInit();
-	ilInit();
-	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
+	//ilInit();
+	//iluInit();
+	//ilutInit();
+	//ilutRenderer(ILUT_OPENGL);
 
 	if(context == NULL)
 	{
@@ -103,11 +102,13 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
+		//glEnable(GL_TEXTURE_CUBE_MAP);
 	}
 
-	LoadModel("Assets/Models/warrior.FBX");
+	//LoadModel("Assets/Models/BakerHouse.FBX");
 
-
+	//LoadModel("Assets/Primitives/Cube.FBX");
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -179,6 +180,52 @@ void ModuleRenderer3D::DrawAllModels()
 void ModuleRenderer3D::LoadModel(const char* path)
 {
 	ResourceModel* tempModel = new ResourceModel(path);
-	tempModel->SetupTexture("BakerHouse.png");
+
 	models.push_back(tempModel);
+
+	tempModel->ApplyCheckerImage();
+	//tempModel->SetupTexture("BakerHouse.png");
+}
+
+void ModuleRenderer3D::SetDepthtest(bool state) {
+	if (state == false)
+		glEnable(GL_DEPTH_TEST);
+	else if (state == true)
+		glDisable(GL_DEPTH_TEST);
+}
+void ModuleRenderer3D::SetCullface(bool state) {
+	if (state == false)
+		glEnable(GL_CULL_FACE);
+	else if (state == true)
+		glDisable(GL_CULL_FACE);
+}
+void ModuleRenderer3D::SetLighting(bool state) {
+	if (state == false)
+		glEnable(GL_LIGHTING);
+	else if (state == true)
+		glDisable(GL_LIGHTING);
+}
+void ModuleRenderer3D::SetColormaterial(bool state) {
+	if (state == false)
+		glEnable(GL_COLOR_MATERIAL);
+	else if (state == true)
+		glDisable(GL_COLOR_MATERIAL);
+}
+void ModuleRenderer3D::SetTexture2D(bool state) {
+	if (state == false)
+		glEnable(GL_TEXTURE_2D);
+	else if (state == true)
+		glDisable(GL_TEXTURE_2D);
+}
+void ModuleRenderer3D::SetCubemap(bool state) {
+	if (state == false)
+		glEnable(GL_TEXTURE_CUBE_MAP);
+	else if (state == true)
+		glDisable(GL_TEXTURE_CUBE_MAP);
+}
+void ModuleRenderer3D::SetPolygonssmooth(bool state) {
+	if (state == false)
+		glEnable(GL_POLYGON_SMOOTH);
+	else if (state == true)
+		glDisable(GL_POLYGON_SMOOTH);
 }

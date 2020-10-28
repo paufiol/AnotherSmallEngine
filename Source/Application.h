@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __Application__
+#define __Application__
 
 #include <vector>
 #include <string>
@@ -32,9 +33,6 @@ public:
 	bool debug;
 	bool renderPrimitives;
 private:
-
-	Timer	ms_timer;
-	float	dt;
 	std::vector<Module*> modules;
 
 public:
@@ -46,9 +44,27 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	uint					frame_count = 0;
+	Timer					startup_time;
+	Timer					frame_time;
+	Timer					last_sec_frame_time;
+	uint					last_sec_frame_count = 0;
+	uint					prev_last_sec_frame_count = 0;
+	uint					framerate_cap = 0;
+	int						capped_ms = -1;
+	int						framerateCap = 60; // Max amount of FPS
+	int						totalBars = 100; // Number of bars that appear in the histogram
+	std::vector<float> fpsVec;
+	std::vector<float> msVec;
+
+	float GetDT() const;
+	float	dt;
+
+
 private:
 
 	void AddModule(Module* module);
 	void PrepareUpdate();
 	void FinishUpdate();
 };
+#endif __Application__

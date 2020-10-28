@@ -28,6 +28,8 @@ void ResourceMesh::setupMesh()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoords));
+
+    
     glBindVertexArray(0);
 
 }
@@ -57,28 +59,25 @@ void ResourceMesh::DrawTexCoords()
     glPointSize(1.0f);
     glEnd();
 }
-void ResourceMesh::Draw(GLuint id)
+void ResourceMesh::Draw(GLuint id, GLubyte checker_image[64][64][4])
 {
+    //DrawTexCoords();
+    //DrawNormals();
     glEnable(GL_TEXTURE_2D);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glBindTexture(GL_TEXTURE_2D, id);
+
+   
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
-
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);
 
-    glDisableVertexAttribArray(2);
-    glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);
-
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
 
     glDisable(GL_TEXTURE_2D);
 }
-
-
-
-

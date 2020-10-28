@@ -14,13 +14,14 @@
 ResourceModel::ResourceModel(const char* path)
 {
     ImportModel(path);
+    
 }
 
 void ResourceModel::Draw()
 {
     for (unsigned int i = 0; i < meshes.size(); i++)
     {
-        meshes[i].Draw(texture_ID);
+        meshes[i].Draw(texture_ID, checker_image);
     }
 }
 
@@ -70,8 +71,7 @@ ResourceMesh ResourceModel::processMesh(aiMesh* mesh, const aiScene* scene)
         vertex.position.x = mesh->mVertices[i].x;
         vertex.position.y = mesh->mVertices[i].y;
         vertex.position.z = mesh->mVertices[i].z;
-
-
+            
         // normals
         if (mesh->HasNormals())
         {
@@ -86,7 +86,11 @@ ResourceMesh ResourceModel::processMesh(aiMesh* mesh, const aiScene* scene)
             vertex.texCoords.y = mesh->mTextureCoords[0][i].y;
         }
         else
+        {
             vertex.texCoords = vec2(0.0f, 0.0f);
+            LOG("Failed to load Texture Coordinates.");
+        }
+            
 
         vertices.push_back(vertex);
 
@@ -116,28 +120,50 @@ void ResourceModel::SetCheckerImage()
         }
     }
 }
+void ResourceModel::ApplyCheckerImage()
+{
+    SetCheckerImage();
+
+    glEnable(GL_TEXTURE_2D);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glGenTextures(1, &default_tex_ID);
+    glBindTexture(GL_TEXTURE_2D, default_tex_ID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, CHECKERS_WIDTH, CHECKERS_HEIGHT,
+        0, GL_RGBA, GL_UNSIGNED_BYTE, checker_image);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
 void ResourceModel::SetupTexture(const char* path)
 {
     string full_path = string(TEXTURES_FOLDER) + '/' + string(path);
    
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    ilInit();
+    iluInit();
+    ilutInit();
+    ilutRenderer(ILUT_OPENGL);
+
+    //glClearColor(0.0, 0.0, 0.0, 0.0);
     
 
-    //ILuint devil_tex;
-    //ilGenImages(1, &devil_tex);
-    //ilBindImage(devil_tex);
-    //if (ilLoadImage(full_path.c_str()) == IL_FALSE)
-    //{
-    //    //Check if the is any error
-    //    ILenum error = ilGetError();
-    //    LOG("ERROR: %s", iluErrorString(error));
+    ILuint devil_tex;
+    ilGenImages(1, &devil_tex);
+    ilBindImage(devil_tex);
+    if (ilLoadImage(full_path.c_str()) == IL_FALSE)
+    {
+        //Check if the is any error
+        ILenum error = ilGetError();
+        LOG("ERROR: %s", iluErrorString(error));
 
-    //}
-    //texture_ID = ilutGLBindTexImage();
-    //LOG("Texture_ID: %d", texture_ID);
-    //ilDeleteImages(1, &devil_tex);
+    }
+    texture_ID = ilutGLBindTexImage();
+    LOG("Texture_ID: %d", texture_ID);
+    ilDeleteImages(1, &devil_tex);
 
-
+    
     SetCheckerImage();
 
     glEnable(GL_TEXTURE_2D);

@@ -27,6 +27,7 @@ public:
 
     void SetupTexture(const char* path);
     void SetCheckerImage();
+    void ApplyCheckerImage();
 private:
     void ImportModel(const char* path);  // loads a model  from file and stores the meshes in the meshes vector.
     void processNode(aiNode* node, const aiScene* scene); // processes each mesh located at the node 
@@ -39,7 +40,8 @@ public:
     vector<ResourceMesh>   meshes;
     vector<Texture>        textures_loaded;
 
-    GLuint                 texture_ID = 0;
+    GLuint                 texture_ID ;
+    GLuint                 default_tex_ID ;
     GLubyte                checker_image[64][64][4];
 
 };

@@ -25,6 +25,14 @@ public:
 	void DrawAllModels();
 	void LoadModel(const char* path);
 
+	void SetDepthtest(bool active);
+	void SetCullface(bool active);
+	void SetLighting(bool active);
+	void SetColormaterial(bool active);
+	void SetTexture2D(bool active);
+	void SetCubemap(bool active);
+	void SetPolygonssmooth(bool active);
+
 public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
