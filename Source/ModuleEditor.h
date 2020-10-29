@@ -41,8 +41,6 @@ public:
 public:
 	//SDL_Window* window;
 	//SDL_WindowFlags window_flags;
-	ImGuiIO io;
-	ImVec4 clear_color;
 	SDL_version version;
 	std::string Caps;
 	std::vector<std::string> log_record;
@@ -59,8 +57,6 @@ public:
 	bool show_configuration_window = true;
 	bool show_about_window = false;
 	bool show_console_window = true;
-
-	bool scroll = true;
 
 	bool depthtest = false;
 	bool cullface = false;

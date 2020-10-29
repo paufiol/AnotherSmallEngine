@@ -27,17 +27,13 @@ bool ModuleEditor::Start()
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO(); (void)io;
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-	ImGui::StyleColorsDark();
 
+	ImGui::StyleColorsDark();
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init(NULL);
 
-
-	//clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	window_width = App->window->width;
 	window_height = App->window->height;
 	brightness = SDL_GetWindowBrightness(App->window->window);
@@ -81,7 +77,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 	update_status ret = UPDATE_CONTINUE;
 
 	ImGui::Render();
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 
@@ -94,6 +90,7 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
+
 	log_record.clear();
 	SDL_DestroyWindow(App->window->window);
 	SDL_Quit();
@@ -105,16 +102,18 @@ bool ModuleEditor::MainMenuBar()
 	bool ret = true;
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Close", "Alt+F4")) { ret = false; }
-			ImGui::EndMenu();
-		}
+		if (ImGui::BeginMenu("File"))	{ ImGui::EndMenu(); }
 		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Configuration")) show_configuration_window = !show_configuration_window;
 
 			if (ImGui::MenuItem("Console")) show_console_window = !show_console_window;
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Draw Options"))
+		{
+			if (ImGui::MenuItem("Draw Normals")) {}
+
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Add"))
@@ -136,6 +135,8 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Exit")) { ret = false; ImGui::EndMenu();}
+		
 
 		ImGui::EndMenuBar();
 		ImGui::End();
@@ -193,13 +194,11 @@ void ModuleEditor::ConfigurationWindow()
 				if (fullscreen) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
 				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Borderless", &borderless))
 			{
 				if (borderless) SDL_SetWindowBordered(App->window->window, SDL_FALSE);
 				else SDL_SetWindowBordered(App->window->window, SDL_TRUE);
 			}
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Full Desktop", &full_desktop))
 			{
 				if (full_desktop) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
@@ -275,23 +274,24 @@ void ModuleEditor::ConfigurationWindow()
 			if (ImGui::Checkbox("Cull Face", &cullface)) {
 				App->renderer3D->SetCullface(cullface);
 			}
-			ImGui::SameLine();
+
 			if (ImGui::Checkbox("Lightning", &lighting)) {
 				App->renderer3D->SetLighting(lighting);
 			}
 			ImGui::SameLine();
-			if (ImGui::Checkbox("Color Material", &colormaterial)) {
-				App->renderer3D->SetColormaterial(colormaterial);
-			}
-
 			if (ImGui::Checkbox("2D", &texture2D)) {
 				App->renderer3D->SetTexture2D(texture2D);
+			}
+
+
+			if (ImGui::Checkbox("Color Material", &colormaterial)) {
+				App->renderer3D->SetColormaterial(colormaterial);
 			}
 			ImGui::SameLine();
 			if (ImGui::Checkbox("Cube Map", &cubemap)) {
 				App->renderer3D->SetCubemap(cubemap);
 			}
-			ImGui::SameLine();
+
 			if (ImGui::Checkbox("Polygons smooth", &polygonssmooth)) {
 				App->renderer3D->SetPolygonssmooth(polygonssmooth);
 			}
@@ -310,12 +310,6 @@ void ModuleEditor::ConsoleWindow()
 		{
 			ImGui::Text("%s", log_record[i].c_str());
 		}
-
-		if (scroll)
-		{
-			ImGui::SetScrollHere(1.0f);
-			scroll = false;
-		}
 		ImGui::End();
 	}
 }
@@ -325,15 +319,12 @@ void ModuleEditor::AddLog(std::string text) {
 	if (&log_record != NULL) {
 		log_record.push_back(text);
 	}
-	scroll = true;
 }
 
 void ModuleEditor::Docking()
 {
 	ImGuiWindowFlags window = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
 		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	static ImGuiDockNodeFlags optional = ImGuiDockNodeFlags_PassthruCentralNode;
 
 	ImGuiViewport* viewport = ImGui::GetWindowViewport();
 	ImGui::SetNextWindowPos(viewport->Pos);
@@ -347,9 +338,8 @@ void ModuleEditor::Docking()
 	ImGui::PopStyleVar(3);
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigDockingWithShift = true;
 	ImGuiID dockspace_id = ImGui::GetID("Dockspace");
-	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), optional);
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
 void ModuleEditor::RequestBrowser(const char* path)

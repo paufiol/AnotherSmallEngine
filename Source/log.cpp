@@ -17,7 +17,7 @@ void log(const char file[], int line, const char* format, ...)
 	OutputDebugString(tmp_string2);
 
 	if (App != nullptr) {
-		std::string log_text = std::string(tmp_string);
+		std::string log_text = std::string(tmp_string2);
 		App->editor->AddLog(log_text);
 	}
 }
