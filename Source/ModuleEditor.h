@@ -1,12 +1,11 @@
 #ifndef __ModuleEditor_H__
 #define __ModuleEditor_H__
-
+#include <vector>
+#include <string>
 #include "Module.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Globals.h"
 #include "Timer.h"
-
-#include <vector>
 
 #define GREEN ImVec4(0.0f, 1.0f, 0.0f, 1.0f)
 
@@ -23,6 +22,12 @@ public:
 	bool CleanUp() override;
 
 	void Docking();
+	void RequestBrowser(const char*);
+	bool MainMenuBar();
+	void AboutWindow();
+	void ConfigurationWindow();
+	void ConsoleWindow();
+	void AddLog(std::string text);
 
 	const char* GetSystemCaps();
 
@@ -31,7 +36,7 @@ public:
 	int GetUsage();
 	int GetAvailable();
 	int GetReserved();
-	std::string Caps;
+
 
 public:
 	//SDL_Window* window;
@@ -39,6 +44,8 @@ public:
 	ImGuiIO io;
 	ImVec4 clear_color;
 	SDL_version version;
+	std::string Caps;
+	std::vector<std::string> log_record;
 	
 	char title[25];
 	char label[32];
@@ -49,8 +56,11 @@ public:
 	bool dockingWindow = true;
 
 	bool show_demo_window = false;
-	bool show_configuration_window = false;
+	bool show_configuration_window = true;
 	bool show_about_window = false;
+	bool show_console_window = true;
+
+	bool scroll = true;
 
 	bool depthtest = false;
 	bool cullface = false;
@@ -64,7 +74,8 @@ public:
 	bool resizable = false;
 	bool borderless = false;
 	bool full_desktop = false;
-	void RequestBrowser(const char*);
+
+
 };
 
 #endif //__ModuleEditor_H__

@@ -108,7 +108,7 @@ bool ModuleRenderer3D::Init()
 
 	//LoadModel("Assets/Models/BakerHouse.FBX");
 
-	//LoadModel("Assets/Primitives/Cube.FBX");
+	//LoadModel("Assets/Primitives/Sphere.FBX");
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -132,7 +132,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		lights[i].Render();
 
 
-
+	DrawAllModels();
 
 	return UPDATE_CONTINUE;
 }
@@ -140,7 +140,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	DrawAllModels();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
