@@ -28,6 +28,7 @@ public:
 	float3 inline GetPosition() const { return this->position ; };
 	Quat inline GetRotation() const { return this->rotation; };
 	float3 inline GetScale() const { return this->scale; };
+	float4x4 inline GetTransformMatrix() const { return this->transform; };
 
 	ComponentTransform(GameObject* parent); //DEFAULTS TO 0,0
 	ComponentTransform(GameObject* parent, float3 position, float3 scale, Quat rotation);

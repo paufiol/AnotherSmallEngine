@@ -5,6 +5,7 @@
 
 using namespace std;
 
+class GameObject;
 class Primitive;
 
 
@@ -19,9 +20,11 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
-
+	
 private:
 
+	std::vector<GameObject*> game_objects;
 	std::vector<Primitive*> primitives;
 
+	GameObject* root_object;
 };

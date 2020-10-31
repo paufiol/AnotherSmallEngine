@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
+#include "ComponentTexture.h"
+#include "ComponentMesh.h"
 #include <vector>
 
 
@@ -52,14 +54,18 @@ Component* GameObject::AddComponent(Component* component)
 		ret = new ComponentTransform(this);
 		break;
 	case(ComponentType::Material):
-		ret = new Component(this);
+		ret = new ComponentTexture(this);
 		break;
 	case(ComponentType::Mesh):
-		ret = new Component(this);
+		ret = new ComponentMesh(this);
 		break;
 
 	}
 	
 	components.push_back(ret);
 	return ret;
+}
+
+void GameObject::AppendChildren(GameObject* children) {
+	this->children.push_back(children);
 }

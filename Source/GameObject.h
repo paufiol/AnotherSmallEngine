@@ -13,6 +13,9 @@ private:
 	std::vector<Component*> components;
 	bool active;
 
+	GameObject* parent;
+	std::vector<GameObject*> children;
+
 //Methods
 public:
 	GameObject(std::string name);
@@ -23,6 +26,9 @@ public:
 	void Update();
 
 	Component* AddComponent(Component* component);
+
+	void AppendChildren(GameObject* children);
+
 private:
 	
 };
