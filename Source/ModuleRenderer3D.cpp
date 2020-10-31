@@ -2,8 +2,8 @@
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
-#include "OpenGL.h"
-#include "ResourceModel.h"
+
+#include "ModuleImporter.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -27,10 +27,6 @@ bool ModuleRenderer3D::Init()
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	glewInit();
-	//ilInit();
-	//iluInit();
-	//ilutInit();
-	//ilutRenderer(ILUT_OPENGL);
 
 	if(context == NULL)
 	{
@@ -96,21 +92,23 @@ bool ModuleRenderer3D::Init()
 
 		GLfloat MaterialDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
-		
+
+		lights[0].Active(true);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 		glEnable(GL_TEXTURE_2D);
 		//glEnable(GL_TEXTURE_CUBE_MAP);
-	}
+	}	
 
-	//LoadModel("Assets/Models/BakerHouse.FBX");
+	//UseCheckerTexture();
 
-	//LoadModel("Assets/Primitives/Sphere.FBX");
+	Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
+	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
+	newMesh = Importer::MeshImporter::tempMesh;
+	newTexture = Importer::TextureImporter::Gl_Tex;
 
-	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
 }
@@ -131,8 +129,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-
-	DrawAllModels();
+	DrawMesh(newMesh); //Here temporarely
 
 	return UPDATE_CONTINUE;
 }
@@ -169,23 +166,114 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::DrawAllModels()
+void ModuleRenderer3D::SetUpBuffers(Mesh* mesh)
 {
-	for (uint i = 0; i < models.size(); i++)
+	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::vertex]);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::vertex]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[Mesh::vertex] * 3, mesh->vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::index]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[Mesh::index]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->size[Mesh::index], mesh->indices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::normal]);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::normal]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->size[Mesh::normal] * 3, mesh->normals, GL_STATIC_DRAW);
+
+	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::texture]);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::texture]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[Mesh::texture] * 2, mesh->texCoords, GL_STATIC_DRAW);
+}
+
+void ModuleRenderer3D::DrawMesh(Mesh* mesh)
+{
+	if (newTexture != NULL)
 	{
-		models[i]->Draw();
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, newTexture);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	}
+	else if (checkerID != NULL)
+	{
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, checkerID);
+	}
+	
+	if (newMesh != nullptr)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_NORMAL_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::vertex]);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::normal]);
+		glNormalPointer(GL_FLOAT, 0, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[Mesh::index]);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::texture]);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		glDrawElements(GL_TRIANGLES, mesh->size[Mesh::index], GL_UNSIGNED_INT, NULL);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_NORMAL_ARRAY, 0);
+
+		glDisableClientState(GL_NORMAL_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
+
+		//DrawNormals();
+	}
+	
 }
 
-void ModuleRenderer3D::LoadModel(const char* path)
+void ModuleRenderer3D::UseCheckerTexture() {
+
+	for (int i = 0; i < 64; i++) {
+		for (int j = 0; j < 64; j++) {
+			int c = ((((i & 0x8) == 0) ^ (((j & 0x8)) == 0))) * 255;
+			checkerImage[i][j][0] = (GLubyte)c;
+			checkerImage[i][j][1] = (GLubyte)c;
+			checkerImage[i][j][2] = (GLubyte)c;
+			checkerImage[i][j][3] = (GLubyte)255;
+		}
+	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glGenTextures(1, &checkerID);
+	glBindTexture(GL_TEXTURE_2D, checkerID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64,
+		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
+
+}
+
+void ModuleRenderer3D::DrawNormals()
 {
-	ResourceModel* tempModel = new ResourceModel(path);
+	glBegin(GL_LINES);
 
-	models.push_back(tempModel);
+	for (uint i = 0; i < newMesh->size[Mesh::vertex]; ++i)
+	{
+	    glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	    glVertex3f(newMesh->vertices[i], newMesh->vertices[i + 1], newMesh->vertices[i + 2]);
+	    glVertex3f(newMesh->normals[i], newMesh->normals[i + 1], newMesh->normals[i + 2]);
+	}
 
-	tempModel->ApplyCheckerImage();
-	//tempModel->SetupTexture("BakerHouse.png");
+	glEnd();
 }
+
 
 void ModuleRenderer3D::SetDepthtest(bool state) {
 	if (state == false)

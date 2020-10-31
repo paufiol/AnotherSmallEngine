@@ -1,4 +1,54 @@
-//#ifndef __ModuleImporter_H__
-//#define __ModuleImporter_H__
+#ifndef __ModuleImporter_H__
+#define __ModuleImporter_H__
 
-//#endif //__ModuleImporter_H__
+#include "Globals.h"
+#include <vector>
+#include "OpenGL.h"
+
+using namespace std;
+
+struct Mesh
+{
+	uint* indices = nullptr;
+	float* vertices = nullptr;
+	float* normals = nullptr;
+	float* texCoords = nullptr;
+
+	enum  Buffers
+	{
+		index,
+		vertex,
+		normal,
+		texture,
+		NONE
+	};
+	uint ID[NONE];
+	uint size[NONE];
+
+};
+
+struct Texture
+{
+	uint id;
+	const char* path;
+};
+namespace Importer
+{
+	namespace MeshImporter
+	{
+		void Import(const char* file);
+		Mesh* tempMesh = new Mesh();
+	}
+
+	namespace TextureImporter
+	{
+		void Import(const char* file);
+		void InitDevil();
+		GLuint Gl_Tex;
+	}
+}
+
+
+
+
+#endif //__ModuleImporter_H__

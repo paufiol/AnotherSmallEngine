@@ -1,8 +1,6 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
-#include "ModuleRenderer3D.h"
-
-using namespace std;
+#include "ModuleImporter.h"
 
 ModuleFileSystem::ModuleFileSystem() {};
 
@@ -12,10 +10,10 @@ void ModuleFileSystem::ReadDropFile(const char* file_path)
 {
 	LOG("File Dropped with path %s", file_path);
 
-	std::string final_path;
+	string final_path;
 	SplitFilePath(file_path, nullptr, &final_path); // get base file name
 
-	FileDropType type = ReadExtension(std::string(file_path)); // get extension type
+	FileDropType type = ReadExtension(string(file_path)); // get extension type
 
 	switch (type) { // add location
 	case FileDropType::MODEL3D:
@@ -26,26 +24,28 @@ void ModuleFileSystem::ReadDropFile(const char* file_path)
 		break;
 	}
 
-	std::string normalized = file_path;
+	string normalized = file_path;
 	NormalizePath(normalized);
 
 	switch (type) { // call the loader
 	case FileDropType::MODEL3D:
 		LOG("Start Loading Model");
-		App->renderer3D->LoadModel(final_path.data());
+		Importer::MeshImporter::Import(final_path.data());
+		//App->renderer3D->LoadModel(final_path.data());
 		break;
 	case FileDropType::TEXTURE:
 		LOG("Start Loading Texture");
+		Importer::TextureImporter::Import(final_path.data());
 		//test->loadModel(final_path.data(), true);
 		break;
 	}
 
 }
 
-FileDropType& ModuleFileSystem::ReadExtension(const std::string& extern_path)
+FileDropType& ModuleFileSystem::ReadExtension(const string& extern_path)
 {
 
-	std::string extension;
+	string extension;
 	SplitFilePath(extern_path.data(), nullptr, nullptr, &extension);
 
 	FileDropType extension_type = FileDropType::DEFAULT;
@@ -67,7 +67,7 @@ FileDropType& ModuleFileSystem::ReadExtension(const std::string& extern_path)
 	return extension_type;
 }
 
-void ModuleFileSystem::SplitFilePath(const char* full_path, std::string* path, std::string* file, std::string* extension) const
+void ModuleFileSystem::SplitFilePath(const char* full_path, string* path, string* file, string* extension) const
 {
 	if (full_path != nullptr)
 	{
@@ -113,7 +113,7 @@ void ModuleFileSystem::NormalizePath(char* full_path) const
 	}
 }
 
-void ModuleFileSystem::NormalizePath(std::string& full_path) const
+void ModuleFileSystem::NormalizePath(string& full_path) const
 {
 	for (string::iterator it = full_path.begin(); it != full_path.end(); ++it)
 	{
