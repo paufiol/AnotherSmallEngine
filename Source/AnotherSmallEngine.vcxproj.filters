@@ -160,6 +160,18 @@
     <ClCompile Include="ModuldeFileSystem.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTranform.cpp">
+      <Filter>Containers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>Containers\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>Containers\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -412,6 +424,21 @@
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Modules</Filter>
     </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentTransform.h">
+      <Filter>Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMesh.h">
+      <Filter>Containers\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>Containers\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -452,6 +479,9 @@
     </Filter>
     <Filter Include="Dependencies\MathGeoLib\Geometry">
       <UniqueIdentifier>{a3309476-89cd-4f1e-a478-f6846164c538}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containers\Components">
+      <UniqueIdentifier>{aa078411-41be-4541-b87d-a2b94c5d1fa4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

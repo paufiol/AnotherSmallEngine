@@ -89,6 +89,10 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentMaterial.h" />
+    <ClInclude Include="ComponentMesh.h" />
+    <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="Dependencies\ImGui\imconfig.h" />
     <ClInclude Include="Dependencies\ImGui\imgui.h" />
     <ClInclude Include="Dependencies\ImGui\imgui_impl_opengl3.h" />
@@ -157,6 +161,7 @@
     <ClInclude Include="Dependencies\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="Dependencies\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="Dependencies\MathGeoLib\include\Time\Clock.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Light.h" />
@@ -177,6 +182,9 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ComponentMaterial.cpp" />
+    <ClCompile Include="ComponentMesh.cpp" />
+    <ClCompile Include="ComponentTranform.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_draw.cpp" />
@@ -215,6 +223,7 @@
     <ClCompile Include="Dependencies\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="Dependencies\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="Dependencies\MathGeoLib\include\Time\Clock.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
