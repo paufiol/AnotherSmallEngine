@@ -6,7 +6,7 @@
 
 GameObject::GameObject(std::string name): name(name), active(true)
 {
-
+	AddComponent(new ComponentTransform(this));
 }
 
 bool GameObject::Enable() //Start up + bool toggle

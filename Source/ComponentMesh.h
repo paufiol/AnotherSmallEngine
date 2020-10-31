@@ -2,11 +2,15 @@
 #include "Component.h"
 #include "glmath.h"
 
+struct Mesh;
+
 class ComponentMesh : public Component {
 	//Properties
 public:
 
 private:
+	Mesh* mesh;
+	std::string path; 
 
 	//Methods
 public:

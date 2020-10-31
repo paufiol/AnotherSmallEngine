@@ -90,7 +90,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentMaterial.h" />
+    <ClInclude Include="ComponentTexture.h" />
     <ClInclude Include="ComponentMesh.h" />
     <ClInclude Include="ComponentTransform.h" />
     <ClInclude Include="Dependencies\ImGui\imconfig.h" />
@@ -183,7 +183,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Color.cpp" />
-    <ClCompile Include="ComponentMaterial.cpp" />
+    <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTranform.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
