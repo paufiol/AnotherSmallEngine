@@ -29,6 +29,7 @@ public:
 	void DrawMesh(Mesh* mesh);
 
 	void DrawNormals();
+	void DrawTexCoords();
 
 	void SetDepthtest(bool active);
 	void SetCullface(bool active);

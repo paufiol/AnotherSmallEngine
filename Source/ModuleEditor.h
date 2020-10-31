@@ -21,6 +21,8 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp() override;
 
+	void Draw();
+
 	void Docking();
 	void RequestBrowser(const char*);
 	bool MainMenuBar();
@@ -70,6 +72,10 @@ public:
 	bool resizable = false;
 	bool borderless = false;
 	bool full_desktop = false;
+
+	bool drawNormals = false;
+	bool drawTexCoords = false;
+	bool drawWireframe = false;
 
 
 };

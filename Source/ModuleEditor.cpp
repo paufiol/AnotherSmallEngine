@@ -77,11 +77,6 @@ update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
-	ImGui::Render();
-	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-
 	return ret;
 }
 
@@ -96,6 +91,13 @@ bool ModuleEditor::CleanUp()
 	SDL_DestroyWindow(App->window->window);
 	SDL_Quit();
 	return true;
+}
+
+void ModuleEditor::Draw()
+{
+	ImGui::Render();
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 bool ModuleEditor::MainMenuBar()
@@ -118,8 +120,6 @@ bool ModuleEditor::MainMenuBar()
 		}
 		if (ImGui::BeginMenu("Draw Options"))
 		{
-			if (ImGui::MenuItem("Draw Normals")) {}
-
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu("Add"))
@@ -302,6 +302,13 @@ void ModuleEditor::ConfigurationWindow()
 			}
 
 		}
+		if (ImGui::CollapsingHeader("Draw Settings"))
+		{
+			if (ImGui::Checkbox("Draw Normals", &drawNormals)){}
+			if (ImGui::Checkbox("Draw Tex Coords", &drawTexCoords)){}
+			if (ImGui::Checkbox ("Wireframe Mode", &drawWireframe)) {}
+		}
+
 		ImGui::End();
 	}
 }
