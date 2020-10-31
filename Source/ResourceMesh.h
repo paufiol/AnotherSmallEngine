@@ -1,5 +1,5 @@
-#ifndef __Meshes_H__
-#define __Meshes_H__
+#ifndef __ResourceMesh_H__
+#define __ResourceMesh_H__
 
 #include "glmath.h"
 #include <OpenGL.h>
@@ -12,9 +12,9 @@ using namespace std;
 
 struct Vertex {
 
-    vec3 Position;
-	vec3 Normal;
-    vec2 TexCoords;
+    vec3 position;
+	vec3 normal;
+    vec2 texCoords;
 };
 
 struct Texture {
@@ -23,26 +23,28 @@ struct Texture {
     string path;
 };
 
-class Meshes {
+class ResourceMesh {
 public:
     vector<Vertex>       vertices;
-    vector<uint>          indices;
+    vector<uint>         indices;
     vector<Texture>      textures;
 
+    ResourceMesh(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
+    ~ResourceMesh();
 
-    Meshes(vector<Vertex> vertices, vector<uint> indices, vector<Texture> textures);
-    ~Meshes();
-    void Draw();
+    void Draw(GLuint id, GLubyte checker_image[64][64][4]);
+    void DrawNormals();
+    void DrawTexCoords();
 
 private:
-    // render data 
 	uint VAO = 0;											// Vertex Array
 	uint VBO = 0;											// Vertex Buffer
 	uint NBO = 0;											// Normal Buffer
 	uint TBO = 0;											// Texture Buffer
 	uint IBO = 0;
     uint EBO = 0;
+
     void setupMesh();
 
 };
-#endif //__Meshes_H__
+#endif //__ResourceMesh_H__

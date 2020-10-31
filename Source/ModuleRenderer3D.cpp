@@ -3,9 +3,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
 #include "OpenGL.h"
-#include "Shaders.h"
-#include "Meshes.h"
-#include "I_Model.h"
+#include "ResourceModel.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -29,6 +27,10 @@ bool ModuleRenderer3D::Init()
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
 	glewInit();
+	//ilInit();
+	//iluInit();
+	//ilutInit();
+	//ilutRenderer(ILUT_OPENGL);
 
 	if(context == NULL)
 	{
@@ -100,9 +102,13 @@ bool ModuleRenderer3D::Init()
 		lights[0].Active(true);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_TEXTURE_2D);
+		//glEnable(GL_TEXTURE_CUBE_MAP);
 	}
 
-	LoadModel("Assets/Models/BakerHouse.FBX");
+	//LoadModel("Assets/Models/BakerHouse.FBX");
+
+	//LoadModel("Assets/Primitives/Sphere.FBX");
 
 	// Projection matrix for
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -126,11 +132,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		lights[i].Render();
 
 
-	for (int i = 0; i < models.size(); ++i)
-	{
-		models[i]->Draw();
-	}
-
+	DrawAllModels();
 
 	return UPDATE_CONTINUE;
 }
@@ -138,10 +140,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	
-
-	//glClearColor(0.f, 0.f, 0.f, 1.f);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -151,7 +149,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 	SDL_GL_DeleteContext(context);
 
 	return true;
@@ -171,11 +169,63 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-
+void ModuleRenderer3D::DrawAllModels()
+{
+	for (uint i = 0; i < models.size(); i++)
+	{
+		models[i]->Draw();
+	}
+}
 
 void ModuleRenderer3D::LoadModel(const char* path)
 {
-	I_Model* tempModel = new I_Model();
-	tempModel->loadModel(path);
+	ResourceModel* tempModel = new ResourceModel(path);
+
 	models.push_back(tempModel);
+
+	tempModel->ApplyCheckerImage();
+	//tempModel->SetupTexture("BakerHouse.png");
+}
+
+void ModuleRenderer3D::SetDepthtest(bool state) {
+	if (state == false)
+		glEnable(GL_DEPTH_TEST);
+	else if (state == true)
+		glDisable(GL_DEPTH_TEST);
+}
+void ModuleRenderer3D::SetCullface(bool state) {
+	if (state == false)
+		glEnable(GL_CULL_FACE);
+	else if (state == true)
+		glDisable(GL_CULL_FACE);
+}
+void ModuleRenderer3D::SetLighting(bool state) {
+	if (state == false)
+		glEnable(GL_LIGHTING);
+	else if (state == true)
+		glDisable(GL_LIGHTING);
+}
+void ModuleRenderer3D::SetColormaterial(bool state) {
+	if (state == false)
+		glEnable(GL_COLOR_MATERIAL);
+	else if (state == true)
+		glDisable(GL_COLOR_MATERIAL);
+}
+void ModuleRenderer3D::SetTexture2D(bool state) {
+	if (state == false)
+		glEnable(GL_TEXTURE_2D);
+	else if (state == true)
+		glDisable(GL_TEXTURE_2D);
+}
+void ModuleRenderer3D::SetCubemap(bool state) {
+	if (state == false)
+		glEnable(GL_TEXTURE_CUBE_MAP);
+	else if (state == true)
+		glDisable(GL_TEXTURE_CUBE_MAP);
+}
+void ModuleRenderer3D::SetPolygonssmooth(bool state) {
+	if (state == false)
+		glEnable(GL_POLYGON_SMOOTH);
+	else if (state == true)
+		glDisable(GL_POLYGON_SMOOTH);
 }

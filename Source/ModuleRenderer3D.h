@@ -6,7 +6,8 @@
 
 #define MAX_LIGHTS 8
 
-class I_Model;
+class ResourceMesh;
+class ResourceModel;
 
 class ModuleRenderer3D : public Module
 {
@@ -21,7 +22,16 @@ public:
 
 	void OnResize(int width, int height);
 
+	void DrawAllModels();
 	void LoadModel(const char* path);
+
+	void SetDepthtest(bool active);
+	void SetCullface(bool active);
+	void SetLighting(bool active);
+	void SetColormaterial(bool active);
+	void SetTexture2D(bool active);
+	void SetCubemap(bool active);
+	void SetPolygonssmooth(bool active);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -29,7 +39,6 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
 
-	//std::vector<Texture*> textures;
-	std::vector<I_Model*> models;
+	std::vector<ResourceModel*> models;
 
 };

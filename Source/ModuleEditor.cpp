@@ -25,46 +25,63 @@ bool ModuleEditor::Start()
 {
 	LOG("Init Editor");
 
-	//Initialize glew
-
-	frame_time.Start();
-
-	//Set all the atributes and flags for our Gui window
-
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui::StyleColorsDark();
+	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
+	ImGui_ImplOpenGL3_Init(NULL);
 
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 7.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-	}
-	// Our state
-	show_demo_window = false;
-	show_configuration_window = false;
-	show_about_window = false;
-	fullscreen = false;
-	resizable = false;
-	fullscreen = false;
-	borderless = false;
-	clear_color = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
 	window_width = App->window->width;
 	window_height = App->window->height;
 	brightness = SDL_GetWindowBrightness(App->window->window);
 	SDL_GetVersion(&version);
-	// Setup Platform/Renderer bindings
-	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
-	ImGui_ImplOpenGL3_Init(0);
+
+
 
 	return true;
+}
+update_status ModuleEditor::PreUpdate(float dt)
+{
+	update_status ret = UPDATE_CONTINUE;
+
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplSDL2_NewFrame(App->window->window);
+	ImGui::NewFrame();
+
+	return ret;
+}
+
+
+update_status ModuleEditor::Update(float dt)
+{
+
+	Docking();
+	if (!MainMenuBar()) return UPDATE_STOP;
+	AboutWindow();
+	ConfigurationWindow();
+	ConsoleWindow();
+	if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
+
+
+	ImGui::End();
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleEditor::PostUpdate(float dt)
+{
+	update_status ret = UPDATE_CONTINUE;
+
+	ImGui::Render();
+	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+
+	return ret;
 }
 
 bool ModuleEditor::CleanUp()
@@ -73,54 +90,63 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
+
+	log_record.clear();
 	SDL_DestroyWindow(App->window->window);
 	SDL_Quit();
 	return true;
 }
 
-update_status ModuleEditor::Update(float dt)
+bool ModuleEditor::MainMenuBar()
 {
-
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-
-
-	//Top bar menu, with an option to close the editor
+	bool ret = true;
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::MenuItem("Close", "Alt+F4")) { return UPDATE_STOP; }
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Options"))
+		if (ImGui::BeginMenu("File"))	{ ImGui::EndMenu(); }
+		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Configuration")) show_configuration_window = !show_configuration_window;
-			
-			if (ImGui::MenuItem("OpenGL")){}
+
+			if (ImGui::MenuItem("Console")) show_console_window = !show_console_window;
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Help")) 
+		if (ImGui::BeginMenu("Draw Options"))
 		{
-			if (ImGui::MenuItem("ImGui Demo"))show_demo_window = !show_demo_window; 
-			if (ImGui::MenuItem("Documentation")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/README.md");
-			if (ImGui::MenuItem("Latest Release")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine"); 
-			if (ImGui::MenuItem("Report a bug")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues"); 
-			if (ImGui::MenuItem("About")) show_about_window = !show_about_window; 
+			if (ImGui::MenuItem("Draw Normals")) {}
+
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Add"))
+		{
+			if (ImGui::MenuItem("Cube")) App->renderer3D->LoadModel("Assets/Primitives/Cube.FBX");
+			if (ImGui::MenuItem("Sphere")) App->renderer3D->LoadModel("Assets/Primitives/Sphere.FBX");
+			if (ImGui::MenuItem("Cylinder")) App->renderer3D->LoadModel("Assets/Primitives/Cylinder.FBX");
+			if (ImGui::MenuItem("Cone")) App->renderer3D->LoadModel("Assets/Primitives/Cone.FBX");
+			if (ImGui::MenuItem("Pyramid")) App->renderer3D->LoadModel("Assets/Primitives/Pyramid.FBX");
+			ImGui::EndMenu();
+
+		}
+		if (ImGui::BeginMenu("Help"))
+		{
+			if (ImGui::MenuItem("ImGui Demo"))show_demo_window = !show_demo_window;
+			if (ImGui::MenuItem("Documentation")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/README.md");
+			if (ImGui::MenuItem("Latest Release")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine");
+			if (ImGui::MenuItem("Report a bug")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues");
+			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Exit")) { ret = false; ImGui::EndMenu();}
+		
 
 		ImGui::EndMenuBar();
 		ImGui::End();
 	}
-
-	//Show the demo window
-	if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
-
-	//About window
-	if (show_about_window) { 
-		ImGui::Begin("About",&active);
+	return ret;
+}
+void ModuleEditor::AboutWindow()
+{
+	if (show_about_window) {
+		ImGui::Begin("About", &show_about_window);
 		ImGui::Text("ASE - Another Small Engine");
 		ImGui::Text("Engine developed for academic purpouses.");
 		ImGui::Text("By Pau Fiol & Aitor Luque");
@@ -135,42 +161,41 @@ update_status ModuleEditor::Update(float dt)
 		ImGui::BulletText("MathGeoLib");
 		ImGui::BulletText("Assimp");
 		ImGui::Separator();
-		ImGui::Text("GNU License:"); 
+		ImGui::Text("GNU License:");
 		sprintf(label, "Click here to see the full License");
 		if (ImGui::Selectable(label, true))	RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/LICENSE.txt");
 		ImGui::End();
 	}
-	//Allocate Framerate in vecor fps_log
-	if (fps_log.size() <= 100)
-		fps_log.push_back(ImGui::GetIO().Framerate);
-	else
-		fps_log.erase(fps_log.begin());
+}
 
-	//Allocate Milliseconds in vecor ms_log
-	if (ms_log.size() <= 100)
-		ms_log.push_back(frame_time.Read());
-	else
-		ms_log.erase(ms_log.begin());
-
-	//Window configuration
-	if (show_configuration_window) {
-		if (!ImGui::Begin("Configuration", &active)) 
+void ModuleEditor::ConfigurationWindow()
+{
+	if (show_configuration_window)
+	{
+		ImGui::Begin("Configuration", &show_configuration_window);
 		if (ImGui::CollapsingHeader("Application"))
 		{
-			sprintf_s(title, 25, "Framerate %1.f", fps_log[fps_log.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-			sprintf_s(title, 25, "Milliseconds %1.f", ms_log[ms_log.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+
+			ImGui::SliderInt("Max FPS", &App->framerateCap, 1, 60);
+
+			ImGui::Text("Limit Framerate:");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%d", App->framerateCap);
+
+			sprintf_s(title, 25, "Framerate %.1f", App->fpsVec[App->fpsVec.size() - 1]);
+			ImGui::PlotHistogram("##framerate", &App->fpsVec[0], App->fpsVec.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+			sprintf_s(title, 25, "Milliseconds %0.1f", App->msVec[App->msVec.size() - 1]);
+			ImGui::PlotHistogram("##milliseconds", &App->msVec[0], App->msVec.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 		}
 		if (ImGui::CollapsingHeader("Window"))
 		{
 			if (ImGui::Checkbox("Fullscreen", &fullscreen))
-			{ 
+			{
 				if (fullscreen) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-				else SDL_SetWindowFullscreen(App->window->window,SDL_WINDOW_RESIZABLE);
+				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
-			if (ImGui::Checkbox("Borderless", &borderless)) 
-			{ 
+			if (ImGui::Checkbox("Borderless", &borderless))
+			{
 				if (borderless) SDL_SetWindowBordered(App->window->window, SDL_FALSE);
 				else SDL_SetWindowBordered(App->window->window, SDL_TRUE);
 			}
@@ -179,8 +204,8 @@ update_status ModuleEditor::Update(float dt)
 				if (full_desktop) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
 			}
-
-			ImGui::SliderInt("Width", &window_width, 350, 1500,"%d");
+			ImGui::Separator();
+			ImGui::SliderInt("Width", &window_width, 350, 1500, "%d");
 			ImGui::SliderInt("Height", &window_height, 350, 1200, "%d");
 			SDL_SetWindowSize(App->window->window, window_width, window_height);
 			App->renderer3D->OnResize(window_width, window_height);
@@ -191,34 +216,220 @@ update_status ModuleEditor::Update(float dt)
 		}
 		if (ImGui::CollapsingHeader("Hardware"))
 		{
-			ImGui::Text("SDL version %d.%d.%d", version.major, version.minor, version.patch);
+			ImGui::Text("SDL Version:");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%d.%d.%d", version.major, version.minor, version.patch);
+
 			ImGui::Separator();
-			ImGui::Text("CPUs: %d", SDL_GetCPUCount());
-			ImGui::Text("System RAM: %dGb", SDL_GetSystemRAM());
+
+			ImGui::Text("CPUs: ");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%d", SDL_GetCPUCount());
+
+			ImGui::Text("System RAM: ");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, " %d Gb", SDL_GetSystemRAM());
 			ImGui::Separator();
+
+			ImGui::Text("Caps: ");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%s", GetSystemCaps());
+			ImGui::Separator();
+
+			ImGui::Text("GPU: ");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%s", glGetString(GL_RENDERER));
+
+			ImGui::Text("Brand: ");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%s", glGetString(GL_VENDOR));
+
+			ImGui::Text("Version: ");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%s", glGetString(GL_VERSION));
+
+			ImGui::Text("VRAM Budget:");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%i Mb", GetBudget());
+
+			ImGui::Text("VRAM Usage:");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%i Mb", GetUsage());
+
+			ImGui::Text("VRAM Available:");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%i Mb", GetAvailable());
+
+			ImGui::Text("VRAM Reserved:");
+			ImGui::SameLine();
+			ImGui::TextColored(GREEN, "%i Mb", GetReserved());
+
+		}
+		if (ImGui::CollapsingHeader("OpenGL Settings")) {
+
+			if (ImGui::Checkbox("Depth Test", &depthtest)) {
+				App->renderer3D->SetDepthtest(depthtest);
+			}
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Cull Face", &cullface)) {
+				App->renderer3D->SetCullface(cullface);
+			}
+
+			if (ImGui::Checkbox("Lightning", &lighting)) {
+				App->renderer3D->SetLighting(lighting);
+			}
+			ImGui::SameLine();
+			if (ImGui::Checkbox("2D", &texture2D)) {
+				App->renderer3D->SetTexture2D(texture2D);
+			}
+
+
+			if (ImGui::Checkbox("Color Material", &colormaterial)) {
+				App->renderer3D->SetColormaterial(colormaterial);
+			}
+			ImGui::SameLine();
+			if (ImGui::Checkbox("Cube Map", &cubemap)) {
+				App->renderer3D->SetCubemap(cubemap);
+			}
+
+			if (ImGui::Checkbox("Polygons smooth", &polygonssmooth)) {
+				App->renderer3D->SetPolygonssmooth(polygonssmooth);
+			}
+
 		}
 		ImGui::End();
 	}
+}
 
-	//Render
-	ImGui::Render();
-	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+void ModuleEditor::ConsoleWindow()
+{
+	if (show_console_window) {
+		ImGui::Begin("Console", &show_console_window);
 
-	// Update and Render additional Platform Windows
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		SDL_Window* backup_current_window = SDL_GL_GetCurrentWindow();
-		SDL_GLContext backup_current_context = SDL_GL_GetCurrentContext();
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault();
-		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
+		for (int i = 0; i < log_record.size(); i++)
+		{
+			ImGui::Text("%s", log_record[i].c_str());
+		}
+		ImGui::End();
 	}
-	return UPDATE_CONTINUE;
+}
+
+void ModuleEditor::AddLog(std::string text) {
+
+	if (&log_record != NULL) {
+		log_record.push_back(text);
+	}
+}
+
+void ModuleEditor::Docking()
+{
+	ImGuiWindowFlags window = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGuiViewport* viewport = ImGui::GetWindowViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::SetNextWindowBgAlpha(0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("Docking", &dockingWindow, window);
+	ImGui::PopStyleVar(3);
+
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuiID dockspace_id = ImGui::GetID("Dockspace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 }
 
 void ModuleEditor::RequestBrowser(const char* path)
 {
 	ShellExecuteA(0, "Open", path, 0, "", 5);
+}
+
+
+const char* ModuleEditor::GetSystemCaps()
+{
+	Caps.clear();
+	// IF the processor has certain register it will be added to the string
+	if (SDL_Has3DNow())
+	{
+		Caps.append("3D Now, ");
+	}
+
+	if (SDL_HasAVX())
+	{
+		Caps.append("AVX, ");
+	}
+
+	if (SDL_HasAVX2())
+	{
+		Caps.append("AVX2, ");
+	}
+
+	if (SDL_HasAltiVec())
+	{
+		Caps.append("AltiVec, ");
+	}
+
+	if (SDL_HasMMX())
+	{
+		Caps.append("MMX, ");
+	}
+
+	if (SDL_HasRDTSC())
+	{
+		Caps.append("RDTSC, ");
+	}
+
+	if (SDL_HasSSE())
+	{
+		Caps.append("SSE, ");
+	}
+
+	if (SDL_HasSSE2())
+	{
+		Caps.append("SSE2, ");
+	}
+
+	if (SDL_HasSSE3())
+	{
+		Caps.append("SSE3, ");
+	}
+
+	if (SDL_HasSSE41())
+	{
+		Caps.append("SSE41, ");
+	}
+
+	if (SDL_HasSSE41())
+	{
+		Caps.append("SSE42");
+	}
+
+	return Caps.data();
+}
+
+int ModuleEditor::GetBudget() {
+	int budget;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &budget);
+	return budget / 1024.0f;
+}
+
+int ModuleEditor::GetUsage() {
+	int usage;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_DEDICATED_VIDMEM_NVX, &usage);
+	return usage / 1024.0f;
+}
+
+int ModuleEditor::GetAvailable() {
+	int available;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &available);
+	return available / 1024.0f;
+}
+
+int ModuleEditor::GetReserved() {
+	int reserved;
+	glGetIntegerv(GL_GPU_MEMORY_INFO_EVICTED_MEMORY_NVX, &reserved);
+	return reserved / 1024.0f;
 }

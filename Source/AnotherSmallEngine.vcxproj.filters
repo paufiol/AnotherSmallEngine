@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="log.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_widgets.cpp">
       <Filter>Dependencies\ImGui</Filter>
     </ClCompile>
@@ -54,9 +51,6 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="Meshes.cpp">
-      <Filter>Importers</Filter>
     </ClCompile>
     <ClCompile Include="Dependencies\MathGeoLib\include\Math\BitOps.cpp">
       <Filter>Dependencies\MathGeoLib\Math</Filter>
@@ -154,11 +148,26 @@
     <ClCompile Include="Dependencies\MathGeoLib\include\Geometry\Ray.cpp">
       <Filter>Dependencies\MathGeoLib\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="I_Model.cpp">
+    <ClCompile Include="ModuleFileSystem.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMesh.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleImporter.cpp">
       <Filter>Importers</Filter>
     </ClCompile>
-    <ClCompile Include="ModuldeFileSystem.cpp">
-      <Filter>Modules</Filter>
+    <ClCompile Include="ResourceModel.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Containers</Filter>
@@ -174,9 +183,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="Globals.h" />
-    <ClInclude Include="Module.h" />
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
       <Filter>Dependencies\ImGui</Filter>
     </ClInclude>
@@ -233,10 +239,6 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenGL.h" />
-    <ClInclude Include="Meshes.h">
-      <Filter>Importers</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\MathGeoLib\include\MathBuildConfig.h">
       <Filter>Dependencies\MathGeoLib</Filter>
@@ -418,9 +420,6 @@
     <ClInclude Include="Dependencies\MathGeoLib\include\Geometry\QuadTree.h">
       <Filter>Dependencies\MathGeoLib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="I_Model.h">
-      <Filter>Importers</Filter>
-    </ClInclude>
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Modules</Filter>
     </ClInclude>
@@ -438,6 +437,26 @@
     </ClInclude>
     <ClInclude Include="ComponentMaterial.h">
       <Filter>Containers\Components</Filter>
+    <ClInclude Include="Module.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMesh.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleImporter.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceModel.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -480,8 +499,13 @@
     <Filter Include="Dependencies\MathGeoLib\Geometry">
       <UniqueIdentifier>{a3309476-89cd-4f1e-a478-f6846164c538}</UniqueIdentifier>
     </Filter>
+<<<<<<< HEAD
     <Filter Include="Containers\Components">
       <UniqueIdentifier>{aa078411-41be-4541-b87d-a2b94c5d1fa4}</UniqueIdentifier>
+=======
+    <Filter Include="Resources">
+      <UniqueIdentifier>{d718c5dc-89c0-4622-b9fb-e978250b2f9a}</UniqueIdentifier>
+>>>>>>> 1e1865465ff14ac4cd02cb3cd43e7d0480992aae
     </Filter>
   </ItemGroup>
   <ItemGroup>
