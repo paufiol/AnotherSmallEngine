@@ -2,6 +2,7 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleCamera3D.h"
 #include "Primitive.h"
+#include "GameObject.h"
 
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
@@ -19,6 +20,9 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+
+	root_object = new GameObject("ROOT");
+	game_objects.push_back(root_object);
 	return ret;
 }
 
@@ -30,8 +34,6 @@ bool ModuleSceneIntro::CleanUp()
 	return true;
 }
 
-
-
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
@@ -40,7 +42,11 @@ update_status ModuleSceneIntro::Update(float dt)
 	p.axis = true;
 	p.Render();
 
-	
+	for (uint n = 0; n < game_objects.size(); n++)
+	{
+		game_objects[n]->Update();
+	}
+
 	for (uint n = 0; n < primitives.size(); n++)
 	{
 		primitives[n]->Update();
@@ -51,10 +57,12 @@ update_status ModuleSceneIntro::Update(float dt)
 
 update_status ModuleSceneIntro::PostUpdate(float dt)
 {
+
 	for (uint n = 0; n < primitives.size(); n++)
 	{
 		primitives[n]->Render();
 	}
+
 	return UPDATE_CONTINUE;
 }
 

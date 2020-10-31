@@ -19,4 +19,6 @@ public:
 	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0
 	//ComponentTexture(GameObject* parent, vec3 position, vec3 rotation, vec3 scale);
 private:
+	Texture* texture;
+	std::string path;
 };
