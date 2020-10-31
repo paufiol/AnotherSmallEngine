@@ -102,9 +102,9 @@ bool ModuleRenderer3D::Init()
 		//glEnable(GL_TEXTURE_CUBE_MAP);
 	}	
 
-	//UseCheckerTexture();
+	UseCheckerTexture();
 
-	Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
+	//Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
 	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
 	newMesh = Importer::MeshImporter::tempMesh;
 	newTexture = Importer::TextureImporter::Gl_Tex;
