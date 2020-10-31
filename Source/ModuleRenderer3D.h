@@ -3,11 +3,13 @@
 #include "Globals.h"
 #include "glmath.h"
 #include "Light.h"
+#include "OpenGL.h"
+#include "Dependencies/SDL/include/SDL.h"
 
 #define MAX_LIGHTS 8
 
-class ResourceMesh;
-class ResourceModel;
+
+struct Mesh;
 
 class ModuleRenderer3D : public Module
 {
@@ -22,8 +24,11 @@ public:
 
 	void OnResize(int width, int height);
 
-	void DrawAllModels();
-	void LoadModel(const char* path);
+	void UseCheckerTexture();
+	void SetUpBuffers(Mesh* mesh);
+	void DrawMesh(Mesh* mesh);
+
+	void DrawNormals();
 
 	void SetDepthtest(bool active);
 	void SetCullface(bool active);
@@ -39,6 +44,10 @@ public:
 	mat3x3 NormalMatrix;
 	mat4x4 ProjectionMatrix;
 
-	std::vector<ResourceModel*> models;
+	GLbyte checkerImage[64][64][4];
+	GLuint checkerID;
+
+	Mesh* newMesh = nullptr;
+	GLuint newTexture;
 
 };

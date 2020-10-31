@@ -2,6 +2,7 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleImporter.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
@@ -102,7 +103,12 @@ bool ModuleEditor::MainMenuBar()
 	bool ret = true;
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))	{ ImGui::EndMenu(); }
+		if (ImGui::BeginMenu("File"))	
+		{ 
+			if(ImGui::MenuItem("Exit")) { ret = false;  }
+			
+			ImGui::EndMenu(); 
+		}
 		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Configuration")) show_configuration_window = !show_configuration_window;
@@ -118,11 +124,11 @@ bool ModuleEditor::MainMenuBar()
 		}
 		if (ImGui::BeginMenu("Add"))
 		{
-			if (ImGui::MenuItem("Cube")) App->renderer3D->LoadModel("Assets/Primitives/Cube.FBX");
-			if (ImGui::MenuItem("Sphere")) App->renderer3D->LoadModel("Assets/Primitives/Sphere.FBX");
-			if (ImGui::MenuItem("Cylinder")) App->renderer3D->LoadModel("Assets/Primitives/Cylinder.FBX");
-			if (ImGui::MenuItem("Cone")) App->renderer3D->LoadModel("Assets/Primitives/Cone.FBX");
-			if (ImGui::MenuItem("Pyramid")) App->renderer3D->LoadModel("Assets/Primitives/Pyramid.FBX");
+			if (ImGui::MenuItem("Cube")) Importer::MeshImporter::Import("Assets/Primitives/Cube.FBX");
+			if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");
+			if (ImGui::MenuItem("Cylinder")) Importer::MeshImporter::Import("Assets/Primitives/Cylinder.FBX");
+			if (ImGui::MenuItem("Cone")) Importer::MeshImporter::Import("Assets/Primitives/Cone.FBX");
+			if (ImGui::MenuItem("Pyramid")) Importer::MeshImporter::Import("Assets/Primitives/Pyramid.FBX");
 			ImGui::EndMenu();
 
 		}
@@ -135,7 +141,6 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Exit")) { ret = false; ImGui::EndMenu();}
 		
 
 		ImGui::EndMenuBar();
