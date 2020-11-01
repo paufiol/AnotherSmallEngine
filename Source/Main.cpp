@@ -86,7 +86,7 @@ int main(int argc, char ** argv)
 		}
 	}
 
-	delete App;
 	LOG("Exiting Engine '%s'...\n", TITLE);
+	delete App;
 	return main_return;
 }

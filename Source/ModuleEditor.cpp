@@ -90,14 +90,13 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-
 	log_record.clear();
 	SDL_DestroyWindow(App->window->window);
 	SDL_Quit();
 	return true;
 }
 
-void ModuleEditor::Draw()
+void ModuleEditor::DrawGUI()
 {
 	ImGui::Render();
 	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -293,9 +292,10 @@ void ModuleEditor::ConfigurationWindow()
 		}
 		if (ImGui::CollapsingHeader("Draw Settings"))
 		{
-			if (ImGui::Checkbox("Draw Normals", &drawNormals)){}
+			if (ImGui::Checkbox ("Draw Normals", &drawNormals)){}
 			if (ImGui::Checkbox ("Wireframe Mode", &drawWireframe)) {}
-			if (ImGui::Checkbox ("Enable Checker Tex", &drawCheckerTex)){}
+			if (ImGui::Checkbox("Enable Checker Tex", &drawCheckerTex)) { drawTexture = false; }
+			if (ImGui::Checkbox("Enable Texture", &drawTexture)) { drawCheckerTex = false; }
 		}
 
 		ImGui::End();

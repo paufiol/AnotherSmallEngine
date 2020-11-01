@@ -143,8 +143,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	IterateMeshDraw();
 
-	App->editor->Draw();
-
+	App->editor->DrawGUI();
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -154,6 +153,7 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
+	Importer::MeshImporter::meshes.clear();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SDL_GL_DeleteContext(context);
 
@@ -206,7 +206,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 {
-	if (newTexture != 0 && !App->editor->drawCheckerTex)
+	if (App->editor->drawTexture && !App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, newTexture);
@@ -215,9 +215,8 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		LOG("RENDERING");
 	}
-	else if (App->editor->drawCheckerTex)
+	else if (!App->editor->drawTexture && App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, checkerID);
@@ -251,6 +250,10 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
 
+	}
+	else
+	{
+		LOG("Unable to render meshes (No meshes loaded)");
 	}
 	
 }

@@ -23,15 +23,15 @@ public:
 	void SetTitle(const char* title);
 
 public:
-	int width;
-	int height;
+	int width = 0;
+	int height = 0;
 	Uint32 flags;
 
 	//The window we'll be rendering to
-	SDL_Window* window;
+	SDL_Window* window = nullptr;
 
 	//The surface contained by the window
-	SDL_Surface* screen_surface;
+	SDL_Surface* screen_surface = nullptr;
 
 	void		SetFullscreen(bool fullscreen);
 	void		SetResizable(bool resizable);
