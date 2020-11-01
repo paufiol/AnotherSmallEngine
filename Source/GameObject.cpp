@@ -59,6 +59,9 @@ Component* GameObject::AddComponent(Component* component)
 		ret = new ComponentTransform(this);
 		break;
 	case(ComponentType::Material):
+		if (this->GetComponent(ComponentType::Material) != nullptr) {
+			return nullptr;
+		}
 		ret = new ComponentTexture(this);
 		break;
 	case(ComponentType::Mesh):
@@ -90,5 +93,21 @@ Component* GameObject::GetComponent(ComponentType type)
 	}
 
 	return nullptr;
+}
+
+std::vector<Component*> GameObject::GetComponents(ComponentType type)
+{
+	std::vector<Component*>::iterator item = components.begin();
+
+	std::vector<Component*> ret;
+
+	for (; item != components.end(); ++item) {
+
+		if ((*item)->type == type) {
+			ret.push_back((*item));
+		}
+	}
+
+	return ret;
 }
 

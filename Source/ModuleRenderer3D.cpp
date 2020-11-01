@@ -218,16 +218,23 @@ void ModuleRenderer3D::IterateMeshDraw()
 		if (App->scene_intro->game_objects[i]->GetComponent(ComponentType::Mesh) != nullptr)
 		{
 			
-			ComponentMesh* componentMesh = (ComponentMesh*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Mesh);
+			std::vector<Component*> meshComponents = App->scene_intro->game_objects[i]->GetComponents(ComponentType::Mesh);
 			
-			ComponentTexture* componentTex = (ComponentTexture*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Material);
-			if (componentTex != nullptr) {
-				DrawMesh(componentMesh->GetMesh(), componentTex->GetTexture()->id);
+			std::vector<Component*>::iterator item = meshComponents.begin();
+			for (; item != meshComponents.end(); ++item) {
+				
+				ComponentTexture* componentTex = (ComponentTexture*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Material);
+				ComponentMesh* tempComponentMesh = (ComponentMesh*)(*item);
+				if (componentTex != nullptr) 
+				{
+					DrawMesh(tempComponentMesh->GetMesh(), componentTex->GetTexture()->id);
+				}
+				else 
+				{
+					DrawMesh(tempComponentMesh->GetMesh());
+				}
 			}
-			else {
-				DrawMesh(componentMesh->GetMesh());
-			}
-			
+
 		}
 	
 	}

@@ -36,6 +36,8 @@ void Importer::MeshImporter::Import(const char* file)
 
     if (scene != nullptr && scene->HasMeshes())
     {
+        GameObject* tempGameObj = new GameObject("New_Obj %d");
+
         // Use scene->mNumMeshes to iterate on scene->mMeshes array
         for (int i = 0; i < scene->mNumMeshes; i++)
         {
@@ -43,14 +45,7 @@ void Importer::MeshImporter::Import(const char* file)
             std::string tmpString = "";
             tmpString.append("New_Obj ");
             
-            GameObject* tempGameObj = new GameObject("New_Obj %d");
             ComponentMesh* tempComponentMesh = new ComponentMesh(tempGameObj);
-
-            tempComponentMesh->SetMesh(tempMesh);
-            tempComponentMesh->SetPath(file);
-            
-            tempGameObj->AddComponent(tempComponentMesh);
-            App->scene_intro->AddGameObject(tempGameObj);
 
             tempMesh->size[Mesh::vertex] = scene->mMeshes[i]->mNumVertices;
             tempMesh->vertices = new float[tempMesh->size[Mesh::vertex] * 3];
@@ -93,10 +88,18 @@ void Importer::MeshImporter::Import(const char* file)
                     tempMesh->texCoords[j * 2 + 1] = scene->mMeshes[i]->mTextureCoords[0][j].y;
                 }
             }
+            tempComponentMesh->SetMesh(tempMesh);
+            tempComponentMesh->SetPath(file);
+
+            tempGameObj->AddComponent(tempComponentMesh);
+
+            
+
             App->renderer3D->SetUpBuffers(tempMesh);
             meshes.push_back(tempMesh);
         }
-
+        
+        App->scene_intro->AddGameObject(tempGameObj);
         aiReleaseImport(scene);
     }
     else
@@ -106,9 +109,7 @@ void Importer::MeshImporter::Import(const char* file)
 }
 
 uint Importer::TextureImporter::Import(const char* path)
-{
-    //texture->id = 0; 
-    
+{  
     ILuint Il_Tex;
     uint tempid;
     ilGenImages(1, &Il_Tex);

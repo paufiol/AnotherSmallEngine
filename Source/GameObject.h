@@ -31,6 +31,7 @@ public:
 
 	Component* AddComponent(Component* component);
 	Component* GetComponent(ComponentType type);
+	std::vector<Component*> GetComponents(ComponentType type);
 	GameObject* AddChildren(GameObject* children);
 	
 
