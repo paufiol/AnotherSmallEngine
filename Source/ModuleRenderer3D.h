@@ -29,8 +29,8 @@ public:
 	void IterateMeshDraw();
 	void DrawMesh(Mesh* mesh);
 
-	void DrawNormals();
-	void DrawTexCoords();
+	void DrawNormals(Mesh* mesh);
+	void DrawTexCoords(Mesh* mesh);
 
 	void SetDepthtest(bool active);
 	void SetCullface(bool active);
@@ -49,7 +49,7 @@ public:
 	GLbyte checkerImage[64][64][4];
 	GLuint checkerID;
 
-	Mesh* newMesh = nullptr;
-	GLuint newTexture;
+	Mesh* mesh = nullptr;
+	GLuint newTexture = 0;
 
 };

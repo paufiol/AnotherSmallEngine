@@ -199,15 +199,14 @@ void ModuleRenderer3D::IterateMeshDraw()
 	{
 		DrawMesh(Importer::MeshImporter::meshes[i]);
 
-		if (App->editor->drawNormals) DrawNormals();
-		if (App->editor->drawTexCoords) DrawTexCoords();
+		if (App->editor->drawNormals) DrawNormals(Importer::MeshImporter::meshes[i]);
 		//LOG("Mesh rendered with %d vertices", Importer::MeshImporter::meshes[i]->size[Mesh::vertex]);
 	}
 }
 
 void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 {
-	if (newTexture != NULL && !App->editor->drawCheckerTex)
+	if (newTexture != 0 && !App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, newTexture);
@@ -216,6 +215,7 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		LOG("RENDERING");
 	}
 	else if (App->editor->drawCheckerTex)
 	{
@@ -279,31 +279,18 @@ void ModuleRenderer3D::UseCheckerTexture() {
 
 }
 
-void ModuleRenderer3D::DrawNormals()
+void ModuleRenderer3D::DrawNormals(Mesh* mesh)
 {
 	glBegin(GL_LINES);
 	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 
-	for (uint i = 0; i < newMesh->size[Mesh::vertex] * 3; i +=3)
+	for (uint i = 0; i < mesh->size[Mesh::vertex] * 3; i +=3)
 	{
-	    glVertex3f(newMesh->vertices[i], newMesh->vertices[i + 1], newMesh->vertices[i + 2]);
-	    glVertex3f(newMesh->vertices[i] + newMesh->normals[i], newMesh->vertices[i + 1] + newMesh->normals[i + 1], newMesh->vertices[i + 2] + newMesh->normals[i + 2]);
+	    glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+	    glVertex3f(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]);
 	}
 
-	glEnd();
-}
-
-void ModuleRenderer3D::DrawTexCoords()
-{
-	glBegin(GL_POINTS);
-	glPointSize(100.0f);
-	glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
-	for (uint i = 0; i < newMesh->size[Mesh::vertex]; ++i)
-	{
-		glVertex3f(newMesh->vertices[i] + newMesh->texCoords[i], newMesh->vertices[i + 1] + newMesh->texCoords[i + 1], newMesh->vertices[i + 2] + newMesh->texCoords[i + 2]);
-	}
-
-	glPointSize(1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnd();
 }
 

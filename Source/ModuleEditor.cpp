@@ -202,26 +202,14 @@ void ModuleEditor::ConfigurationWindow()
 		}
 		if (ImGui::CollapsingHeader("Window"))
 		{
-			if (ImGui::Checkbox("Fullscreen", &fullscreen))
-			{
-				if (fullscreen) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN);
-				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-			}
-			if (ImGui::Checkbox("Borderless", &borderless))
-			{
-				if (borderless) SDL_SetWindowBordered(App->window->window, SDL_FALSE);
-				else SDL_SetWindowBordered(App->window->window, SDL_TRUE);
-			}
-			if (ImGui::Checkbox("Full Desktop", &full_desktop))
-			{
-				if (full_desktop) SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-				else SDL_SetWindowFullscreen(App->window->window, SDL_WINDOW_RESIZABLE);
-			}
+			if (ImGui::Checkbox("Fullscreen", &fullscreen)) App->window->SetFullscreen(fullscreen);
+			if (ImGui::Checkbox("Borderless", &borderless)) App->window->SetBorderless(borderless);
+			if (ImGui::Checkbox("Full Desktop", &full_desktop)) App->window->SetFullscreenDesktop(full_desktop);
+
 			ImGui::Separator();
-			ImGui::SliderInt("Width", &window_width, 350, 1500, "%d");
-			ImGui::SliderInt("Height", &window_height, 350, 1200, "%d");
-			SDL_SetWindowSize(App->window->window, window_width, window_height);
-			App->renderer3D->OnResize(window_width, window_height);
+			if(ImGui::SliderInt("Width", &window_width, 350, 1500, "%d")) SDL_SetWindowSize(App->window->window, window_width, window_height);
+			if(ImGui::SliderInt("Height", &window_height, 350, 1200, "%d")) SDL_SetWindowSize(App->window->window, window_width, window_height);
+			
 
 			ImGui::SliderFloat("Brightness", &brightness, 0, 1, "%.3f");
 			SDL_SetWindowBrightness(App->window->window, brightness);
@@ -283,28 +271,21 @@ void ModuleEditor::ConfigurationWindow()
 			if (ImGui::Checkbox("Depth Test", &depthtest)) {
 				App->renderer3D->SetDepthtest(depthtest);
 			}
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Cull Face", &cullface)) {
 				App->renderer3D->SetCullface(cullface);
 			}
-
 			if (ImGui::Checkbox("Lightning", &lighting)) {
 				App->renderer3D->SetLighting(lighting);
 			}
-			ImGui::SameLine();
 			if (ImGui::Checkbox("2D", &texture2D)) {
 				App->renderer3D->SetTexture2D(texture2D);
 			}
-
-
 			if (ImGui::Checkbox("Color Material", &colormaterial)) {
 				App->renderer3D->SetColormaterial(colormaterial);
 			}
-			ImGui::SameLine();
 			if (ImGui::Checkbox("Cube Map", &cubemap)) {
 				App->renderer3D->SetCubemap(cubemap);
 			}
-
 			if (ImGui::Checkbox("Polygons smooth", &polygonssmooth)) {
 				App->renderer3D->SetPolygonssmooth(polygonssmooth);
 			}
@@ -313,7 +294,6 @@ void ModuleEditor::ConfigurationWindow()
 		if (ImGui::CollapsingHeader("Draw Settings"))
 		{
 			if (ImGui::Checkbox("Draw Normals", &drawNormals)){}
-			if (ImGui::Checkbox("Draw Tex Coords", &drawTexCoords)){}
 			if (ImGui::Checkbox ("Wireframe Mode", &drawWireframe)) {}
 			if (ImGui::Checkbox ("Enable Checker Tex", &drawCheckerTex)){}
 		}
