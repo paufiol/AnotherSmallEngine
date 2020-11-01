@@ -74,7 +74,6 @@ public:
 	bool full_desktop = false;
 
 	bool drawNormals = false;
-	bool drawTexCoords = false;
 	bool drawWireframe = false;
 	bool drawCheckerTex = false;
 
