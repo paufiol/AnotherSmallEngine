@@ -125,7 +125,7 @@ bool ModuleEditor::MainMenuBar()
 		if (ImGui::BeginMenu("Add"))
 		{
 			if (ImGui::MenuItem("Cube")) Importer::MeshImporter::Import("Assets/Primitives/Cube.FBX");
-			if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");
+			if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");	
 			if (ImGui::MenuItem("Cylinder")) Importer::MeshImporter::Import("Assets/Primitives/Cylinder.FBX");
 			if (ImGui::MenuItem("Cone")) Importer::MeshImporter::Import("Assets/Primitives/Cone.FBX");
 			if (ImGui::MenuItem("Pyramid")) Importer::MeshImporter::Import("Assets/Primitives/Pyramid.FBX");
@@ -307,6 +307,7 @@ void ModuleEditor::ConfigurationWindow()
 			if (ImGui::Checkbox("Draw Normals", &drawNormals)){}
 			if (ImGui::Checkbox("Draw Tex Coords", &drawTexCoords)){}
 			if (ImGui::Checkbox ("Wireframe Mode", &drawWireframe)) {}
+			if (ImGui::Checkbox ("Enable Checker Tex", &drawCheckerTex)){}
 		}
 
 		ImGui::End();

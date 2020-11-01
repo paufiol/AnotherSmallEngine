@@ -37,7 +37,8 @@ namespace Importer
 	namespace MeshImporter
 	{
 		void Import(const char* file);
-		Mesh* tempMesh = new Mesh();
+
+		vector<Mesh*> meshes;
 	}
 
 	namespace TextureImporter

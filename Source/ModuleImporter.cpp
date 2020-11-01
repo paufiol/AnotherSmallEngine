@@ -33,6 +33,7 @@ void Importer::MeshImporter::Import(const char* file)
         // Use scene->mNumMeshes to iterate on scene->mMeshes array
         for (int i = 0; i < scene->mNumMeshes; i++)
         {
+            Mesh* tempMesh = new Mesh();
             tempMesh->size[Mesh::vertex] = scene->mMeshes[i]->mNumVertices;
             tempMesh->vertices = new float[tempMesh->size[Mesh::vertex] * 3];
             memcpy(tempMesh->vertices, scene->mMeshes[i]->mVertices, sizeof(float) * tempMesh->size[Mesh::vertex] * 3);
@@ -74,7 +75,7 @@ void Importer::MeshImporter::Import(const char* file)
                 }
             }
             App->renderer3D->SetUpBuffers(tempMesh);
-            
+            meshes.push_back(tempMesh);
         }
 
         aiReleaseImport(scene);
@@ -87,7 +88,7 @@ void Importer::MeshImporter::Import(const char* file)
 
 void Importer::TextureImporter::Import(const char* path)
 {
-    Importer::TextureImporter::InitDevil();
+    
     ILuint Il_Tex;
     ilGenImages(1, &Il_Tex);
     ilBindImage(Il_Tex);

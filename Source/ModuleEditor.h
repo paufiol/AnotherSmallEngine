@@ -76,6 +76,7 @@ public:
 	bool drawNormals = false;
 	bool drawTexCoords = false;
 	bool drawWireframe = false;
+	bool drawCheckerTex = false;
 
 
 };
