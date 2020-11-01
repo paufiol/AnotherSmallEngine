@@ -62,7 +62,8 @@ Component* GameObject::AddComponent(Component* component)
 
 	}
 	
-	components.push_back(ret);
+	//components.push_back(ret);
+	components.push_back(component);
 	return ret;
 }
 

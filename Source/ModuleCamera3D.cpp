@@ -47,13 +47,17 @@ void ModuleCamera3D::FocusObject()
 	ObjPosition.y = selected_obj->GetPosition().y;
 	ObjPosition.z = selected_obj->GetPosition().z;
 
-	Z = normalize(Position - ObjPosition);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-	
-	LookAt(ObjPosition);
+	vec3 ObjScale;
 
-	
+	ObjScale.x = selected_obj->GetScale().x;
+	ObjScale.y = selected_obj->GetScale().y;
+	ObjScale.z = selected_obj->GetScale().z;
+
+	Position = (ObjPosition + normalize(Position - ObjPosition)) * 8;
+	//Position.y = ;
+	//Position.z = ;
+
+	LookAt(ObjPosition);
 }
 
 // -----------------------------------------------------------------
