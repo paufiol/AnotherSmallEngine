@@ -90,14 +90,13 @@ bool ModuleEditor::CleanUp()
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-
 	log_record.clear();
 	SDL_DestroyWindow(App->window->window);
 	SDL_Quit();
 	return true;
 }
 
-void ModuleEditor::Draw()
+void ModuleEditor::DrawGUI()
 {
 	ImGui::Render();
 	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -118,15 +117,13 @@ bool ModuleEditor::MainMenuBar()
 		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Configuration")) show_configuration_window = !show_configuration_window;
-
 			if (ImGui::MenuItem("Console")) show_console_window = !show_console_window;
+			if (ImGui::MenuItem("Hierarchy"))show_hierarchy_window = !show_hierarchy_window;
+			if (ImGui::MenuItem("Inspector"))show_inspector_window = !show_inspector_window;
+
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Draw Options"))
-		{
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Add"))
+		if (ImGui::BeginMenu("Add Primitive"))
 		{
 			if (ImGui::MenuItem("Cube")) Importer::MeshImporter::Import("Assets/Primitives/Cube.FBX");
 			if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");	
@@ -143,11 +140,6 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("Latest Release")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine");
 			if (ImGui::MenuItem("Report a bug")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues");
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Hierarchy")) {
-			if (ImGui::MenuItem("Hierarchy Window"))show_hierarchy_window = !show_hierarchy_window;
-			if (ImGui::MenuItem("Inspector Window"))show_inspector_window = !show_inspector_window;
 			ImGui::EndMenu();
 		}
 
@@ -293,9 +285,10 @@ void ModuleEditor::ConfigurationWindow()
 		}
 		if (ImGui::CollapsingHeader("Draw Settings"))
 		{
-			if (ImGui::Checkbox("Draw Normals", &drawNormals)){}
+			if (ImGui::Checkbox ("Draw Normals", &drawNormals)){}
 			if (ImGui::Checkbox ("Wireframe Mode", &drawWireframe)) {}
-			if (ImGui::Checkbox ("Enable Checker Tex", &drawCheckerTex)){}
+			if (ImGui::Checkbox("Enable Checker Tex", &drawCheckerTex)) { drawTexture = false; }
+			if (ImGui::Checkbox("Enable Texture", &drawTexture)) { drawCheckerTex = false; }
 		}
 
 		ImGui::End();

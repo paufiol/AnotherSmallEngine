@@ -30,8 +30,8 @@ public:
 	ModuleFileSystem* file_system ;
 
 
-	bool debug;
-	bool renderPrimitives;
+	bool debug = false;
+	bool renderPrimitives = false;
 private:
 	std::vector<Module*> modules;
 

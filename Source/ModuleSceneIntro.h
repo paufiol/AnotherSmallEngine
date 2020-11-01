@@ -28,6 +28,6 @@ private:
 public:
 	std::vector<GameObject*> game_objects;
 
-	GameObject* root_object;
-	GameObject* selected_object;
+	GameObject* root_object = nullptr;
+	GameObject* selected_object = nullptr;
 };

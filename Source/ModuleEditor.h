@@ -21,7 +21,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp() override;
 
-	void Draw();
+	void DrawGUI();
 
 	void Docking();
 	void RequestBrowser(const char*);
@@ -46,13 +46,14 @@ public:
 	//SDL_WindowFlags window_flags;
 	SDL_version version;
 	std::string Caps;
+
 	std::vector<std::string> log_record;
 	
 	char title[25];
 	char label[32];
-	int window_width;
-	int window_height;
-	float brightness;
+	int window_width = 0;
+	int window_height = 0;
+	float brightness = 0;
 
 	bool dockingWindow = true;
 
@@ -79,6 +80,7 @@ public:
 	bool drawNormals = false;
 	bool drawWireframe = false;
 	bool drawCheckerTex = false;
+	bool drawTexture = true;
 
 
 };

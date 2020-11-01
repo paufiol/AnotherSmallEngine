@@ -72,6 +72,7 @@ void Importer::MeshImporter::Import(const char* file)
                         memcpy(&tempMesh->indices[f * 3], scene->mMeshes[i]->mFaces[f].mIndices, 3 * sizeof(uint));
                     }
                 }
+                LOG("With %d indices", tempMesh->size[Mesh::index]);
             }
 
             if (scene->mMeshes[i]->HasNormals())
