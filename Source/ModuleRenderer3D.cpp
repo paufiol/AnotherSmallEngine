@@ -102,12 +102,12 @@ bool ModuleRenderer3D::Init()
 		glEnable(GL_TEXTURE_2D);
 		//glEnable(GL_TEXTURE_CUBE_MAP);
 	}	
-
+	Importer::TextureImporter::InitDevil();
 	UseCheckerTexture();
 
-	//Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
+	Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
 	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
-	newMesh = Importer::MeshImporter::tempMesh;
+
 	newTexture = Importer::TextureImporter::Gl_Tex;
 
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -138,11 +138,11 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 // PostUpdate present buffer to screen
 update_status ModuleRenderer3D::PostUpdate(float dt)
 {
-	if (App->editor->drawNormals) DrawNormals();
-	if (App->editor->drawTexCoords) DrawTexCoords();
 	if (App->editor->drawWireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); glEnable(GL_TEXTURE_CUBE_MAP); }
 	else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glDisable(GL_TEXTURE_CUBE_MAP); }
-	DrawMesh(newMesh); //Here temporarely
+	
+	IterateMeshDraw();
+
 	App->editor->Draw();
 
 
@@ -193,9 +193,21 @@ void ModuleRenderer3D::SetUpBuffers(Mesh* mesh)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[Mesh::texture] * 2, mesh->texCoords, GL_STATIC_DRAW);
 }
 
+void ModuleRenderer3D::IterateMeshDraw()
+{
+	for(uint i = 0; i < Importer::MeshImporter::meshes.size(); i++)
+	{
+		DrawMesh(Importer::MeshImporter::meshes[i]);
+
+		if (App->editor->drawNormals) DrawNormals();
+		if (App->editor->drawTexCoords) DrawTexCoords();
+		//LOG("Mesh rendered with %d vertices", Importer::MeshImporter::meshes[i]->size[Mesh::vertex]);
+	}
+}
+
 void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 {
-	if (newTexture != NULL)
+	if (newTexture != NULL && !App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, newTexture);
@@ -205,13 +217,13 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	}
-	else if (checkerID != NULL)
+	else if (App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, checkerID);
 	}
 	
-	if (newMesh != nullptr)
+	if (!Importer::MeshImporter::meshes.empty())
 	{
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -288,7 +300,6 @@ void ModuleRenderer3D::DrawTexCoords()
 	glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
 	for (uint i = 0; i < newMesh->size[Mesh::vertex]; ++i)
 	{
-
 		glVertex3f(newMesh->vertices[i] + newMesh->texCoords[i], newMesh->vertices[i + 1] + newMesh->texCoords[i + 1], newMesh->vertices[i + 2] + newMesh->texCoords[i + 2]);
 	}
 

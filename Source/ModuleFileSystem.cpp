@@ -32,7 +32,7 @@ void ModuleFileSystem::ReadDropFile(const char* file_path)
 	case FileDropType::MODEL3D:
 		LOG("Start Loading Model");
 		Importer::MeshImporter::Import(final_path.data());
-		App->renderer3D->newMesh = Importer::MeshImporter::tempMesh;
+		//App->renderer3D->newMesh = Importer::MeshImporter::tempMesh;
 		//App->renderer3D->LoadModel(final_path.data());
 		break;
 	case FileDropType::TEXTURE:
