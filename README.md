@@ -28,6 +28,8 @@ This project is been created as part of CITM's Game Engine course under supervis
 * **A:** Moves the camera to the left.
 * **S:** Moves the camera backwards.
 * **D:** Moves the camera to the right.
+* **Z:** Moves the camera upwards.
+* **X:** Moves the camera downwards.
 * **Shift:** Duplicate camera speed.
 * **F:** Centers the reference point on the selected model.
 ****
