@@ -1,7 +1,7 @@
 #pragma once
 #include "ComponentTexture.h"
 #include "GameObject.h"
-
+#include <string>
 #include "ModuleImporter.h" //TODO: NEEDED ONLY BECAUSE OF MESH CLASS-> Turn Mesh Class into stand alone file.
 #include "Dependencies/ImGUI/imgui.h"
 
@@ -10,6 +10,7 @@ ComponentTexture::ComponentTexture(GameObject* parent) : Component(parent)
 	texture = new Texture();
 	texture->id = -1;
 	texture->path = "Default Path";
+	type = ComponentType::Material;
 };
 
 void ComponentTexture::Enable() {
@@ -37,6 +38,12 @@ void ComponentTexture::SetTexture(Texture* texture)
 {
 	this->texture->id = texture->id;
 	this->texture->path = texture->path;
+}
+
+void ComponentTexture::SetTexture(uint id, const char* path)
+{
+	this->texture->id = id;
+	this->texture->path = path;
 }
 
 Texture* ComponentTexture::GetTexture()

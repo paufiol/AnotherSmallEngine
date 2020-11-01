@@ -27,7 +27,7 @@ public:
 	void UseCheckerTexture();
 	void SetUpBuffers(Mesh* mesh);
 	void IterateMeshDraw();
-	void DrawMesh(Mesh* mesh);
+	void DrawMesh(Mesh* mesh, uint id = 0);
 
 	void DrawNormals(Mesh* mesh);
 

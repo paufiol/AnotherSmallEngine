@@ -2,6 +2,10 @@
 #include "ModuleFileSystem.h"
 #include "ModuleImporter.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleSceneIntro.h"
+#include "ComponentTexture.h"
+#include "GameObject.h"
+
 
 ModuleFileSystem::ModuleFileSystem() {};
 
@@ -37,8 +41,12 @@ void ModuleFileSystem::ReadDropFile(const char* file_path)
 		break;
 	case FileDropType::TEXTURE:
 		LOG("Start Loading Texture");
-		Importer::TextureImporter::Import(final_path.data());
-		App->renderer3D->newTexture = Importer::TextureImporter::texture.id;
+		
+		ComponentTexture* tempCompTex = new ComponentTexture(App->scene_intro->selected_object);
+		tempCompTex->SetTexture(Importer::TextureImporter::Import(final_path.data()), final_path.data());
+		
+		App->scene_intro->selected_object->AddComponent(tempCompTex);
+		
 		//test->loadModel(final_path.data(), true);
 		break;
 	}

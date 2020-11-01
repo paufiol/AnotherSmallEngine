@@ -1,8 +1,10 @@
 #pragma once
 #include "Component.h"
 #include "glmath.h"
+#include "Globals.h"
 
 struct Texture;
+
 
 class ComponentTexture : public Component {
 	//Properties
@@ -19,6 +21,7 @@ public:
 	void DrawInspector() override; 
 
 	void SetTexture(Texture* texture);
+	void SetTexture(uint id, const char* path);
 	Texture* GetTexture();
 
 	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0

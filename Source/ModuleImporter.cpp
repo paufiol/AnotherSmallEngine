@@ -42,6 +42,7 @@ void Importer::MeshImporter::Import(const char* file)
             Mesh* tempMesh = new Mesh();
             std::string tmpString = "";
             tmpString.append("New_Obj ");
+            
             GameObject* tempGameObj = new GameObject("New_Obj %d");
             ComponentMesh* tempComponentMesh = new ComponentMesh(tempGameObj);
 
@@ -50,7 +51,6 @@ void Importer::MeshImporter::Import(const char* file)
             
             tempGameObj->AddComponent(tempComponentMesh);
             App->scene_intro->AddGameObject(tempGameObj);
-
 
             tempMesh->size[Mesh::vertex] = scene->mMeshes[i]->mNumVertices;
             tempMesh->vertices = new float[tempMesh->size[Mesh::vertex] * 3];
@@ -105,17 +105,16 @@ void Importer::MeshImporter::Import(const char* file)
     }
 }
 
-void Importer::TextureImporter::Import(const char* path)
+uint Importer::TextureImporter::Import(const char* path)
 {
-
-    texture.path = path;
     //texture->id = 0; 
     
     ILuint Il_Tex;
+    uint tempid;
     ilGenImages(1, &Il_Tex);
     ilBindImage(Il_Tex);
     ilLoadImage(path);
-    texture.id = ilutGLBindTexImage();
+    tempid = ilutGLBindTexImage();
     ilDeleteImages(1, &Il_Tex);
     if (Il_Tex != NULL)
     {
@@ -124,5 +123,7 @@ void Importer::TextureImporter::Import(const char* path)
     else {
         LOG("Error loading the texture!");
     }
+
+    return tempid;
 }
 

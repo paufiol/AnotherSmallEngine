@@ -4,6 +4,13 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
 
+#include "GameObject.h"
+
+#include "Component.h"
+#include "ComponentMesh.h"
+#include "ComponentTexture.h"
+#include "ModuleSceneIntro.h"
+
 #include "ModuleImporter.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
@@ -105,10 +112,13 @@ bool ModuleRenderer3D::Init()
 	Importer::TextureImporter::InitDevil();
 	UseCheckerTexture();
 
-	Importer::TextureImporter::Import("Assets/Textures/Pizza.png");
-	Importer::MeshImporter::Import("Assets/Models/Careto.FBX");
+	//Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
+	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
 
-	newTexture = Importer::TextureImporter::texture.id;
+	ComponentTexture* tempCompTex = new ComponentTexture(App->scene_intro->selected_object);
+	tempCompTex->SetTexture(Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png"), "Assets/Textures/BakerHouse.png");
+
+	App->scene_intro->selected_object->AddComponent(tempCompTex);
 
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
@@ -195,21 +205,42 @@ void ModuleRenderer3D::SetUpBuffers(Mesh* mesh)
 
 void ModuleRenderer3D::IterateMeshDraw()
 {
-	for(uint i = 0; i < Importer::MeshImporter::meshes.size(); i++)
+	/*for(uint i = 0; i < Importer::MeshImporter::meshes.size(); i++)
 	{
 		DrawMesh(Importer::MeshImporter::meshes[i]);
 
 		if (App->editor->drawNormals) DrawNormals(Importer::MeshImporter::meshes[i]);
 		//LOG("Mesh rendered with %d vertices", Importer::MeshImporter::meshes[i]->size[Mesh::vertex]);
+	}*/
+
+	for (uint i = 0; i < App->scene_intro->game_objects.size(); i++) 
+	{
+		if (App->scene_intro->game_objects[i]->GetComponent(ComponentType::Mesh) != nullptr)
+		{
+			
+			ComponentMesh* componentMesh = (ComponentMesh*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Mesh);
+			
+			ComponentTexture* componentTex = (ComponentTexture*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Material);
+			if (componentTex != nullptr) {
+				DrawMesh(componentMesh->GetMesh(), componentTex->GetTexture()->id);
+			}
+			else {
+				DrawMesh(componentMesh->GetMesh());
+			}
+			
+		}
+	
 	}
+
 }
 
-void ModuleRenderer3D::DrawMesh(Mesh* mesh)
+void ModuleRenderer3D::DrawMesh(Mesh* mesh, uint id)
 {
-	if (App->editor->drawTexture && !App->editor->drawCheckerTex)
+	
+	if (!App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, newTexture);
+		glBindTexture(GL_TEXTURE_2D, id);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

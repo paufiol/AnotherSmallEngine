@@ -43,7 +43,7 @@ namespace Importer
 
 	namespace TextureImporter
 	{
-		void Import(const char* file);
+		uint Import(const char* file);
 		void InitDevil();
 		//GLuint Gl_Tex;
 		Texture texture; 
