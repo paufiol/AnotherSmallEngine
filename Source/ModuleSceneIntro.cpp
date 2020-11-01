@@ -20,9 +20,10 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-
+	
 	root_object = new GameObject("ROOT");
 	game_objects.push_back(root_object);
+	selected_object = root_object;
 	return ret;
 }
 
