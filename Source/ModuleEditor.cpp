@@ -313,7 +313,11 @@ void ModuleEditor::InspectorWindow()
 		*/
 		for (uint m = 0; m < App->scene_intro->selected_object->components.size(); m++)
 		{
-			App->scene_intro->selected_object->components[m]->DrawInspector();
+			if (App->scene_intro->selected_object->selected)
+			{
+				App->scene_intro->selected_object->components[m]->DrawInspector();
+			}
+
 		}
 
 		ImGui::End();
@@ -322,15 +326,22 @@ void ModuleEditor::InspectorWindow()
 
 void DrawHierarchyLevel(std::vector<GameObject*> list)
 {
-	for (uint n = 0; n < list.size(); n++)
+	vector<GameObject*> list2 = App->scene_intro->game_objects;
+	
+	for (uint n = 0; n < list2.size(); n++)
 	{
-		if (ImGui::Button(list[n]->name.c_str()))
+		if (ImGui::Button(list2[n]->name.c_str()))
 		{
-			App->scene_intro->selected_object = list[n];
+			list2[n]->selected = true;
+			App->scene_intro->selected_object = list2[n];
+			for (uint k = 0; k < list2.size(); k++)
+			{
+				if (list2[n] != list2[k]) list2[k]->selected = false;
+			}
 		}
-		if (list[n]->children.size() > 0) {
-			DrawHierarchyLevel(list[n]->children);
-		}
+		//if (list2[n]->children.size() > 0) {
+		//	DrawHierarchyLevel(list2[n]->children);
+		//}
 	}
 };
 

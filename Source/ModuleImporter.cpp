@@ -36,7 +36,10 @@ void Importer::MeshImporter::Import(const char* file)
 
     if (scene != nullptr && scene->HasMeshes())
     {
-        GameObject* tempGameObj = new GameObject("New_Obj %d");
+        string tempName = "Game Object ";
+        string stringSize = to_string(App->scene_intro->game_objects.size());
+        tempName += stringSize;
+        GameObject* tempGameObj = new GameObject(tempName);
 
         // Use scene->mNumMeshes to iterate on scene->mMeshes array
         for (int i = 0; i < scene->mNumMeshes; i++)

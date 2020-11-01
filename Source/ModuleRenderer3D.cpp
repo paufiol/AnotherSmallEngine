@@ -228,10 +228,12 @@ void ModuleRenderer3D::IterateMeshDraw()
 				if (componentTex != nullptr) 
 				{
 					DrawMesh(tempComponentMesh->GetMesh(), componentTex->GetTexture()->id);
+					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
 				{
 					DrawMesh(tempComponentMesh->GetMesh());
+					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 			}
 
@@ -244,7 +246,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 void ModuleRenderer3D::DrawMesh(Mesh* mesh, uint id)
 {
 	
-	if (!App->editor->drawCheckerTex)
+	if (App->editor->drawTexture && !App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, id);
