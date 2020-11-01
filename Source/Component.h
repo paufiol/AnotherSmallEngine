@@ -25,6 +25,8 @@ public:
 	virtual void Enable() {};
 	virtual void Update() {};
 	virtual void Disable() {};
+
+	virtual void DrawInspector() {};
 	Component(GameObject* parent) : active(true), parent(parent), type(ComponentType::Error) {};
 private:
 

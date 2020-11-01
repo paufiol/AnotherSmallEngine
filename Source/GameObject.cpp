@@ -41,6 +41,11 @@ void GameObject::Update() //Start up + bool toggle
 	}
 }
 
+void GameObject::SetParent(GameObject* parent)
+{
+	this->parent = parent;
+}
+
 Component* GameObject::AddComponent(Component* component)
 {
 	Component* ret = nullptr;
@@ -67,6 +72,12 @@ Component* GameObject::AddComponent(Component* component)
 	return ret;
 }
 
+GameObject* GameObject::AddChildren(GameObject* children) {
+	
+	if(!this->children.empty() ) this->children.push_back(children);
+	return children;
+}
+
 Component* GameObject::GetComponent(ComponentType type)
 {
 	std::vector<Component*>::iterator item = components.begin();
@@ -81,6 +92,3 @@ Component* GameObject::GetComponent(ComponentType type)
 	return nullptr;
 }
 
-void GameObject::AppendChildren(GameObject* children) {
-	this->children.push_back(children);
-}

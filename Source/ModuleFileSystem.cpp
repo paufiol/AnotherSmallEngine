@@ -38,7 +38,7 @@ void ModuleFileSystem::ReadDropFile(const char* file_path)
 	case FileDropType::TEXTURE:
 		LOG("Start Loading Texture");
 		Importer::TextureImporter::Import(final_path.data());
-		App->renderer3D->newTexture = Importer::TextureImporter::Gl_Tex;
+		App->renderer3D->newTexture = Importer::TextureImporter::texture.id;
 		//test->loadModel(final_path.data(), true);
 		break;
 	}

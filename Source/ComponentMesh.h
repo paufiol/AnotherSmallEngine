@@ -17,10 +17,14 @@ public:
 	void Enable() override;
 	void Update() override;
 	void Disable() override;
+	void DrawInspector() override; 
 
 	Mesh* GetMesh() const { return this->mesh; };
+	std::string  GetPath() const { return this->path; };
 
-	ComponentMesh(GameObject* parent); //DEFAULTS TO 0,0
-	//ComponentMesh(GameObject* parent, vec3 position, vec3 rotation, vec3 scale);
+	void SetMesh(Mesh* mesh);
+	void SetPath(std::string path);
+
+	ComponentMesh(GameObject* parent); 
 private:
 };

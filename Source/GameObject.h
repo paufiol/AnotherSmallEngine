@@ -14,9 +14,9 @@ public:
 	bool active;
 
 	GameObject* parent;
-	
-private:
 	std::vector<GameObject*> children;
+private:
+
 
 //Methods
 public:
@@ -27,10 +27,12 @@ public:
 	
 	void Update();
 
+	void SetParent(GameObject* parent);
+
 	Component* AddComponent(Component* component);
 	Component* GetComponent(ComponentType type);
-
-	void AppendChildren(GameObject* children);
+	GameObject* AddChildren(GameObject* children);
+	
 
 private:
 	

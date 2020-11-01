@@ -3,6 +3,9 @@
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleImporter.h"
+#include "ModuleSceneIntro.h"
+#include "GameObject.h"
+#include "Component.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
@@ -66,7 +69,8 @@ update_status ModuleEditor::Update(float dt)
 	ConfigurationWindow();
 	ConsoleWindow();
 	if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
-
+	HierarchyWindow();
+	InspectorWindow();
 
 	ImGui::End();
 
@@ -141,7 +145,11 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
 			ImGui::EndMenu();
 		}
-		
+		if (ImGui::BeginMenu("Hierarchy")) {
+			if (ImGui::MenuItem("Hierarchy Window"))show_hierarchy_window = !show_hierarchy_window;
+			if (ImGui::MenuItem("Inspector Window"))show_inspector_window = !show_inspector_window;
+			ImGui::EndMenu();
+		}
 
 		ImGui::EndMenuBar();
 		ImGui::End();
@@ -313,6 +321,58 @@ void ModuleEditor::ConfigurationWindow()
 		ImGui::End();
 	}
 }
+
+void ModuleEditor::InspectorWindow()
+{
+	if (show_inspector_window)
+	{
+		ImGui::Begin("Inspector", &show_inspector_window);
+
+		ImGui::Separator();
+		/*
+			for (uint n = 0; n < App->scene_intro->game_objects.size(); n++)
+		{
+			for (uint m = 0; m < App->scene_intro->game_objects[n]->components.size(); m++)
+			{
+				App->scene_intro->game_objects[n]->components[m]->DrawInspector();
+			}
+		}
+		*/
+		for (uint m = 0; m < App->scene_intro->selected_object->components.size(); m++)
+		{
+			App->scene_intro->selected_object->components[m]->DrawInspector();
+		}
+
+		ImGui::End();
+	}
+}
+
+void DrawHierarchyLevel(std::vector<GameObject*> list)
+{
+	for (uint n = 0; n < list.size(); n++)
+	{
+		if (ImGui::Button(list[n]->name.c_str()))
+		{
+			App->scene_intro->selected_object = list[n];
+		}
+		if (list[n]->children.size() > 0) {
+			DrawHierarchyLevel(list[n]->children);
+		}
+	}
+};
+
+void ModuleEditor::HierarchyWindow()
+{
+	if (show_hierarchy_window)
+	{
+		ImGui::Begin("Hierarchy", &show_hierarchy_window);
+		
+		DrawHierarchyLevel(App->scene_intro->game_objects);
+
+		ImGui::End();
+	}
+}
+
 
 void ModuleEditor::ConsoleWindow()
 {

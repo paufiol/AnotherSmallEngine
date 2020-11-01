@@ -20,6 +20,7 @@ public:
 	void Enable() override;
 	void Update() override;
 	void Disable() override;
+	void DrawInspector() override;
 
 	void inline SetPosition(float3 position) { this->position = position;  UpdateMatrix();};
 	void inline SetRotation(Quat rotation) { this->rotation = rotation; UpdateMatrix();};

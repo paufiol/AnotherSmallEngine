@@ -29,7 +29,7 @@ struct Mesh
 
 struct Texture
 {
-	uint id;
+	GLuint id;
 	const char* path;
 };
 namespace Importer
@@ -45,7 +45,8 @@ namespace Importer
 	{
 		void Import(const char* file);
 		void InitDevil();
-		GLuint Gl_Tex;
+		//GLuint Gl_Tex;
+		Texture texture; 
 	}
 }
 

@@ -20,6 +20,7 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
+	void AddGameObject(GameObject* object);
 	
 private:
 	std::vector<Primitive*> primitives;

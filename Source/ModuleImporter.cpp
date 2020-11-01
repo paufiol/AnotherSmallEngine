@@ -1,6 +1,12 @@
 #include "Application.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleImporter.h"
+
+#include "GameObject.h"
+#include "ComponentMesh.h"
+#include "ComponentTexture.h"
+#include "ModuleSceneIntro.h"
+
 #include "Dependencies/Assimp/include/mesh.h"
 #include "Dependencies/Assimp/include/cimport.h"
 #include "Dependencies/Assimp/include/scene.h"
@@ -34,6 +40,18 @@ void Importer::MeshImporter::Import(const char* file)
         for (int i = 0; i < scene->mNumMeshes; i++)
         {
             Mesh* tempMesh = new Mesh();
+            std::string tmpString = "";
+            tmpString.append("New_Obj ");
+            GameObject* tempGameObj = new GameObject("New_Obj %d");
+            ComponentMesh* tempComponentMesh = new ComponentMesh(tempGameObj);
+
+            tempComponentMesh->SetMesh(tempMesh);
+            tempComponentMesh->SetPath(file);
+            
+            tempGameObj->AddComponent(tempComponentMesh);
+            App->scene_intro->AddGameObject(tempGameObj);
+
+
             tempMesh->size[Mesh::vertex] = scene->mMeshes[i]->mNumVertices;
             tempMesh->vertices = new float[tempMesh->size[Mesh::vertex] * 3];
             memcpy(tempMesh->vertices, scene->mMeshes[i]->mVertices, sizeof(float) * tempMesh->size[Mesh::vertex] * 3);
@@ -88,12 +106,15 @@ void Importer::MeshImporter::Import(const char* file)
 
 void Importer::TextureImporter::Import(const char* path)
 {
+
+    texture.path = path;
+    //texture->id = 0; 
     
     ILuint Il_Tex;
     ilGenImages(1, &Il_Tex);
     ilBindImage(Il_Tex);
     ilLoadImage(path);
-    Gl_Tex = ilutGLBindTexImage();
+    texture.id = ilutGLBindTexImage();
     ilDeleteImages(1, &Il_Tex);
     if (Il_Tex != NULL)
     {

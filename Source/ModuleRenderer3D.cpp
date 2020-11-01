@@ -105,10 +105,10 @@ bool ModuleRenderer3D::Init()
 	Importer::TextureImporter::InitDevil();
 	UseCheckerTexture();
 
-	Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
-	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
+	Importer::TextureImporter::Import("Assets/Textures/Pizza.png");
+	Importer::MeshImporter::Import("Assets/Models/Careto.FBX");
 
-	newTexture = Importer::TextureImporter::Gl_Tex;
+	newTexture = Importer::TextureImporter::texture.id;
 
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;

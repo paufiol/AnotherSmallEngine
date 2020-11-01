@@ -6,6 +6,9 @@
 
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
+	root_object = new GameObject("Scene");
+	game_objects.push_back(root_object);
+	selected_object = root_object;
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
@@ -20,10 +23,6 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	
-	root_object = new GameObject("ROOT");
-	game_objects.push_back(root_object);
-	selected_object = root_object;
 	return ret;
 }
 
@@ -65,5 +64,14 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+void ModuleSceneIntro::AddGameObject(GameObject* object)
+{
+	selected_object = object;
+	object->SetParent(root_object);
+	root_object->AddChildren(object);
+	game_objects.push_back(object); 
+	//root_object->AppendChildren(object);
 }
 

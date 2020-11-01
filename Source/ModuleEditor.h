@@ -30,9 +30,10 @@ public:
 	void ConfigurationWindow();
 	void ConsoleWindow();
 	void AddLog(std::string text);
+	void InspectorWindow();
+	void HierarchyWindow();
 
 	const char* GetSystemCaps();
-
 
 	int GetBudget();
 	int GetUsage();
@@ -59,6 +60,8 @@ public:
 	bool show_configuration_window = true;
 	bool show_about_window = false;
 	bool show_console_window = true;
+	bool show_hierarchy_window = true;
+	bool show_inspector_window = true;
 
 	bool depthtest = false;
 	bool cullface = false;
