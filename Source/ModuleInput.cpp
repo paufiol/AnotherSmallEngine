@@ -82,7 +82,7 @@ update_status ModuleInput::PreUpdate(float dt)
 		}
 	}
 
-	mouse_x_motion = mouse_y_motion = 0;
+	mouse_x_motion = mouse_y_motion = mouse_z_motion = 0;
 
 	bool quit = false;
 	SDL_Event e;
@@ -92,6 +92,8 @@ update_status ModuleInput::PreUpdate(float dt)
 		{
 			case SDL_MOUSEWHEEL:
 			mouse_z = e.wheel.y;
+			mouse_z_motion = e.wheel.y;
+			
 			break;
 
 			case SDL_MOUSEMOTION:

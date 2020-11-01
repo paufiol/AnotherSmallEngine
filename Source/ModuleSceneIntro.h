@@ -22,9 +22,11 @@ public:
 
 	
 private:
-
-	std::vector<GameObject*> game_objects;
 	std::vector<Primitive*> primitives;
 
+public:
+	std::vector<GameObject*> game_objects;
+
 	GameObject* root_object;
+	GameObject* selected_object;
 };

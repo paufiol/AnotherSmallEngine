@@ -3,17 +3,19 @@
 #include <vector>
 
 class Component;
-//enum class ComponentType;
+enum class ComponentType;
 
 class GameObject {
 //Properties
 public:
 	std::string name;
-private:
+
 	std::vector<Component*> components;
 	bool active;
 
 	GameObject* parent;
+	
+private:
 	std::vector<GameObject*> children;
 
 //Methods
@@ -26,6 +28,7 @@ public:
 	void Update();
 
 	Component* AddComponent(Component* component);
+	Component* GetComponent(ComponentType type);
 
 	void AppendChildren(GameObject* children);
 

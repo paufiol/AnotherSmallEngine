@@ -186,7 +186,7 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
-    <ClCompile Include="ComponentTranform.cpp" />
+    <ClCompile Include="ComponentTransform.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_draw.cpp" />

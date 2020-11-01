@@ -66,6 +66,20 @@ Component* GameObject::AddComponent(Component* component)
 	return ret;
 }
 
+Component* GameObject::GetComponent(ComponentType type)
+{
+	std::vector<Component*>::iterator item = components.begin();
+	
+	for (; item != components.end(); ++item) {
+
+		if ((*item)->type == type) {
+			return (*item);
+		}
+	}
+
+	return nullptr;
+}
+
 void GameObject::AppendChildren(GameObject* children) {
 	this->children.push_back(children);
 }

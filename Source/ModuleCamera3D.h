@@ -19,6 +19,8 @@ public:
 	float* GetRawViewMatrix();
 	mat4x4 GetViewMatrix();
 
+	void FocusObject();
+
 private:
 
 	void CalculateViewMatrix();
