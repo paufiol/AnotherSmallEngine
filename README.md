@@ -10,7 +10,12 @@ This project is been created as part of CITM's Game Engine course under supervis
 [Github account](<https://github.com/Aitorlb7>).
 ****
 ## Engine Features
-* GUI along with configuration options (Made with ImGui)
+* Window configuration options
+* OpenGl configuration options
+* Render configuration options
+* "Add" label to load Primitives
+* Hierarchy & Inspector
+* GUI Docking
 * 3D Model Loading
 * Texture Loading
 * Drag & Drop of Models and Textures
