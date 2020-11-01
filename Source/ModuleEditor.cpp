@@ -307,7 +307,7 @@ void ModuleEditor::InspectorWindow()
 	if (show_inspector_window)
 	{
 		ImGui::Begin("Inspector", &show_inspector_window);
-
+		ImGui::Text(App->scene_intro->selected_object->name.c_str());
 		ImGui::Separator();
 		/*
 			for (uint n = 0; n < App->scene_intro->game_objects.size(); n++)

@@ -19,8 +19,8 @@ public:
 	void Disable() override;
 	void DrawInspector() override; 
 
-	Mesh* GetMesh() const { return this->mesh; };
-	std::string  GetPath() const { return this->path; };
+	Mesh* GetMesh() const { return mesh; };
+	std::string  GetPath() const { return path; };
 
 	void SetMesh(Mesh* mesh);
 	void SetPath(std::string path);
