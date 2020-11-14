@@ -9,6 +9,7 @@
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
+#include "ComponentTransform.h"
 #include "ModuleSceneIntro.h"
 
 #include "ModuleImporter.h"
@@ -219,20 +220,21 @@ void ModuleRenderer3D::IterateMeshDraw()
 		{
 			
 			std::vector<Component*> meshComponents = App->scene_intro->game_objects[i]->GetComponents(ComponentType::Mesh);
-			
 			std::vector<Component*>::iterator item = meshComponents.begin();
+
 			for (; item != meshComponents.end(); ++item) {
 				
 				ComponentTexture* componentTex = (ComponentTexture*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Material);
 				ComponentMesh* tempComponentMesh = (ComponentMesh*)(*item);
+				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), componentTex->GetTexture()->id);
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetTransformMatrix(), componentTex->GetTexture()->id );
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
 				{
-					DrawMesh(tempComponentMesh->GetMesh());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetTransformMatrix());
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 			}
@@ -243,9 +245,11 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 }
 
-void ModuleRenderer3D::DrawMesh(Mesh* mesh, uint id)
+void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 {
-	
+	//glPushMatrix();
+	//glMultMatrixf((float*)&transform.Transposed());
+
 	if (App->editor->drawTexture && !App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);

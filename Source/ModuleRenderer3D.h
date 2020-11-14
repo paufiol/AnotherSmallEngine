@@ -5,6 +5,7 @@
 #include "Light.h"
 #include "OpenGL.h"
 #include "Dependencies/SDL/include/SDL.h"
+#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
 
 #define MAX_LIGHTS 8
 
@@ -27,7 +28,7 @@ public:
 	void UseCheckerTexture();
 	void SetUpBuffers(Mesh* mesh);
 	void IterateMeshDraw();
-	void DrawMesh(Mesh* mesh, uint id = 0);
+	void DrawMesh(Mesh* mesh, float4x4 transform, uint id = 0);
 
 	void DrawNormals(Mesh* mesh);
 

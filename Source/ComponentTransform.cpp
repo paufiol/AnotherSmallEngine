@@ -50,8 +50,8 @@ void ComponentTransform::DrawInspector() {
 		//if(ImGui::InputFloat3("Scale", (float*)&scale, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue)) { UpdateMatrix(); };
 		//if(ImGui::InputFloat4("Rotation", (float*)&rotation, 1, ImGuiInputTextFlags_EnterReturnsTrue));
 
-		if(ImGui::DragFloat3("Position", (float*)&position, 0.0f,0.0f,0.0f, "%.3f", ImGuiSliderFlags_None)){ UpdateMatrix(); }
-		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.0f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
-		if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.0f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
+		if(ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)){ UpdateMatrix(); }
+		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
+		if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
 	}
 }
