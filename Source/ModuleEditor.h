@@ -75,7 +75,7 @@ public:
 	bool fullscreen = false;
 	bool resizable = false;
 	bool borderless = false;
-	bool full_desktop = false;
+	bool full_desktop = true;
 
 	bool drawNormals = false;
 	bool drawWireframe = false;

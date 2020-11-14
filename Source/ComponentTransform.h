@@ -33,6 +33,7 @@ public:
 
 	ComponentTransform(GameObject* parent); //DEFAULTS TO 0,0
 	ComponentTransform(GameObject* parent, float3 position, float3 scale, Quat rotation);
+	~ComponentTransform();
 private:
 
 	void UpdateMatrix(); //Call after every interaction with the matrix;  

@@ -17,6 +17,10 @@ ComponentTransform::ComponentTransform(GameObject* parent, float3 position, floa
 	type = ComponentType::Transform;
 };
 
+ComponentTransform::~ComponentTransform()
+{
+}
+
 void ComponentTransform::Enable() {
 	if (!this->active) {
 		this->active = true;
@@ -42,8 +46,12 @@ void ComponentTransform::UpdateMatrix(){
 void ComponentTransform::DrawInspector() {
 	if (ImGui::CollapsingHeader("Component Transform"))
 	{
-		ImGui::InputFloat3("Transform", (float*)&position, 1);
-		ImGui::InputFloat3("Scale", (float*)&scale, 1);
-		ImGui::InputFloat4("Rotation", (float*)&rotation, 1);
+		//if(ImGui::InputFloat3("Transform", (float*)&position, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue)) { UpdateMatrix(); };
+		//if(ImGui::InputFloat3("Scale", (float*)&scale, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue)) { UpdateMatrix(); };
+		//if(ImGui::InputFloat4("Rotation", (float*)&rotation, 1, ImGuiInputTextFlags_EnterReturnsTrue));
+
+		if(ImGui::DragFloat3("Position", (float*)&position, 0.0f,0.0f,0.0f, "%.3f", ImGuiSliderFlags_None)){ UpdateMatrix(); }
+		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.0f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
+		if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.0f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
 	}
 }

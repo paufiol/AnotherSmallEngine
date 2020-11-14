@@ -22,9 +22,6 @@
     <ClCompile Include="ModuleCamera3D.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleEditor.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="ModuleInput.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -166,17 +163,20 @@
     <ClCompile Include="ModuleImporter.cpp">
       <Filter>Importers</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentMesh.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentTexture.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentTransform.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentMesh.cpp">
+      <Filter>GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTexture.cpp">
+      <Filter>GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentTransform.cpp">
+      <Filter>GameObjects\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleEditor.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -208,9 +208,6 @@
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleCamera3D.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleEditor.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleInput.h">
@@ -445,13 +442,16 @@
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="ComponentMesh.h">
-      <Filter>GameObjects</Filter>
+      <Filter>GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentTexture.h">
-      <Filter>GameObjects</Filter>
+      <Filter>GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentTransform.h">
-      <Filter>GameObjects</Filter>
+      <Filter>GameObjects\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEditor.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -497,8 +497,14 @@
     <Filter Include="GameObjects">
       <UniqueIdentifier>{e23e7cde-383e-40a2-8b33-9dd1b15ebfca}</UniqueIdentifier>
     </Filter>
-       <Filter Include="Core">
+    <Filter Include="Core">
       <UniqueIdentifier>{a70620a4-e7bb-47fc-8038-3e9b19f6556c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects\Components">
+      <UniqueIdentifier>{2bda0a92-dc71-4795-80e1-fecefaf0e3c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{87aaa6fe-3f7a-4d5b-bf55-edb74df08dc1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
