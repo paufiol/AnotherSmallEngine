@@ -247,8 +247,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 {
-	//glPushMatrix();
-	//glMultMatrixf((float*)&transform.Transposed());
+
 
 	if (App->editor->drawTexture && !App->editor->drawCheckerTex)
 	{
@@ -268,6 +267,9 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 	
 	if (!Importer::MeshImporter::meshes.empty())
 	{
+		glPushMatrix();
+		glMultMatrixf((float*)&transform.Transposed());
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);

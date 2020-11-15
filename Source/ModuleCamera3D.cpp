@@ -39,19 +39,17 @@ bool ModuleCamera3D::CleanUp()
 
 void ModuleCamera3D::FocusObject() 
 {
-	ComponentTransform* selected_obj = (ComponentTransform*)App->scene_intro->selected_object->GetComponent(ComponentType::Transform);
-	
 	vec3 ObjPosition;
 	
-	ObjPosition.x = selected_obj->GetPosition().x;
-	ObjPosition.y = selected_obj->GetPosition().y;
-	ObjPosition.z = selected_obj->GetPosition().z;
+	ObjPosition.x = App->scene_intro->selected_object->transform->GetPosition().x;
+	ObjPosition.y = App->scene_intro->selected_object->transform->GetPosition().y;
+	ObjPosition.z = App->scene_intro->selected_object->transform->GetPosition().z;
 
 	vec3 ObjScale;
 
-	ObjScale.x = selected_obj->GetScale().x;
-	ObjScale.y = selected_obj->GetScale().y;
-	ObjScale.z = selected_obj->GetScale().z;
+	ObjScale.x = App->scene_intro->selected_object->transform->GetScale().x;
+	ObjScale.y = App->scene_intro->selected_object->transform->GetScale().y;
+	ObjScale.z = App->scene_intro->selected_object->transform->GetScale().z;
 
 	Position = (ObjPosition + normalize(Position - ObjPosition)) * 8;
 	//Position.y = ;

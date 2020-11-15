@@ -72,6 +72,8 @@ void ModuleSceneIntro::AddGameObject(GameObject* object)
 	object->SetParent(root_object);
 	root_object->AddChildren(object);
 	game_objects.push_back(object); 
+
+
 	//root_object->AppendChildren(object);
 }
 

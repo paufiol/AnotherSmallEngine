@@ -3,6 +3,9 @@
 #include <vector>
 
 class Component;
+class ComponentTransform;
+class ComponentMesh;
+class ComponentTexture;
 enum class ComponentType;
 
 class GameObject {
@@ -15,6 +18,9 @@ public:
 
 	GameObject* parent;
 	std::vector<GameObject*> children;
+
+	ComponentTransform* transform = nullptr;
+	ComponentTexture* texture = nullptr;
 private:
 
 
