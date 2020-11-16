@@ -8,6 +8,7 @@ ComponentTransform::ComponentTransform(GameObject* parent) :
 {
 	transform = float4x4::FromTRS(position, rotation, scale);
 	type = ComponentType::Transform;
+	UpdateEulerAngles();
 };
 
 ComponentTransform::ComponentTransform(GameObject* parent, float3 position, float3 scale, Quat rotation) :
@@ -39,15 +40,38 @@ void ComponentTransform::Update() {
 
 }
 
-void ComponentTransform::UpdateMatrix(){
+void ComponentTransform::UpdateLocalMatrix(){
 	transform = float4x4::FromTRS(position, rotation, scale);
 }
 
+void ComponentTransform::UpdateTRS()
+{
+	transform.Decompose(position, rotation, scale);
+	UpdateEulerAngles();
+}
+
+void ComponentTransform::UpdateEulerAngles()
+{
+	eulerRotation = rotation.ToEulerXYZ();
+	eulerRotation *= RADTODEG;
+}
+
+void ComponentTransform::SetEulerRotation(float3 eulerAngles)
+{
+	float3 temp = (eulerAngles - eulerRotation) * DEGTORAD;
+	Quat quaternion = Quat::FromEulerXYZ(temp.x, temp.y, temp.z);
+	rotation = rotation * quaternion;
+	eulerRotation = eulerAngles;
+	UpdateLocalMatrix();
+}
+
+
 void ComponentTransform::DrawInspector() {
+	
 	if (ImGui::CollapsingHeader("Component Transform"))
 	{
-		if(ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)){ UpdateMatrix(); }
-		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
-		if (ImGui::DragFloat3("Rotation", (float*)&rotation, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateMatrix(); }
+		if (ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalMatrix(); }
+		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalMatrix(); }
+		if (ImGui::DragFloat3("Rotation", (float*)&_eulerRotation, 0.06f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(_eulerRotation); }
 	}
 }

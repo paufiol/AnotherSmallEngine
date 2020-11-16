@@ -56,6 +56,9 @@ void ModuleCamera3D::FocusObject()
 	//Position.z = ;
 
 	LookAt(ObjPosition);
+	
+	
+	//LookAt(Position); //??????
 }
 
 // -----------------------------------------------------------------

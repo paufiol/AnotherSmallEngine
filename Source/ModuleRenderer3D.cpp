@@ -103,19 +103,16 @@ bool ModuleRenderer3D::Init()
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 
 		lights[0].Active(true);
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-		glEnable(GL_TEXTURE_2D);
-		//glEnable(GL_TEXTURE_CUBE_MAP);
+		SetDepthtest(false);
+		SetCullface(false);
+		SetLighting(false);
+		SetColormaterial(false);
+		SetTexture2D(false);
 	}	
 	Importer::TextureImporter::InitDevil();
+
 	UseCheckerTexture();
-
-	//Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png");
 	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
-
 	ComponentTexture* tempCompTex = new ComponentTexture(App->scene_intro->selected_object);
 	tempCompTex->SetTexture(Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png"), "Assets/Textures/BakerHouse.png");
 
@@ -267,8 +264,9 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 	
 	if (!Importer::MeshImporter::meshes.empty())
 	{
-		glPushMatrix();
+		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());
+
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -296,6 +294,8 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
 
+
+		glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
 	}
 	else
 	{
