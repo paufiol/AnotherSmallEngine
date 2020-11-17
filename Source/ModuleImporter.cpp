@@ -36,19 +36,19 @@ void Importer::MeshImporter::Import(const char* file)
 
     if (scene != nullptr && scene->HasMeshes())
     {
-        string tempName = "Game Object ";
-        string stringSize = to_string(App->scene_intro->game_objects.size());
-        tempName += stringSize;
-        GameObject* tempGameObj = new GameObject(tempName);
+        //string tempName = "Game Object ";
+        //string stringSize = to_string(App->scene_intro->game_objects.size());
+        //tempName += stringSize;
+        //GameObject* tempGameObj = new GameObject(tempName);
 
         // Use scene->mNumMeshes to iterate on scene->mMeshes array
         for (int i = 0; i < scene->mNumMeshes; i++)
         {
             Mesh* tempMesh = new Mesh();
-            std::string tmpString = "";
-            tmpString.append("New_Obj ");
-            
-            ComponentMesh* tempComponentMesh = new ComponentMesh(tempGameObj);
+            //std::string tmpString = "";
+            //tmpString.append("New_Obj ");
+            //
+            //ComponentMesh* tempComponentMesh = new ComponentMesh(tempGameObj);
 
             tempMesh->size[Mesh::vertex] = scene->mMeshes[i]->mNumVertices;
             tempMesh->vertices = new float[tempMesh->size[Mesh::vertex] * 3];
@@ -91,10 +91,10 @@ void Importer::MeshImporter::Import(const char* file)
                     tempMesh->texCoords[j * 2 + 1] = scene->mMeshes[i]->mTextureCoords[0][j].y;
                 }
             }
-            tempComponentMesh->SetMesh(tempMesh);
-            tempComponentMesh->SetPath(file);
+            //tempComponentMesh->SetMesh(tempMesh);
+            //tempComponentMesh->SetPath(file);
 
-            tempGameObj->AddComponent(tempComponentMesh);
+            //tempGameObj->AddComponent(tempComponentMesh);
 
             
 
@@ -102,7 +102,7 @@ void Importer::MeshImporter::Import(const char* file)
             meshes.push_back(tempMesh);
         }
         
-        App->scene_intro->AddGameObject(tempGameObj);
+        //App->scene_intro->AddGameObject(tempGameObj);
         aiReleaseImport(scene);
     }
     else

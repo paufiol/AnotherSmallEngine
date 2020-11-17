@@ -26,5 +26,6 @@ public:
 	void SetPath(std::string path);
 
 	ComponentMesh(GameObject* parent); 
+	ComponentMesh(GameObject* parent, const char* meshPath, Mesh* _mesh = nullptr);
 private:
 };

@@ -3,6 +3,7 @@
 #include "ComponentTransform.h"
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
+#include "ModuleImporter.h"
 #include <vector>
 
 
@@ -112,4 +113,7 @@ std::vector<Component*> GameObject::GetComponents(ComponentType type)
 
 	return ret;
 }
+
+
+
 

@@ -3,6 +3,9 @@
 #include "ModuleCamera3D.h"
 #include "Primitive.h"
 #include "GameObject.h"
+#include "ModuleImporter.h" //TODO: NEEDED ONLY BECAUSE OF MESH CLASS-> Turn Mesh Class into stand alone file.
+#include "ComponentTexture.h"
+#include "ComponentMesh.h"
 
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
@@ -22,6 +25,8 @@ bool ModuleSceneIntro::Start()
 	
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
+
+	CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
 
 	return ret;
 }
@@ -64,6 +69,48 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 	}
 
 	return UPDATE_CONTINUE;
+}
+
+
+void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const char* texturePath)
+{
+	GameObject* tempGO = new GameObject(name);
+	int meshNum = 1;
+	if (meshPath != nullptr)
+	{
+		Importer::MeshImporter::Import(meshPath);
+		vector<Mesh*> meshes = Importer::MeshImporter::meshes;
+		tempGO->SetParent(root_object);
+		root_object->AddChildren(tempGO);
+		game_objects.push_back(tempGO);
+		if (meshes.size() == 1)
+		{
+			ComponentMesh* compMesh = new ComponentMesh(tempGO, meshPath, meshes.front());
+			tempGO->AddComponent(compMesh);
+		}
+		else if (meshes.size() > 1)
+		{
+			vector<Mesh*>::iterator iterator = meshes.begin();
+			for (; iterator != meshes.end(); iterator++)
+			{
+				string tempName = "Mesh ";
+				string stringSize = to_string(meshNum);
+				tempName += stringSize;
+
+				GameObject* childGO = new GameObject(tempName);
+				ComponentMesh* newComp = new ComponentMesh(childGO, meshPath, (*iterator));
+
+				childGO->AddComponent(newComp); //It's a componentMesh it may not work
+
+				childGO->SetParent(tempGO);
+				tempGO->AddChildren(childGO);
+				game_objects.push_back(childGO);
+				meshNum++;
+			}
+		}
+	}
+
+
 }
 
 void ModuleSceneIntro::AddGameObject(GameObject* object)

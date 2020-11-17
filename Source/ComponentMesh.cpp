@@ -2,7 +2,7 @@
 #include "ComponentMesh.h"
 #include "GameObject.h"
 
-#include "ModuleImporter.h" //TODO: NEEDED ONLY BECAUSE OF MESH CLASS-> Turn Mesh Class into stand alone file.
+#include "ModuleImporter.h"
 #include "Dependencies/ImGUI/imgui.h"
 
 ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent)
@@ -12,6 +12,12 @@ ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent)
 	path = "No path!";
 	type = ComponentType::Mesh;
 };
+ComponentMesh::ComponentMesh(GameObject* parent, const char* meshPath, Mesh* _mesh) : Component(parent)
+{
+	mesh = _mesh;
+	path = meshPath;
+	type = ComponentType::Mesh;
+}
 
 void ComponentMesh::Enable() {
 

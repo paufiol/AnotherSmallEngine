@@ -21,6 +21,7 @@ public:
 	bool CleanUp();
 
 	void AddGameObject(GameObject* object);
+	void CreateGameObject(string name, const char* meshPath, const char* texturePath);
 	
 private:
 	std::vector<Primitive*> primitives;

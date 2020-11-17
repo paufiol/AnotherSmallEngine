@@ -112,11 +112,12 @@ bool ModuleRenderer3D::Init()
 	Importer::TextureImporter::InitDevil();
 
 	UseCheckerTexture();
-	Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
-	ComponentTexture* tempCompTex = new ComponentTexture(App->scene_intro->selected_object);
-	tempCompTex->SetTexture(Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png"), "Assets/Textures/BakerHouse.png");
 
-	App->scene_intro->selected_object->AddComponent(tempCompTex);
+	//Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
+	//ComponentTexture* tempCompTex = new ComponentTexture(App->scene_intro->selected_object);
+	//tempCompTex->SetTexture(Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png"), "Assets/Textures/BakerHouse.png");
+
+	//App->scene_intro->selected_object->AddComponent(tempCompTex);
 
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
