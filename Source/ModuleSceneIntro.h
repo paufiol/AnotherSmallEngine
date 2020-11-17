@@ -22,6 +22,7 @@ public:
 
 	void AddGameObject(GameObject* object);
 	void CreateGameObject(string name, const char* meshPath, const char* texturePath);
+	void SelectObject(GameObject* object);
 	
 private:
 	std::vector<Primitive*> primitives;

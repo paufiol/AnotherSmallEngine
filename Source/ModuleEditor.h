@@ -7,7 +7,9 @@
 #include "Globals.h"
 #include "Timer.h"
 
+using namespace std;
 #define GREEN ImVec4(0.0f, 1.0f, 0.0f, 1.0f)
+class GameObject;
 
 class ModuleEditor : public Module 
 {
@@ -32,6 +34,7 @@ public:
 	void AddLog(std::string text);
 	void InspectorWindow();
 	void HierarchyWindow();
+	void DrawHierarchyLevel(GameObject* rootObject);
 
 	const char* GetSystemCaps();
 
@@ -54,7 +57,7 @@ public:
 	int window_width = 0;
 	int window_height = 0;
 	float brightness = 0;
-
+	int fpsCap = 0;
 	bool dockingWindow = true;
 
 	bool show_demo_window = false;

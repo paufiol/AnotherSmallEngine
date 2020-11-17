@@ -80,7 +80,7 @@ Component* GameObject::AddComponent(Component* component)
 
 GameObject* GameObject::AddChildren(GameObject* children) {
 	
-	if(!this->children.empty() ) this->children.push_back(children);
+	if(this != nullptr) this->children.push_back(children);
 	return children;
 }
 

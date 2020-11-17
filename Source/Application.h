@@ -32,10 +32,8 @@ public:
 
 	bool debug = false;
 	bool renderPrimitives = false;
-private:
-	std::vector<Module*> modules;
 
-public:
+	std::vector<Module*> modules;
 
 	Application();
 	~Application();
@@ -44,6 +42,11 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	std::vector<float> GetFps() { return fpsVec; }
+	std::vector<float> GetMs() { return msVec; }
+	int GetFpsCap() { return framerateCap; }
+	void SetFpsCap(int fpsCap);
+private:
 	uint					frame_count = 0;
 	Timer					startup_time;
 	Timer					frame_time;
@@ -60,8 +63,6 @@ public:
 	float GetDT() const;
 	float	dt;
 
-
-private:
 
 	void AddModule(Module* module);
 	void PrepareUpdate();

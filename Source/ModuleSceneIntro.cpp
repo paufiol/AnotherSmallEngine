@@ -86,6 +86,12 @@ void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const
 		if (meshes.size() == 1)
 		{
 			ComponentMesh* compMesh = new ComponentMesh(tempGO, meshPath, meshes.front());
+			if (texturePath != nullptr)
+			{
+				ComponentTexture* compTex = new ComponentTexture(tempGO, texturePath);
+				compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
+				tempGO->AddComponent(compTex);
+			}
 			tempGO->AddComponent(compMesh);
 		}
 		else if (meshes.size() > 1)
@@ -99,8 +105,13 @@ void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const
 
 				GameObject* childGO = new GameObject(tempName);
 				ComponentMesh* newComp = new ComponentMesh(childGO, meshPath, (*iterator));
-
-				childGO->AddComponent(newComp); //It's a componentMesh it may not work
+				if (texturePath != nullptr)
+				{
+					ComponentTexture* compTex = new ComponentTexture(childGO, texturePath);
+					compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
+					childGO->AddComponent(compTex);
+				}
+				childGO->AddComponent(newComp);
 
 				childGO->SetParent(tempGO);
 				tempGO->AddChildren(childGO);
@@ -122,5 +133,13 @@ void ModuleSceneIntro::AddGameObject(GameObject* object)
 
 
 	//root_object->AppendChildren(object);
+}
+
+void ModuleSceneIntro::SelectObject(GameObject* object)
+{
+	if (object != nullptr)
+	{
+		selected_object = object;
+	}
 }
 

@@ -153,6 +153,8 @@ bool Application::CleanUp()
 	return ret;
 }
 
+void Application::SetFpsCap(int fpsCap) { framerateCap = fpsCap; }
+
 void Application::AddModule(Module* module)
 {
 	modules.push_back(module);

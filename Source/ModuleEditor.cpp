@@ -42,7 +42,7 @@ bool ModuleEditor::Start()
 	window_height = App->window->height;
 	brightness = SDL_GetWindowBrightness(App->window->window);
 	SDL_GetVersion(&version);
-
+	fpsCap = App->GetFpsCap();
 
 
 	return true;
@@ -181,16 +181,16 @@ void ModuleEditor::ConfigurationWindow()
 		if (ImGui::CollapsingHeader("Application"))
 		{
 
-			ImGui::SliderInt("Max FPS", &App->framerateCap, 1, 60);
-
+			ImGui::SliderInt("Max FPS", &fpsCap, 1, 60);
+			App->SetFpsCap(fpsCap);
 			ImGui::Text("Limit Framerate:");
 			ImGui::SameLine();
-			ImGui::TextColored(GREEN, "%d", App->framerateCap);
+			ImGui::TextColored(GREEN, "%d", fpsCap);
 
-			sprintf_s(title, 25, "Framerate %.1f", App->fpsVec[App->fpsVec.size() - 1]);
-			ImGui::PlotHistogram("##framerate", &App->fpsVec[0], App->fpsVec.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
-			sprintf_s(title, 25, "Milliseconds %0.1f", App->msVec[App->msVec.size() - 1]);
-			ImGui::PlotHistogram("##milliseconds", &App->msVec[0], App->msVec.size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
+			sprintf_s(title, 25, "Framerate %.1f", App->GetFps()[App->GetFps().size() - 1]);
+			ImGui::PlotHistogram("##framerate", &App->GetFps()[0], App->GetFps().size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+			sprintf_s(title, 25, "Milliseconds %0.1f", App->GetMs()[App->GetMs().size() - 1]);
+			ImGui::PlotHistogram("##milliseconds", &App->GetMs()[0], App->GetMs().size(), 0, title, 0.0f, 40.0f, ImVec2(310, 100));
 		}
 		if (ImGui::CollapsingHeader("Window"))
 		{
@@ -324,25 +324,68 @@ void ModuleEditor::InspectorWindow()
 	}
 }
 
-void DrawHierarchyLevel(std::vector<GameObject*> list)
+void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 {
-	vector<GameObject*> list2 = App->scene_intro->game_objects;
-	
-	for (uint n = 0; n < list2.size(); n++)
+	GameObject* childObject = nullptr;
+	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	if(rootObject->children.empty()) treeFlags |= ImGuiTreeNodeFlags_Leaf;
+	if(rootObject == App->scene_intro->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected;
+	ImGui::AlignTextToFramePadding();
+
+	if (ImGui::TreeNodeEx(rootObject->name.c_str(), treeFlags))
 	{
-		if (ImGui::Button(list2[n]->name.c_str()))
+		if (rootObject != App->scene_intro->root_object)
 		{
-			list2[n]->selected = true;
-			App->scene_intro->selected_object = list2[n];
-			for (uint k = 0; k < list2.size(); k++)
+			if (ImGui::IsItemClicked())						//For the Scene and the House it doesnt open the Inspector!!
 			{
-				if (list2[n] != list2[k]) list2[k]->selected = false;
+				App->scene_intro->SelectObject(rootObject);
+				rootObject->selected = true;
+			}
+			if (ImGui::BeginDragDropSource())
+			{
+				ImGui::SetDragDropPayload("Dragged_Object", rootObject, sizeof(GameObject));
+				ImGui::Text("Dragging %s", rootObject->name);
+				childObject = rootObject;
+				ImGui::EndDragDropSource();
+			}
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Dragged_Object"))
+				{
+					rootObject->AddChildren(childObject);
+					childObject->SetParent(rootObject);
+					childObject = nullptr;
+				}
+				ImGui::EndDragDropTarget();
 			}
 		}
-		//if (list2[n]->children.size() > 0) {
-		//	DrawHierarchyLevel(list2[n]->children);
-		//}
+			if (!rootObject->children.empty())
+			{
+				for (uint i = 0; i < rootObject->children.size(); ++i)
+				{
+					DrawHierarchyLevel(rootObject->children[i]);
+				}
+			}
+
+		ImGui::TreePop();	
 	}
+
+	
+	//vector<GameObject*> list2 = App->scene_intro->game_objects;
+	//
+	//for (uint n = 0; n < list2.size(); n++)
+	//{
+	//	if (ImGui::Button(list2[n]->name.c_str()))
+	//	{
+	//		list2[n]->selected = true;
+	//		App->scene_intro->selected_object = list2[n];
+	//		for (uint k = 0; k < list2.size(); k++)
+	//		{
+	//			if (list2[n] != list2[k]) list2[k]->selected = false;
+	//		}
+	//	}
+
+	//}
 };
 
 void ModuleEditor::HierarchyWindow()
@@ -351,7 +394,7 @@ void ModuleEditor::HierarchyWindow()
 	{
 		ImGui::Begin("Hierarchy", &show_hierarchy_window);
 		
-		DrawHierarchyLevel(App->scene_intro->game_objects);
+		DrawHierarchyLevel(App->scene_intro->root_object);
 
 		ImGui::End();
 	}

@@ -13,6 +13,14 @@ ComponentTexture::ComponentTexture(GameObject* parent) : Component(parent)
 	type = ComponentType::Material;
 };
 
+ComponentTexture::ComponentTexture(GameObject* parent, const char* texturePath) : Component(parent)
+{
+	texture = new Texture();
+	texture->id = -1;
+	texture->path = texturePath;
+	type = ComponentType::Material;
+}
+
 void ComponentTexture::Enable() {
 
 }
