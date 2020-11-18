@@ -33,8 +33,7 @@ bool ModuleEditor::Start()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-	ImGui::StyleColorsDark();
+	ImGui::StyleColorsDark(); 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init(NULL);
 
@@ -326,25 +325,23 @@ void ModuleEditor::InspectorWindow()
 
 void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 {
-	GameObject* childObject = nullptr;
-	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
 	if(rootObject->children.empty()) treeFlags |= ImGuiTreeNodeFlags_Leaf;
-	if(rootObject == App->scene_intro->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected;
+	if (rootObject == App->scene_intro->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected;
 	ImGui::AlignTextToFramePadding();
 
 	if (ImGui::TreeNodeEx(rootObject->name.c_str(), treeFlags))
 	{
-		if (rootObject != App->scene_intro->root_object)
+		if (ImGui::IsItemClicked())						// To select Scene or the House needs to be opened
 		{
-			if (ImGui::IsItemClicked())						//For the Scene and the House it doesnt open the Inspector!!
-			{
-				App->scene_intro->SelectObject(rootObject);
-				rootObject->selected = true;
-			}
+			App->scene_intro->SelectObject(rootObject);
+			rootObject->selected = true;
+		}
+		if (rootObject != App->scene_intro->root_object)
+		{	
 			if (ImGui::BeginDragDropSource())
 			{
 				ImGui::SetDragDropPayload("Dragged_Object", rootObject, sizeof(GameObject));
-				ImGui::Text("Dragging %s", rootObject->name);
 				childObject = rootObject;
 				ImGui::EndDragDropSource();
 			}
@@ -354,8 +351,16 @@ void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 				{
 					rootObject->AddChildren(childObject);
 					childObject->SetParent(rootObject);
+					//for()
+					//
+					//
+					//
+					//childObject->parent->children.
+
+
 					childObject = nullptr;
 				}
+				
 				ImGui::EndDragDropTarget();
 			}
 		}
@@ -369,23 +374,6 @@ void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 
 		ImGui::TreePop();	
 	}
-
-	
-	//vector<GameObject*> list2 = App->scene_intro->game_objects;
-	//
-	//for (uint n = 0; n < list2.size(); n++)
-	//{
-	//	if (ImGui::Button(list2[n]->name.c_str()))
-	//	{
-	//		list2[n]->selected = true;
-	//		App->scene_intro->selected_object = list2[n];
-	//		for (uint k = 0; k < list2.size(); k++)
-	//		{
-	//			if (list2[n] != list2[k]) list2[k]->selected = false;
-	//		}
-	//	}
-
-	//}
 };
 
 void ModuleEditor::HierarchyWindow()

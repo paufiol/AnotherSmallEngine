@@ -51,7 +51,8 @@ public:
 	std::string Caps;
 
 	std::vector<std::string> log_record;
-	
+	GameObject* childObject = nullptr;
+
 	char title[25];
 	char label[32];
 	int window_width = 0;
@@ -76,9 +77,9 @@ public:
 	bool polygonssmooth = false;
 
 	bool fullscreen = false;
-	bool resizable = false;
+	bool resizable = true;
 	bool borderless = false;
-	bool full_desktop = true;
+	bool full_desktop = false;
 
 	bool drawNormals = false;
 	bool drawWireframe = false;

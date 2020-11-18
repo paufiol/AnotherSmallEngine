@@ -54,6 +54,11 @@ bool ModuleWindow::Init()
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
+		if (WIN_MAXIMIZED == true)
+		{
+			flags |= SDL_WINDOW_MAXIMIZED;
+		}
+
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags);
 
 		if(window == NULL)
