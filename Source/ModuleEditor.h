@@ -11,6 +11,7 @@ using namespace std;
 #define GREEN ImVec4(0.0f, 1.0f, 0.0f, 1.0f)
 class GameObject;
 
+
 class ModuleEditor : public Module 
 {
 public:
@@ -31,10 +32,11 @@ public:
 	void AboutWindow();
 	void ConfigurationWindow();
 	void ConsoleWindow();
-	void AddLog(std::string text);
+	void AddLog(string text);
 	void InspectorWindow();
 	void HierarchyWindow();
 	void DrawHierarchyLevel(GameObject* rootObject);
+	void GUIisHovered();
 
 	const char* GetSystemCaps();
 
@@ -47,6 +49,7 @@ public:
 public:
 	//SDL_Window* window;
 	//SDL_WindowFlags window_flags;
+
 	SDL_version version;
 	std::string Caps;
 
@@ -86,7 +89,8 @@ public:
 	bool drawCheckerTex = false;
 	bool drawTexture = true;
 
-
+	bool scrollDown = true;
+	bool GUIhovered = false;
 };
 
 #endif //__ModuleEditor_H__

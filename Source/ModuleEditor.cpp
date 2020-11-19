@@ -33,6 +33,8 @@ bool ModuleEditor::Start()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	
+
 	ImGui::StyleColorsDark(); 
 	ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
 	ImGui_ImplOpenGL3_Init(NULL);
@@ -49,7 +51,6 @@ bool ModuleEditor::Start()
 update_status ModuleEditor::PreUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
-
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -70,7 +71,7 @@ update_status ModuleEditor::Update(float dt)
 	if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 	HierarchyWindow();
 	InspectorWindow();
-
+	GUIisHovered();
 	ImGui::End();
 
 	return UPDATE_CONTINUE;
@@ -98,8 +99,13 @@ bool ModuleEditor::CleanUp()
 void ModuleEditor::DrawGUI()
 {
 	ImGui::Render();
-	//glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleEditor::GUIisHovered()
+{
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.WantCaptureMouse ? GUIhovered = true : GUIhovered = false;
 }
 
 bool ModuleEditor::MainMenuBar()
@@ -141,9 +147,9 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
 			ImGui::EndMenu();
 		}
-
 		ImGui::EndMenuBar();
 		ImGui::End();
+
 	}
 	return ret;
 }
@@ -168,7 +174,9 @@ void ModuleEditor::AboutWindow()
 		ImGui::Text("GNU License:");
 		sprintf(label, "Click here to see the full License");
 		if (ImGui::Selectable(label, true))	RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/LICENSE.txt");
+		
 		ImGui::End();
+
 	}
 }
 
@@ -301,15 +309,6 @@ void ModuleEditor::InspectorWindow()
 		ImGui::Begin("Inspector", &show_inspector_window);
 		ImGui::Text(App->scene_intro->selected_object->name.c_str());
 		ImGui::Separator();
-		/*
-			for (uint n = 0; n < App->scene_intro->game_objects.size(); n++)
-		{
-			for (uint m = 0; m < App->scene_intro->game_objects[n]->components.size(); m++)
-			{
-				App->scene_intro->game_objects[n]->components[m]->DrawInspector();
-			}
-		}
-		*/
 		for (uint m = 0; m < App->scene_intro->selected_object->components.size(); m++)
 		{
 			if (App->scene_intro->selected_object->selected)
@@ -377,6 +376,7 @@ void ModuleEditor::HierarchyWindow()
 		
 		DrawHierarchyLevel(App->scene_intro->root_object);
 
+
 		ImGui::End();
 	}
 }
@@ -385,20 +385,40 @@ void ModuleEditor::HierarchyWindow()
 void ModuleEditor::ConsoleWindow()
 {
 	if (show_console_window) {
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6));
+
+		ImVec4 textColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 		ImGui::Begin("Console", &show_console_window);
 
 		for (int i = 0; i < log_record.size(); i++)
 		{
+			if (strstr(log_record[i].c_str(), "ERROR") != nullptr)
+			{
+				textColor = { 1.0f, 0.0f, 0.3f, 0.7f };
+			}
+
+			ImGui::PushStyleColor(ImGuiCol_Text, textColor);
+
 			ImGui::Text("%s", log_record[i].c_str());
+
+			ImGui::PopStyleColor();
 		}
+
+		ImGui::PopStyleVar();
+
+		if (scrollDown) ImGui::SetScrollHere(1.0f);
+		scrollDown = false;
+
 		ImGui::End();
 	}
 }
 
-void ModuleEditor::AddLog(std::string text) {
+void ModuleEditor::AddLog(string text) {
 
 	if (&log_record != NULL) {
 		log_record.push_back(text);
+		scrollDown = true;
 	}
 }
 

@@ -4,6 +4,7 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleEditor.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
@@ -66,6 +67,8 @@ update_status ModuleCamera3D::Update(float dt)
 {
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
+	if (App->editor->GUIhovered) return UPDATE_CONTINUE;
+
 	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN) FocusObject();
 
 	vec3 newPos(0,0,0);
