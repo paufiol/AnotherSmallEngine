@@ -11,6 +11,7 @@ ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
 	root_object = new GameObject("Scene");
 	game_objects.push_back(root_object);
+	root_object->parent = nullptr;
 	selected_object = root_object;
 }
 

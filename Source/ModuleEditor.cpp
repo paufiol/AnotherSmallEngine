@@ -350,13 +350,6 @@ void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Dragged_Object"))
 				{
 					rootObject->AddChildren(childObject);
-					childObject->SetParent(rootObject);
-					//for()
-					//
-					//
-					//
-					//childObject->parent->children.
-
 
 					childObject = nullptr;
 				}

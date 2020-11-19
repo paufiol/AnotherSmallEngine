@@ -1,3 +1,5 @@
+#include "Application.h"
+#include "ModuleSceneIntro.h"
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
@@ -92,20 +94,66 @@ Component* GameObject::AddComponent(Component* component)
 	return ret;
 }
 
-GameObject* GameObject::AddChildren(GameObject* children) {
+GameObject* GameObject::AddChildren(GameObject* children) 
+{
+	if (this->parent != nullptr)
+	{
+		GameObject* parentObject = this->parent;
+
+		while (parentObject != App->scene_intro->root_object)	//Iterate all parents to avoid parenting a parent to its own child
+		{
+			if (parentObject == children)
+			{
+				LOG("ERROR: Can't add %s to %s, they are already parented", children->name.c_str(), this->name.c_str());
+				return children;
+			}
+			else if (parentObject->parent != nullptr)
+			{
+				parentObject = parentObject->parent;
+			}
+		}
+	}
 	
-	if(this != nullptr) this->children.push_back(children);
+	if (children->parent != nullptr) 
+	{
+		children->parent->EraseChildren(children);
+		children->SetParent(this);
+	}
+
+	this->children.push_back(children);
 	return children;
+}
+
+bool GameObject::EraseChildren(GameObject* child)
+{
+	for (uint i = 0; i < children.size(); ++i)
+	{
+		if (children[i] == child)
+		{
+			children.erase(children.begin() + i);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 Component* GameObject::GetComponent(ComponentType type)
 {
-	std::vector<Component*>::iterator item = components.begin();
-	
-	for (; item != components.end(); ++item) {
+	//std::vector<Component*>::iterator item = components.begin();
+	//
+	//for (; item != components.end(); ++item) {
 
-		if ((*item)->type == type) {
-			return (*item);
+	//	if ((*item)->type == type) {
+	//		return (*item);
+	//	}
+	//}
+
+	for (uint i = 0; i < components.size(); ++i) {
+
+		if (components[i]->type == type)
+		{
+			return(components[i]);
 		}
 	}
 

@@ -40,7 +40,7 @@ public:
 	Component* GetComponent(ComponentType type);
 	std::vector<Component*> GetComponents(ComponentType type);
 	GameObject* AddChildren(GameObject* children);
-
+	bool EraseChildren(GameObject* children);
 	
 	bool selected = false;
 private:
