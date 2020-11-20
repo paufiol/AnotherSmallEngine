@@ -15,7 +15,7 @@ class Component {
 public:
 	ComponentType type;
 	bool active;
-	GameObject* parent;
+	GameObject* owner;
 
 private:
 
@@ -27,7 +27,7 @@ public:
 	virtual void Disable() {};
 
 	virtual void DrawInspector() {};
-	Component(GameObject* parent) : active(true), parent(parent), type(ComponentType::Error) {};
+	Component(GameObject* owner) : active(true), owner(owner), type(ComponentType::Error) {};
 private:
 
 };

@@ -5,7 +5,7 @@
 #include "ModuleImporter.h" //TODO: NEEDED ONLY BECAUSE OF MESH CLASS-> Turn Mesh Class into stand alone file.
 #include "Dependencies/ImGUI/imgui.h"
 
-ComponentTexture::ComponentTexture(GameObject* parent) : Component(parent)
+ComponentTexture::ComponentTexture(GameObject* owner) : Component(owner)
 {
 	texture = new Texture();
 	texture->id = -1;
@@ -13,7 +13,7 @@ ComponentTexture::ComponentTexture(GameObject* parent) : Component(parent)
 	type = ComponentType::Material;
 };
 
-ComponentTexture::ComponentTexture(GameObject* parent, const char* texturePath) : Component(parent)
+ComponentTexture::ComponentTexture(GameObject* owner, const char* texturePath) : Component(owner)
 {
 	texture = new Texture();
 	texture->id = -1;

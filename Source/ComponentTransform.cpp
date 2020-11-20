@@ -1,52 +1,88 @@
+#include "Application.h"
+#include "ModuleSceneIntro.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 
-ComponentTransform::ComponentTransform(GameObject* parent) : 
-	Component(parent), position(float3(0.0f, 0.0f, 0.0f)), rotation(Quat::identity), scale(float3(1.0f, 1.0f, 1.0f))
+ComponentTransform::ComponentTransform(GameObject* owner) : 
+	Component(owner), position(float3(0.0f, 0.0f, 0.0f)), rotation(Quat::identity), scale(float3(1.0f, 1.0f, 1.0f))
 {
-	transform = float4x4::FromTRS(position, rotation, scale);
+	local_transform = float4x4::FromTRS(position, rotation, scale);
+	global_transform = Quat::identity;
 	type = ComponentType::Transform;
-	UpdateEulerAngles();
+	//UpdateEulerAngles();
 };
 
-ComponentTransform::ComponentTransform(GameObject* parent, float3 position, float3 scale, Quat rotation) :
-	Component(parent), scale(scale), rotation(rotation), position(position)
+ComponentTransform::ComponentTransform(GameObject* owner, float3 position, float3 scale, Quat rotation) :
+	Component(owner), scale(scale), rotation(rotation), position(position)
 {
-	transform = float4x4::FromTRS(position, rotation, scale);
+	local_transform = float4x4::FromTRS(position, rotation, scale);
+	global_transform = Quat::identity;
 	type = ComponentType::Transform;
+	//UpdateEulerAngles();
 };
 
 ComponentTransform::~ComponentTransform()
 {
 }
 
-void ComponentTransform::Enable() {
+void ComponentTransform::Enable() 
+{
 	if (!this->active) {
 		this->active = true;
 		//ON ENABLE CODE
 	}
 }
 
-void ComponentTransform::Disable() {
+void ComponentTransform::Disable() 
+{
 	if (this->active) {
 		this->active = false;
 		//ON DISABLE CODE
 	}
 }
 
-void ComponentTransform::Update() {
-
+void ComponentTransform::Update() 
+{
+	//if (globalTransform_toUpdate) 
+	//	UpdateGlobalTransform();
 }
 
-void ComponentTransform::UpdateLocalMatrix(){
-	transform = float4x4::FromTRS(position, rotation, scale);
+void ComponentTransform::UpdateLocalTransform()
+{
+	local_transform = float4x4::FromTRS(position, rotation, scale);
+	UpdateEulerAngles();
+	UpdateGlobalTransform();
+
+
+	//globalTransform_toUpdate = true;
+}
+
+void ComponentTransform::UpdateGlobalTransform()
+{
+	GameObject* tempParent = owner->parent;
+	//   && tempParent != App->scene_intro->root_object
+	if (tempParent != nullptr  )
+	{
+		global_transform = tempParent->transform->global_transform * local_transform;
+	}
+
+	UpdateTRS();
+
+	LOG("Global transform of %s updated", owner->name.c_str());
+
+	//globalTransform_toUpdate = false;
+
+	for (uint i = 0; i < owner->children.size(); i++)
+	{
+		owner->children.at(i)->transform->UpdateGlobalTransform();
+	}
 }
 
 void ComponentTransform::UpdateTRS()
 {
-	transform.Decompose(position, rotation, scale);
+	local_transform.Decompose(position, rotation, scale);
 	UpdateEulerAngles();
 }
 
@@ -62,16 +98,17 @@ void ComponentTransform::SetEulerRotation(float3 eulerAngles)
 	Quat quaternion = Quat::FromEulerXYZ(temp.x, temp.y, temp.z);
 	rotation = rotation * quaternion;
 	eulerRotation = eulerAngles;
-	UpdateLocalMatrix();
+	UpdateLocalTransform();
 }
 
 
-void ComponentTransform::DrawInspector() {
+void ComponentTransform::DrawInspector() 
+{
 	
 	if (ImGui::CollapsingHeader("Component Transform"))
 	{
-		if (ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalMatrix(); }
-		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalMatrix(); }
+		if (ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
+		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
 		if (ImGui::DragFloat3("Rotation", (float*)&_eulerRotation, 0.06f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(_eulerRotation); }
 	}
 }

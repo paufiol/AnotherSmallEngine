@@ -115,7 +115,7 @@ bool ModuleEditor::MainMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))	
 		{ 
-			if(ImGui::MenuItem("Exit")) { ret = false;  }
+			if(ImGui::MenuItem("Exit")) ret = false;
 			
 			ImGui::EndMenu(); 
 		}

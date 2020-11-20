@@ -227,12 +227,12 @@ void ModuleRenderer3D::IterateMeshDraw()
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetTransformMatrix(), componentTex->GetTexture()->id );
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->id );  //TO BE CHANGED ONCE GLOBALS WORK
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetTransformMatrix());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform());
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 			}

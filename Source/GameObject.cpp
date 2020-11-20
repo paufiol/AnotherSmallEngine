@@ -40,7 +40,7 @@ void GameObject::Update() //Start up + bool toggle
 	bool ret = true;
 	
 	for (; item != components.end() && ret == true; ++item) {
-		//ret = (*item)->Update();
+		(*item)->Update();
 	}
 }
 

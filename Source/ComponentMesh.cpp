@@ -5,14 +5,14 @@
 #include "ModuleImporter.h"
 #include "Dependencies/ImGUI/imgui.h"
 
-ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent)
+ComponentMesh::ComponentMesh(GameObject* owner) : Component(owner)
 {
 	//parent->AddComponent(this);
 	mesh = nullptr; 
 	path = "No path!";
 	type = ComponentType::Mesh;
 };
-ComponentMesh::ComponentMesh(GameObject* parent, const char* meshPath, Mesh* _mesh) : Component(parent)
+ComponentMesh::ComponentMesh(GameObject* owner, const char* meshPath, Mesh* _mesh) : Component(owner)
 {
 	mesh = _mesh;
 	path = meshPath;
