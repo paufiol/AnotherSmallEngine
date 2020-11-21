@@ -44,23 +44,28 @@ void GameObject::Update() //Start up + bool toggle
 	}
 }
 
-void GameObject::SetParent(GameObject* parent)
+void GameObject::SetParent(GameObject* _parent)
 {
 
-	if (this != nullptr && parent != nullptr)
+	if (this != nullptr && _parent != nullptr)
 	{
-		this->parent = parent;
-		LOG("Game Object %s new parent: %s", this->name.c_str(), parent->name.c_str());
+		this->parent = _parent;
+		LOG("Game Object %s new parent: %s", this->name.c_str(), _parent->name.c_str());
 	}
 	else if (this == nullptr)
 	{
 		LOG("ERROR: Game Object %s is nullptr", this->name.c_str());
 	}
-	else if (parent == nullptr)
+	else if (_parent == nullptr)
 	{
-		LOG("ERROR: Game Object %s is nullptr", parent->name.c_str());
+		LOG("ERROR: Game Object %s is nullptr", _parent->name.c_str());
 	}
 
+}
+
+void GameObject::SetName(const char* _name)
+{
+	name = _name;
 }
 
 Component* GameObject::AddComponent(Component* component)

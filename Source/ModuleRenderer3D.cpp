@@ -214,6 +214,8 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 	for (uint i = 0; i < App->scene_intro->game_objects.size(); i++) 
 	{
+		if (!App->scene_intro->game_objects.at(i)->active && !App->scene_intro->game_objects.at(i)->children.empty()) break;
+
 		if (App->scene_intro->game_objects[i]->GetComponent(ComponentType::Mesh) != nullptr)
 		{
 			
@@ -222,12 +224,14 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 			for (; item != meshComponents.end(); ++item) {
 				
+				if (!App->scene_intro->game_objects.at(i)->active) break;
+
 				ComponentTexture* componentTex = (ComponentTexture*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Material);
 				ComponentMesh* tempComponentMesh = (ComponentMesh*)(*item);
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->id );  //TO BE CHANGED ONCE GLOBALS WORK
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->id );
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 

@@ -45,8 +45,7 @@ void ComponentTransform::Disable()
 
 void ComponentTransform::Update() 
 {
-	//if (globalTransform_toUpdate) 
-	//	UpdateGlobalTransform();
+
 }
 
 void ComponentTransform::UpdateLocalTransform()
@@ -55,14 +54,11 @@ void ComponentTransform::UpdateLocalTransform()
 	UpdateEulerAngles();
 	UpdateGlobalTransform();
 
-
-	//globalTransform_toUpdate = true;
 }
 
 void ComponentTransform::UpdateGlobalTransform()
 {
 	GameObject* tempParent = owner->parent;
-	//   && tempParent != App->scene_intro->root_object
 	if (tempParent != nullptr  )
 	{
 		global_transform = tempParent->transform->global_transform * local_transform;
@@ -70,14 +66,12 @@ void ComponentTransform::UpdateGlobalTransform()
 
 	UpdateTRS();
 
-	LOG("Global transform of %s updated", owner->name.c_str());
-
-	//globalTransform_toUpdate = false;
-
 	for (uint i = 0; i < owner->children.size(); i++)
 	{
 		owner->children.at(i)->transform->UpdateGlobalTransform();
 	}
+
+	LOG("Global transform of %s updated", owner->name.c_str());
 }
 
 void ComponentTransform::UpdateTRS()

@@ -52,6 +52,8 @@ update_status ModuleEditor::PreUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
+
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -98,6 +100,11 @@ bool ModuleEditor::CleanUp()
 
 void ModuleEditor::DrawGUI()
 {
+	
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui::Render();
+	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
@@ -307,8 +314,21 @@ void ModuleEditor::InspectorWindow()
 	if (show_inspector_window)
 	{
 		ImGui::Begin("Inspector", &show_inspector_window);
-		ImGui::Text(App->scene_intro->selected_object->name.c_str());
+
+		ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
+		char tempName[64];
+		strcpy_s(tempName, App->scene_intro->selected_object->name.c_str());
+		if (ImGui::InputText("Game Object Name", tempName, IM_ARRAYSIZE(tempName), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			App->scene_intro->selected_object->SetName(tempName);
+		}
 		ImGui::Separator();
+
+		if (ImGui::Checkbox("Object Enabled", &enableObject)) 
+		{
+			enableObject ? App->scene_intro->selected_object->Enable() : App->scene_intro->selected_object->Disable();
+		}
+
 		for (uint m = 0; m < App->scene_intro->selected_object->components.size(); m++)
 		{
 			if (App->scene_intro->selected_object->selected)
@@ -325,8 +345,8 @@ void ModuleEditor::InspectorWindow()
 void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 {
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
-	if(rootObject->children.empty()) treeFlags |= ImGuiTreeNodeFlags_Leaf;
-	if (rootObject == App->scene_intro->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected;
+	if(rootObject->children.empty()) treeFlags |= ImGuiTreeNodeFlags_Leaf ;
+	if (rootObject == App->scene_intro->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Framed;
 	ImGui::AlignTextToFramePadding();
 
 	if (ImGui::TreeNodeEx(rootObject->name.c_str(), treeFlags))

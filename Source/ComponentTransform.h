@@ -20,8 +20,6 @@ private:
 
 	float4x4	local_transform;
 	float4x4	global_transform;
-
-	bool		globalTransform_toUpdate = false; // To delete
 	
 	//Methods
 public:
@@ -51,6 +49,4 @@ private:
 	void UpdateTRS();
 	void UpdateEulerAngles();
 
-
-	//void UpdateMatrix(); //Call after every interaction with the matrix;  
 };

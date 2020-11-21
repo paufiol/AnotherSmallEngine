@@ -34,7 +34,8 @@ public:
 	
 	void Update();
 
-	void SetParent(GameObject* parent);
+	void SetParent(GameObject* _parent);
+	void SetName(const char* _name);
 
 	Component* AddComponent(Component* component);
 	Component* GetComponent(ComponentType type);

@@ -91,6 +91,8 @@ public:
 
 	bool scrollDown = true;
 	bool GUIhovered = false;
+
+	bool enableObject = true;
 };
 
 #endif //__ModuleEditor_H__
