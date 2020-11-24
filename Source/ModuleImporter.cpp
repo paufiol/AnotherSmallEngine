@@ -30,25 +30,16 @@ void Importer::TextureImporter::InitDevil()
     ilutRenderer(ILUT_OPENGL);
 }
 
-void Importer::MeshImporter::Import(const char* file)
+vector<Mesh*> Importer::MeshImporter::Import(const char* file)
 {
     const aiScene* scene = aiImportFile(file, aiProcessPreset_TargetRealtime_MaxQuality);
-
+    vector<Mesh*> meshes;
     if (scene != nullptr && scene->HasMeshes())
     {
-        //string tempName = "Game Object ";
-        //string stringSize = to_string(App->scene_intro->game_objects.size());
-        //tempName += stringSize;
-        //GameObject* tempGameObj = new GameObject(tempName);
-
         // Use scene->mNumMeshes to iterate on scene->mMeshes array
         for (int i = 0; i < scene->mNumMeshes; i++)
         {
             Mesh* tempMesh = new Mesh();
-            //std::string tmpString = "";
-            //tmpString.append("New_Obj ");
-            //
-            //ComponentMesh* tempComponentMesh = new ComponentMesh(tempGameObj);
 
             tempMesh->size[Mesh::vertex] = scene->mMeshes[i]->mNumVertices;
             tempMesh->vertices = new float[tempMesh->size[Mesh::vertex] * 3];
@@ -91,24 +82,19 @@ void Importer::MeshImporter::Import(const char* file)
                     tempMesh->texCoords[j * 2 + 1] = scene->mMeshes[i]->mTextureCoords[0][j].y;
                 }
             }
-            //tempComponentMesh->SetMesh(tempMesh);
-            //tempComponentMesh->SetPath(file);
-
-            //tempGameObj->AddComponent(tempComponentMesh);
-
             
 
             App->renderer3D->SetUpBuffers(tempMesh);
             meshes.push_back(tempMesh);
         }
-        
-        //App->scene_intro->AddGameObject(tempGameObj);
         aiReleaseImport(scene);
     }
     else
     {
         LOG("Error loading scene %s", file);
     }
+
+    return meshes;
 }
 
 uint Importer::TextureImporter::Import(const char* path)

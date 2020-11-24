@@ -107,7 +107,9 @@ bool ModuleRenderer3D::Init()
 		SetCullface(false);
 		SetLighting(false);
 		SetColormaterial(false);
-		SetTexture2D(false);
+		SetTexture2D(false);	
+		glEnable(GL_BLEND);
+		
 	}	
 	Importer::TextureImporter::InitDevil();
 
@@ -162,7 +164,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 bool ModuleRenderer3D::CleanUp()
 {
 	LOG("Destroying 3D Renderer");
-	Importer::MeshImporter::meshes.clear();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SDL_GL_DeleteContext(context);
 
@@ -260,6 +261,7 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	else if (!App->editor->drawTexture && App->editor->drawCheckerTex)
 	{
@@ -267,11 +269,10 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 		glBindTexture(GL_TEXTURE_2D, checkerID);
 	}
 	
-	if (!Importer::MeshImporter::meshes.empty())
+	if (!App->scene_intro->root_object->children.empty())
 	{
 		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());
-
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);

@@ -28,7 +28,11 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
-
+	//CreateGameObject("Street Environment", "Assets/Models/Street_environment.FBX", "Assets/Textures/Street_environment1.png");
+	//CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/grass.png");
+	CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/blending_transparent_window.png");
+	CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/blending_transparent_window.png");
+	CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/blending_transparent_window.png");
 	return ret;
 }
 
@@ -79,8 +83,7 @@ void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const
 	int meshNum = 1;
 	if (meshPath != nullptr)
 	{
-		Importer::MeshImporter::Import(meshPath);
-		vector<Mesh*> meshes = Importer::MeshImporter::meshes;
+		vector<Mesh*> meshes = Importer::MeshImporter::Import(meshPath);
 		tempGO->SetParent(root_object);
 		root_object->AddChildren(tempGO);
 		game_objects.push_back(tempGO);
@@ -94,6 +97,7 @@ void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const
 				tempGO->AddComponent(compTex);
 			}
 			tempGO->AddComponent(compMesh);
+
 		}
 		else if (meshes.size() > 1)
 		{
@@ -120,6 +124,8 @@ void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const
 				meshNum++;
 			}
 		}
+
+		
 	}
 
 
