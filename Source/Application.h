@@ -27,7 +27,7 @@ public:
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
-	ModuleFileSystem* file_system ;
+	ModuleFileSystem* fileSystem ;
 
 
 	bool debug = false;

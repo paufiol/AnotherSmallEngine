@@ -18,7 +18,7 @@ void log(const char file[], int line, const char* format, ...);
 #define HAVE_M_PI
 
 
-
+typedef unsigned __int64 uint64;
 typedef unsigned int uint;
 
 enum update_status
@@ -29,8 +29,8 @@ enum update_status
 };
 
 // Configuration -----------
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 960
 #define SCREEN_SIZE 1
 #define WIN_FULLSCREEN false
 #define WIN_RESIZABLE true
@@ -39,6 +39,41 @@ enum update_status
 #define WIN_MAXIMIZED true
 #define VSYNC true
 #define TITLE "AnotherSmallEngine"
+
+//File System
+
+#define LIBRARY_PATH "Library/"
+#define FOLDERS_PATH "Library/Folders/"
+#define MESHES_PATH "Library/Meshes/"
+#define MATERIALS_PATH "Library/Materials/"
+#define TEXTURES_PATH "Library/Textures/"
+#define SCENES_PATH "Library/Scenes/"
+
+
+
+// Deletes a buffer
+#define RELEASE( x )\
+    {\
+       if( x != nullptr )\
+       {\
+         delete x;\
+	     x = nullptr;\
+       }\
+    }
+
+// Deletes an array of buffers
+#define RELEASE_ARRAY( x )\
+	{\
+       if( x != nullptr )\
+       {\
+           delete[] x;\
+	       x = nullptr;\
+		 }\
+	 }
+
+
+
+
 
 class Application;
 

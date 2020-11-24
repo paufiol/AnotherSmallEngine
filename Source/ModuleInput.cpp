@@ -109,7 +109,11 @@ update_status ModuleInput::PreUpdate(float dt)
 			break;
 
 			case SDL_DROPFILE: {
-			App->file_system->ReadDropFile(e.drop.file);
+
+
+
+
+			//App->fileSystem->ReadDropFile(e.drop.file);
 			SDL_free(e.drop.file);
 			break; }
 
