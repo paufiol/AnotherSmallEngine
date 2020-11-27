@@ -3,7 +3,7 @@
 #include "ModuleInput.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "ModuleEditor.h"
 
 ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)

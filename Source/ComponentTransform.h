@@ -1,6 +1,11 @@
 #pragma once
 #include "Component.h"
-#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
+
+//#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
+#include "Dependencies/MathGeoLib/include/Math/float3.h"
+#include "Dependencies/MathGeoLib/include/Math/float4x4.h"
+#include "Dependencies/MathGeoLib/include/Math/Quat.h"
+
 #include "glmath.h"
 #include "Globals.h"
 

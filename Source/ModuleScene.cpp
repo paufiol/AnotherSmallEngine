@@ -1,5 +1,5 @@
 #include "Application.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "ModuleCamera3D.h"
 #include "Primitive.h"
 #include "GameObject.h"
@@ -10,7 +10,7 @@
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 
-ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
+ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
 	root_object = new GameObject("Scene");
 	game_objects.push_back(root_object);
@@ -18,11 +18,11 @@ ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 	selected_object = root_object;
 }
 
-ModuleSceneIntro::~ModuleSceneIntro()
+ModuleScene::~ModuleScene()
 {}
 
 // Load assets
-bool ModuleSceneIntro::Start()
+bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
@@ -41,7 +41,7 @@ bool ModuleSceneIntro::Start()
 }
 
 // Load assets
-bool ModuleSceneIntro::CleanUp()
+bool ModuleScene::CleanUp()
 {
 	LOG("Unloading Intro scene");
 
@@ -49,7 +49,7 @@ bool ModuleSceneIntro::CleanUp()
 }
 
 // Update
-update_status ModuleSceneIntro::Update(float dt)
+update_status ModuleScene::Update(float dt)
 {
 
 	Plane p(vec3(0, 1, 0));
@@ -69,7 +69,7 @@ update_status ModuleSceneIntro::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-update_status ModuleSceneIntro::PostUpdate(float dt)
+update_status ModuleScene::PostUpdate(float dt)
 {
 
 	for (uint n = 0; n < primitives.size(); n++)
@@ -81,13 +81,13 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 }
 
 
-void ModuleSceneIntro::CreateGameObject(string name, GameObject* parent)
+GameObject* ModuleScene::CreateGameObject(string name, GameObject* parent)
 {
 	std::string fullName = name;
 
 	fullName += std::to_string(game_objects.size());
 
-	GameObject* tempObject = new GameObject( fullName);
+	GameObject* tempObject = new GameObject(fullName);
 
 	if (tempObject != nullptr)
 	{
@@ -107,7 +107,7 @@ void ModuleSceneIntro::CreateGameObject(string name, GameObject* parent)
 
 	game_objects.push_back(tempObject);
 	
-	
+	return tempObject;
 	
 	//GameObject* tempGO = new GameObject(name);
 	//int meshNum = 1;
@@ -161,7 +161,7 @@ void ModuleSceneIntro::CreateGameObject(string name, GameObject* parent)
 
 }
 
-void ModuleSceneIntro::AddGameObject(GameObject* object)
+void ModuleScene::AddGameObject(GameObject* object)
 {
 	selected_object = object;
 	object->SetParent(root_object);
@@ -172,7 +172,7 @@ void ModuleSceneIntro::AddGameObject(GameObject* object)
 	//root_object->AppendChildren(object);
 }
 
-void ModuleSceneIntro::SelectObject(GameObject* object)
+void ModuleScene::SelectObject(GameObject* object)
 {
 	if (object != nullptr)
 	{

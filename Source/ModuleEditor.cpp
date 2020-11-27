@@ -2,7 +2,7 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 #include "GameObject.h"
 #include "Component.h"
 

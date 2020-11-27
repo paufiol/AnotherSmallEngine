@@ -2,18 +2,18 @@
 #include "Module.h"
 #include "Globals.h"
 
-
-using namespace std;
+#include <vector>
+#include <string>
 
 class GameObject;
 class Primitive;
 
 
-class ModuleSceneIntro : public Module
+class ModuleScene : public Module
 {
 public:
-	ModuleSceneIntro(bool start_enabled = true);
-	~ModuleSceneIntro();
+	ModuleScene(bool start_enabled = true);
+	~ModuleScene();
 
 	bool Start();
 	update_status Update(float dt) override;
@@ -21,7 +21,7 @@ public:
 	bool CleanUp();
 
 	void AddGameObject(GameObject* object);
-	void CreateGameObject(string name, GameObject* parent = nullptr);
+	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);
 	void SelectObject(GameObject* object);
 	
 private:

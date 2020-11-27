@@ -5,7 +5,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "ModuleFileSystem.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
@@ -19,8 +19,9 @@
 #include "Dependencies/Assimp/include/postprocess.h"
 #pragma comment (lib, "Dependencies/Assimp/libx86/assimp.lib")
 
-#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
-
+//#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
+#include "Dependencies/MathGeoLib/include/Math/float3.h"
+#include "Dependencies/MathGeoLib/include/Math/Quat.h"
 
 void Importer::SceneImporter::ImportScene(const char* scenePath)
 {

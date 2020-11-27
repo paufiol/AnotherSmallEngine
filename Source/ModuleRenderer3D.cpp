@@ -3,7 +3,7 @@
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"

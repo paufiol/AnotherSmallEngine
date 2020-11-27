@@ -7,7 +7,7 @@
 #include "GameObject.h"
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleScene.h"
 
 
 #include "Dependencies/Devil/Include/ilut.h"

@@ -10,7 +10,7 @@
 class Module;												
 class ModuleWindow;
 class ModuleInput;
-class ModuleSceneIntro;
+class ModuleScene;
 class ModuleRenderer3D;
 class ModuleEditor;
 class ModuleCamera3D;
@@ -23,7 +23,7 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleSceneIntro* scene_intro;
+	ModuleScene* scene_intro;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
