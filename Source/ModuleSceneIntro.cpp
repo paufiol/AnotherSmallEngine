@@ -3,9 +3,12 @@
 #include "ModuleCamera3D.h"
 #include "Primitive.h"
 #include "GameObject.h"
-#include "ModuleImporter.h" //TODO: NEEDED ONLY BECAUSE OF MESH CLASS-> Turn Mesh Class into stand alone file.
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
+#include "ImporterScene.h"
+#include "ImporterMesh.h"
+#include "ResourceMesh.h"
+#include "ResourceMaterial.h"
 
 ModuleSceneIntro::ModuleSceneIntro(bool start_enabled) : Module(start_enabled)
 {
@@ -27,12 +30,13 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
-	CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
-	//CreateGameObject("Street Environment", "Assets/Models/Street_environment.FBX", "Assets/Textures/Street_environment1.png");
-	//CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/grass.png");
-	CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/blending_transparent_window.png");
-	CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/blending_transparent_window.png");
-	CreateGameObject("Cube", "Assets/Primitives/Cube.fbx", "Assets/Textures/blending_transparent_window.png");
+	//CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
+	////CreateGameObject("Street Environment", "Assets/Models/Street_environment.FBX", "Assets/Textures/Street_environment1.png");
+
+
+
+	//Importer::SceneImporter::ImportScene("Assets/Models/BakerHouse.FBX");
+	Importer::SceneImporter::ImportScene("Assets/Models/Street_environment.FBX");
 	return ret;
 }
 
@@ -77,56 +81,82 @@ update_status ModuleSceneIntro::PostUpdate(float dt)
 }
 
 
-void ModuleSceneIntro::CreateGameObject(string name, const char* meshPath, const char* texturePath)
+void ModuleSceneIntro::CreateGameObject(string name, GameObject* parent)
 {
-	GameObject* tempGO = new GameObject(name);
-	int meshNum = 1;
-	if (meshPath != nullptr)
+	std::string fullName = name;
+
+	fullName += std::to_string(game_objects.size());
+
+	GameObject* tempObject = new GameObject( fullName);
+
+	if (tempObject != nullptr)
 	{
-		vector<Mesh*> meshes = Importer::MeshImporter::Import(meshPath);
-		tempGO->SetParent(root_object);
-		root_object->AddChildren(tempGO);
-		game_objects.push_back(tempGO);
-		if (meshes.size() == 1)
+		if (game_objects.empty())
 		{
-			ComponentMesh* compMesh = new ComponentMesh(tempGO, meshPath, meshes.front());
-			if (texturePath != nullptr)
-			{
-				ComponentTexture* compTex = new ComponentTexture(tempGO, texturePath);
-				compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
-				tempGO->AddComponent(compTex);
-			}
-			tempGO->AddComponent(compMesh);
-
-		}
-		else if (meshes.size() > 1)
-		{
-			vector<Mesh*>::iterator iterator = meshes.begin();
-			for (; iterator != meshes.end(); iterator++)
-			{
-				string tempName = "Mesh ";
-				string stringSize = to_string(meshNum);
-				tempName += stringSize;
-
-				GameObject* childGO = new GameObject(tempName);
-				ComponentMesh* newComp = new ComponentMesh(childGO, meshPath, (*iterator));
-				if (texturePath != nullptr)
-				{
-					ComponentTexture* compTex = new ComponentTexture(childGO, texturePath);
-					compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
-					childGO->AddComponent(compTex);
-				}
-				childGO->AddComponent(newComp);
-
-				childGO->SetParent(tempGO);
-				tempGO->AddChildren(childGO);
-				game_objects.push_back(childGO);
-				meshNum++;
-			}
+			root_object = tempObject;
 		}
 
-		
+		game_objects.push_back(tempObject);
+
+		if (parent != nullptr)
+		{
+			parent->AddChildren(tempObject);
+			tempObject->SetParent(parent);
+		}
 	}
+
+	game_objects.push_back(tempObject);
+	
+	
+	
+	//GameObject* tempGO = new GameObject(name);
+	//int meshNum = 1;
+	//if (meshPath != nullptr)
+	//{
+	//	//vector<ResourceMesh*> meshes = Importer::MeshImporter::LoadMeshes(meshPath);
+	//	tempGO->SetParent(root_object);
+	//	root_object->AddChildren(tempGO);
+	//	game_objects.push_back(tempGO);
+	//	if (meshes.size() == 1)
+	//	{
+	//		ComponentMesh* compMesh = new ComponentMesh(tempGO, meshPath, meshes.front());
+	//		if (texturePath != nullptr)
+	//		{
+	//			ComponentTexture* compTex = new ComponentTexture(tempGO, texturePath);
+	//			compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
+	//			tempGO->AddComponent(compTex);
+	//		}
+	//		tempGO->AddComponent(compMesh);
+
+	//	}
+	//	else if (meshes.size() > 1)
+	//	{
+	//		vector<Mesh*>::iterator iterator = meshes.begin();
+	//		for (; iterator != meshes.end(); iterator++)
+	//		{
+	//			string tempName = "Mesh ";
+	//			string stringSize = to_string(meshNum);
+	//			tempName += stringSize;
+
+	//			GameObject* childGO = new GameObject(tempName);
+	//			ComponentMesh* newComp = new ComponentMesh(childGO, meshPath, (*iterator));
+	//			if (texturePath != nullptr)
+	//			{
+	//				ComponentTexture* compTex = new ComponentTexture(childGO, texturePath);
+	//				compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
+	//				childGO->AddComponent(compTex);
+	//			}
+	//			childGO->AddComponent(newComp);
+
+	//			childGO->SetParent(tempGO);
+	//			tempGO->AddChildren(childGO);
+	//			game_objects.push_back(childGO);
+	//			meshNum++;
+	//		}
+	//	}
+
+	//	
+	//}
 
 
 }

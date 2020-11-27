@@ -45,13 +45,15 @@ void ComponentTransform::Disable()
 
 void ComponentTransform::Update() 
 {
-
+	//if (updateGlobalTrans) UpdateGlobalTransform();
 }
 
 void ComponentTransform::UpdateLocalTransform()
 {
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	UpdateEulerAngles();
+	
+	updateGlobalTrans = true;
 	UpdateGlobalTransform();
 
 }
@@ -66,6 +68,8 @@ void ComponentTransform::UpdateGlobalTransform()
 
 	UpdateTRS();
 
+
+	updateGlobalTrans = false;
 	for (uint i = 0; i < owner->children.size(); i++)
 	{
 		owner->children.at(i)->transform->UpdateGlobalTransform();

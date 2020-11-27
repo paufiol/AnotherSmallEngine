@@ -35,3 +35,22 @@ void ResourceMesh::DrawTexCoords()
     glEnd();*/
 }
 
+void ResourceMesh::SetUpBuffers(ResourceMesh* mesh)
+{
+    glGenBuffers(1, (GLuint*)&mesh->ID[ResourceMesh::vertex]);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::vertex]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[ResourceMesh::vertex] * 3, mesh->vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, (GLuint*)&mesh->ID[ResourceMesh::index]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[ResourceMesh::index]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->size[ResourceMesh::index], mesh->indices, GL_STATIC_DRAW);
+
+    glGenBuffers(1, (GLuint*)&mesh->ID[ResourceMesh::normal]);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::normal]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->size[ResourceMesh::normal] * 3, mesh->normals, GL_STATIC_DRAW);
+
+    glGenBuffers(1, (GLuint*)&mesh->ID[ResourceMesh::texture]);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::texture]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[ResourceMesh::texture] * 2, mesh->texCoords, GL_STATIC_DRAW);
+}
+

@@ -157,9 +157,6 @@
     <ClCompile Include="ResourceMesh.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ModuleImporter.cpp">
-      <Filter>Importers</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>GameObjects</Filter>
     </ClCompile>
@@ -180,6 +177,21 @@
     </ClCompile>
     <ClCompile Include="ModuleFileSystem.cpp">
       <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMesh.cpp">
+      <Filter>Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterMaterials.cpp">
+      <Filter>Importers</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceMaterial.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterTexture.cpp">
+      <Filter>Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -432,9 +444,6 @@
     <ClInclude Include="ResourceMesh.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="ModuleImporter.h">
-      <Filter>Importers</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
@@ -461,6 +470,21 @@
     </ClInclude>
     <ClInclude Include="ModuleFileSystem.h">
       <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMesh.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterMaterials.h">
+      <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceMaterial.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterTexture.h">
+      <Filter>Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

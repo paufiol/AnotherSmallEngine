@@ -21,7 +21,7 @@ public:
 	bool CleanUp();
 
 	void AddGameObject(GameObject* object);
-	void CreateGameObject(string name, const char* meshPath, const char* texturePath);
+	void CreateGameObject(string name, GameObject* parent = nullptr);
 	void SelectObject(GameObject* object);
 	
 private:

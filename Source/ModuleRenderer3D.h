@@ -10,7 +10,7 @@
 #define MAX_LIGHTS 8
 
 
-struct Mesh;
+class ResourceMesh;
 
 class ModuleRenderer3D : public Module
 {
@@ -26,11 +26,10 @@ public:
 	void OnResize(int width, int height);
 
 	void UseCheckerTexture();
-	void SetUpBuffers(Mesh* mesh);
 	void IterateMeshDraw();
-	void DrawMesh(Mesh* mesh, float4x4 transform, uint id = 0);
+	void DrawMesh(ResourceMesh* mesh, float4x4 transform, uint id = 0);
 
-	void DrawNormals(Mesh* mesh);
+	void DrawNormals(ResourceMesh* mesh);
 
 	void SetDepthtest(bool active);
 	void SetCullface(bool active);
@@ -49,7 +48,7 @@ public:
 	GLbyte checkerImage[64][64][4];
 	GLuint checkerID;
 
-	Mesh* mesh = nullptr;
+	ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
 
 };

@@ -3,6 +3,11 @@
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleEditor.h"
+#include "ModuleSceneIntro.h"
+
+#include "ResourceMesh.h"
+#include "ResourceMaterial.h"
+#include "ImporterTexture.h"
 
 #include "GameObject.h"
 
@@ -10,9 +15,8 @@
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
 #include "ComponentTransform.h"
-#include "ModuleSceneIntro.h"
 
-#include "ModuleImporter.h"
+
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -108,7 +112,7 @@ bool ModuleRenderer3D::Init()
 		SetLighting(false);
 		SetColormaterial(false);
 		SetTexture2D(false);	
-		glEnable(GL_BLEND);
+		//glEnable(GL_BLEND);
 		
 	}	
 	Importer::TextureImporter::InitDevil();
@@ -184,24 +188,7 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glLoadIdentity();
 }
 
-void ModuleRenderer3D::SetUpBuffers(Mesh* mesh)
-{
-	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::vertex]);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::vertex]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[Mesh::vertex] * 3, mesh->vertices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::index]);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[Mesh::index]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * mesh->size[Mesh::index], mesh->indices, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::normal]);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::normal]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->size[Mesh::normal] * 3, mesh->normals, GL_STATIC_DRAW);
-
-	glGenBuffers(1, (GLuint*)&mesh->ID[Mesh::texture]);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::texture]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[Mesh::texture] * 2, mesh->texCoords, GL_STATIC_DRAW);
-}
 
 void ModuleRenderer3D::IterateMeshDraw()
 {
@@ -232,7 +219,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->id );
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->GetId());
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
@@ -248,7 +235,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 }
 
-void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
+void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, uint id)
 {
 
 
@@ -274,22 +261,24 @@ void ModuleRenderer3D::DrawMesh(Mesh* mesh, float4x4 transform, uint id)
 		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());
 
+		glLineWidth(2);
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::vertex]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::vertex]);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::normal]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::normal]);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[Mesh::index]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[ResourceMesh::index]);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[Mesh::texture]);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::texture]);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		glDrawElements(GL_TRIANGLES, mesh->size[Mesh::index], GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, mesh->size[ResourceMesh::index], GL_UNSIGNED_INT, NULL);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -334,12 +323,12 @@ void ModuleRenderer3D::UseCheckerTexture() {
 
 }
 
-void ModuleRenderer3D::DrawNormals(Mesh* mesh)
+void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh)
 {
 	glBegin(GL_LINES);
 	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 
-	for (uint i = 0; i < mesh->size[Mesh::vertex] * 3; i +=3)
+	for (uint i = 0; i < mesh->size[ResourceMesh::vertex] * 3; i +=3)
 	{
 	    glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
 	    glVertex3f(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]);

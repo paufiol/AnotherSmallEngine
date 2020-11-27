@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include <string.h>
 
 struct aiScene;
 struct aiNode;
@@ -8,8 +9,8 @@ namespace Importer
 {
 	namespace SceneImporter
 	{
-		void ImportScene(const char* path);
-		void IterateNodes(aiScene* scene, aiNode* node, GameObject* parent);
+		void ImportScene(const char* scenePath);
+		void IterateNodes(const char* scenePath, const aiScene* scene, aiNode* node, GameObject* parent);
 
 		
 

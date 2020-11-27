@@ -2,7 +2,7 @@
 #include "ComponentMesh.h"
 #include "GameObject.h"
 
-#include "ModuleImporter.h"
+#include "ResourceMesh.h"
 #include "Dependencies/ImGUI/imgui.h"
 
 ComponentMesh::ComponentMesh(GameObject* owner) : Component(owner)
@@ -12,7 +12,7 @@ ComponentMesh::ComponentMesh(GameObject* owner) : Component(owner)
 	path = "No path!";
 	type = ComponentType::Mesh;
 };
-ComponentMesh::ComponentMesh(GameObject* owner, const char* meshPath, Mesh* _mesh) : Component(owner)
+ComponentMesh::ComponentMesh(GameObject* owner, const char* meshPath, ResourceMesh* _mesh) : Component(owner)
 {
 	mesh = _mesh;
 	path = meshPath;
@@ -35,7 +35,7 @@ void ComponentMesh::DrawInspector() {
 	
 	if(ImGui::CollapsingHeader("Component Mesh"))
 	{
-		ImGui::Text("Path: %s", path);
+		ImGui::Text("Path: %s", path.c_str());
 		ImGui::Text("Index: %d", mesh->size[0]);
 		ImGui::Text("Vertices: %d", mesh->size[1]);
 		ImGui::Text("Normals: %d", mesh->size[2]);
@@ -43,7 +43,7 @@ void ComponentMesh::DrawInspector() {
 	}
 }
 
-void ComponentMesh::SetMesh(Mesh* mesh)
+void ComponentMesh::SetMesh(ResourceMesh* mesh)
 {
 	this->mesh = mesh;
 }

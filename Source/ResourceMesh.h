@@ -1,8 +1,6 @@
 #ifndef __ResourceMesh_H__
 #define __ResourceMesh_H__
 
-#include "glmath.h"
-#include <OpenGL.h>
 #include "Globals.h"
 
 using namespace std;
@@ -10,14 +8,32 @@ using namespace std;
 class ResourceMesh {
 public:
 
+	uint* indices = nullptr;
+	float* vertices = nullptr;
+	float* normals = nullptr;
+	float* texCoords = nullptr;
+
+	enum  Buffers
+	{
+		index,
+		vertex,
+		normal,
+		texture,
+		NONE
+	};
+	uint ID[NONE];
+	uint size[NONE];
+
+	//AABB aabb;
+public:
 
     ResourceMesh();
     ~ResourceMesh();
 
-    void Draw();
     void DrawNormals();
     void DrawTexCoords();
-
+	void SetUpBuffers(ResourceMesh* mesh);
+	void CreateAABB(); //Yet to implement
 
 
 

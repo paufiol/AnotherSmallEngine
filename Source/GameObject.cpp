@@ -5,13 +5,13 @@
 #include "ComponentTransform.h"
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
-#include "ModuleImporter.h"
 #include <vector>
 
 
 GameObject::GameObject(std::string name): name(name), active(true)
 {
 	AddComponent(new ComponentTransform(this));
+	this->parent = nullptr;	// May crash HERE, at the moment it's necesary
 }
 
 bool GameObject::Enable() //Start up + bool toggle
@@ -124,7 +124,10 @@ GameObject* GameObject::AddChildren(GameObject* children)
 		children->parent->EraseChildren(children);
 		children->SetParent(this);
 	}
-
+	else if (children->parent == nullptr)
+	{
+		children->SetParent(this);
+	}
 	this->children.push_back(children);
 	return children;
 }

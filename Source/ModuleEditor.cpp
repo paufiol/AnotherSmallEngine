@@ -2,7 +2,6 @@
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "ModuleRenderer3D.h"
-#include "ModuleImporter.h"
 #include "ModuleSceneIntro.h"
 #include "GameObject.h"
 #include "Component.h"
@@ -137,11 +136,11 @@ bool ModuleEditor::MainMenuBar()
 		}
 		if (ImGui::BeginMenu("Add Primitive"))
 		{
-			if (ImGui::MenuItem("Cube")) Importer::MeshImporter::Import("Assets/Primitives/Cube.FBX");
-			if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");	
-			if (ImGui::MenuItem("Cylinder")) Importer::MeshImporter::Import("Assets/Primitives/Cylinder.FBX");
-			if (ImGui::MenuItem("Cone")) Importer::MeshImporter::Import("Assets/Primitives/Cone.FBX");
-			if (ImGui::MenuItem("Pyramid")) Importer::MeshImporter::Import("Assets/Primitives/Pyramid.FBX");
+			//if (ImGui::MenuItem("Cube")) Importer::MeshImporter::Import("Assets/Primitives/Cube.FBX");
+			//if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");	
+			//if (ImGui::MenuItem("Cylinder")) Importer::MeshImporter::Import("Assets/Primitives/Cylinder.FBX");
+			//if (ImGui::MenuItem("Cone")) Importer::MeshImporter::Import("Assets/Primitives/Cone.FBX");
+			//if (ImGui::MenuItem("Pyramid")) Importer::MeshImporter::Import("Assets/Primitives/Pyramid.FBX");
 			ImGui::EndMenu();
 
 		}

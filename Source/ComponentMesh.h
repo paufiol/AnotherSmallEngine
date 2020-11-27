@@ -2,14 +2,14 @@
 #include "Component.h"
 #include "glmath.h"
 
-struct Mesh;
+struct ResourceMesh;
 
 class ComponentMesh : public Component {
 	//Properties
 public:
 
 private:
-	Mesh* mesh;
+	ResourceMesh* mesh;
 	std::string path; 
 
 	//Methods
@@ -19,13 +19,13 @@ public:
 	void Disable() override;
 	void DrawInspector() override; 
 
-	Mesh* GetMesh() const { return mesh; };
+	ResourceMesh* GetMesh() const { return mesh; };
 	std::string  GetPath() const { return path; };
 
-	void SetMesh(Mesh* mesh);
+	void SetMesh(ResourceMesh* mesh);
 	void SetPath(std::string path);
 
 	ComponentMesh(GameObject* parent); 
-	ComponentMesh(GameObject* parent, const char* meshPath, Mesh* _mesh = nullptr);
+	ComponentMesh(GameObject* parent, const char* meshPath, ResourceMesh* _mesh = nullptr);
 private:
 };

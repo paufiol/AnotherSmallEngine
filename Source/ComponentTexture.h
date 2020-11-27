@@ -3,7 +3,7 @@
 #include "glmath.h"
 #include "Globals.h"
 
-struct Texture;
+class ResourceMaterial;
 
 
 class ComponentTexture : public Component {
@@ -11,7 +11,7 @@ class ComponentTexture : public Component {
 public:
 
 private:
-	Texture* texture;
+	ResourceMaterial* rMaterial;
 
 	//Methods
 public:
@@ -20,12 +20,12 @@ public:
 	void Disable() override;
 	void DrawInspector() override; 
 
-	void SetTexture(Texture* texture);
-	void SetTexture(uint id, const char* path);
-	Texture* GetTexture();
+
+	inline ResourceMaterial* GetTexture() { return rMaterial; }
 
 	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0
-	ComponentTexture(GameObject* parent, const char* texturePath);
+	ComponentTexture(GameObject* parent, const char* texturePath, uint id);
+	ComponentTexture(GameObject* parent, ResourceMaterial* rMaterial);
 	//ComponentTexture(GameObject* parent, vec3 position, vec3 rotation, vec3 scale);
 private:
 	
