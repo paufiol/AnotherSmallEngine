@@ -48,6 +48,14 @@ void ComponentTransform::Update()
 	//if (updateGlobalTrans) UpdateGlobalTransform();
 }
 
+void ComponentTransform::UpdateTransform(float3 _position, float3 _scale, Quat _rotation)
+{
+	local_transform = float4x4::FromTRS(_position, _rotation, _scale);
+	UpdateEulerAngles();
+	UpdateGlobalTransform();
+}
+
+
 void ComponentTransform::UpdateLocalTransform()
 {
 	local_transform = float4x4::FromTRS(position, rotation, scale);
@@ -61,13 +69,13 @@ void ComponentTransform::UpdateLocalTransform()
 void ComponentTransform::UpdateGlobalTransform()
 {
 	GameObject* tempParent = owner->parent;
+	
 	if (tempParent != nullptr  )
 	{
 		global_transform = tempParent->transform->global_transform * local_transform;
 	}
 
 	UpdateTRS();
-
 
 	updateGlobalTrans = false;
 	for (uint i = 0; i < owner->children.size(); i++)

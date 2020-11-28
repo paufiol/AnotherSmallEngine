@@ -34,6 +34,7 @@ public:
 	void Disable() override;
 	void DrawInspector() override;
 
+	void UpdateTransform(float3 position, float3 scale, Quat rotation);
 
 	void inline SetPosition(float3 position) { this->position = position;  UpdateLocalTransform();};
 	void inline SetRotation(Quat rotation) { this->rotation = rotation; UpdateLocalTransform();};

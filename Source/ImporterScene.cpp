@@ -101,38 +101,39 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 	float3	scale(aiScale.x, aiScale.y, aiScale.z);
 	Quat	rotation(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
 
-	bool dummyFound = true;
-	while (dummyFound)
+
+	while (strstr(node->mName.C_Str(), "_$AssimpFbx$_") != nullptr && node->mNumChildren == 1)
 	{
-		dummyFound = false;
+		node = node->mChildren[0];
+		node->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
 
-		if (strstr(node->mName.C_Str(), "_$AssimpFbx$_") != nullptr)
-		{
-			node = node->mChildren[0];
-			node->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
+		position.x += aiPosition.x;
+		position.y += aiPosition.y;
+		position.z += aiPosition.z;
 
-			position.x += aiPosition.x;
-			position.y += aiPosition.y;
-			position.z += aiPosition.z;
+		scale.x *= aiScale.x;
+		scale.y *= aiScale.y;
+		scale.z *= aiScale.z;
 
-			scale.x *= aiScale.x;
-			scale.y *= aiScale.y;
-			scale.z *= aiScale.z;
-
-			rotation.x *= aiRotation.x;
-			rotation.y *= aiRotation.y;
-			rotation.z *= aiRotation.z;
-			rotation.w *= aiRotation.w;
-
-			dummyFound = true;
-		}
+		rotation.x *= aiRotation.x;
+		rotation.y *= aiRotation.y;
+		rotation.z *= aiRotation.z;
+		rotation.w *= aiRotation.w;
 	}
+
 	ComponentTransform* tempCompTransform = new ComponentTransform(tempObject);
+	
 	//---------------------------------------------------------------------------------
+	//if (node->mParent == nullptr)
+	//	tempObject->SetParent(App->scene_intro->root_object);
+
+	//else 
+	//	tempObject->SetParent(parent);
 
 	parent->AddChildren(tempObject);
 	App->scene_intro->game_objects.push_back(tempObject);
 	
+	tempObject->transform->UpdateTransform(position, scale, rotation);
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
 	{
