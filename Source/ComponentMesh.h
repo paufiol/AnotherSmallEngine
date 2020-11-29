@@ -17,7 +17,8 @@ public:
 	void Enable() override;
 	void Update() override;
 	void Disable() override;
-	void DrawInspector() override; 
+	void DrawInspector() override;
+	void CleanUp() override;
 
 	ResourceMesh* GetMesh() const { return mesh; };
 	std::string  GetPath() const { return path; };

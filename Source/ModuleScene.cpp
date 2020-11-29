@@ -8,6 +8,7 @@
 #include "ImporterScene.h"
 #include "ImporterMesh.h"
 #include "ResourceMesh.h"
+#include "ModuleInput.h"
 #include "ResourceMaterial.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
@@ -32,8 +33,6 @@ bool ModuleScene::Start()
 
 	//CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
 	////CreateGameObject("Street Environment", "Assets/Models/Street_environment.FBX", "Assets/Textures/Street_environment1.png");
-
-
 
 	//Importer::SceneImporter::ImportScene("Assets/Models/BakerHouse.FBX");
 	Importer::SceneImporter::ImportScene("Assets/Models/Street_environment.FBX");
@@ -66,6 +65,10 @@ update_status ModuleScene::Update(float dt)
 		primitives[n]->Update();
 	}
 	
+
+	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+		App->scene_intro->DeleteGameObject(App->scene_intro->selected_object);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -157,8 +160,6 @@ GameObject* ModuleScene::CreateGameObject(string name, GameObject* parent)
 
 	//	
 	//}
-
-
 }
 
 void ModuleScene::AddGameObject(GameObject* object)
@@ -168,8 +169,31 @@ void ModuleScene::AddGameObject(GameObject* object)
 	root_object->AddChildren(object);
 	game_objects.push_back(object); 
 
-
 	//root_object->AppendChildren(object);
+}
+
+void ModuleScene::DeleteGameObject(GameObject* object) 
+{
+	if (object != nullptr && object != root_object) //Avoid deleting root
+	{		
+		for (uint i = 0; i < game_objects.size(); i++)
+		{
+			if (object == game_objects[i]) 
+			{
+				LOG("Game Object %s deleted", object->name.c_str());
+				selected_object = nullptr;
+				
+				object->parent->EraseChild(object);
+
+				game_objects.erase(game_objects.begin() + i);
+				
+				object->CleanUp();
+			
+				
+				//delete object;
+			}
+		}
+	}
 }
 
 void ModuleScene::SelectObject(GameObject* object)
