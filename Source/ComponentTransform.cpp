@@ -48,6 +48,11 @@ void ComponentTransform::Update()
 	//if (updateGlobalTrans) UpdateGlobalTransform();
 }
 
+void ComponentTransform::CleanUp()
+{
+	
+}
+
 void ComponentTransform::UpdateTransform(float3 _position, float3 _scale, Quat _rotation)
 {
 	local_transform = float4x4::FromTRS(_position, _rotation, _scale);

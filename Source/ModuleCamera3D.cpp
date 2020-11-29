@@ -42,15 +42,15 @@ void ModuleCamera3D::FocusObject()
 {
 	vec3 ObjPosition;
 	
-	ObjPosition.x = App->scene_intro->selected_object->transform->GetPosition().x;
-	ObjPosition.y = App->scene_intro->selected_object->transform->GetPosition().y;
-	ObjPosition.z = App->scene_intro->selected_object->transform->GetPosition().z;
+	ObjPosition.x = App->scene->selected_object->transform->GetPosition().x;
+	ObjPosition.y = App->scene->selected_object->transform->GetPosition().y;
+	ObjPosition.z = App->scene->selected_object->transform->GetPosition().z;
 
 	vec3 ObjScale;
 
-	ObjScale.x = App->scene_intro->selected_object->transform->GetScale().x;
-	ObjScale.y = App->scene_intro->selected_object->transform->GetScale().y;
-	ObjScale.z = App->scene_intro->selected_object->transform->GetScale().z;
+	ObjScale.x = App->scene->selected_object->transform->GetScale().x;
+	ObjScale.y = App->scene->selected_object->transform->GetScale().y;
+	ObjScale.z = App->scene->selected_object->transform->GetScale().z;
 
 	Position = (ObjPosition + normalize(Position - ObjPosition)) * 8;
 	//Position.y = ;

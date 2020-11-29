@@ -444,9 +444,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentMesh.h">
       <Filter>GameObjects\Components</Filter>
     </ClInclude>
@@ -485,6 +482,9 @@
     </ClInclude>
     <ClInclude Include="ModuleScene.h">
       <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

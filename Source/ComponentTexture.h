@@ -19,7 +19,7 @@ public:
 	void Update() override;
 	void Disable() override;
 	void DrawInspector() override; 
-
+	void CleanUp() override;
 
 	inline ResourceMaterial* GetMaterial() { return rMaterial; }
 

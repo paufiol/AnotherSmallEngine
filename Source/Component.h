@@ -26,6 +26,8 @@ public:
 	virtual void Update() {};
 	virtual void Disable() {};
 
+	virtual void CleanUp() {};
+
 	virtual void DrawInspector() {};
 	Component(GameObject* owner) : active(true), owner(owner), type(ComponentType::Error) {};
 private:

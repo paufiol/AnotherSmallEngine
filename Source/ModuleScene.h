@@ -23,7 +23,8 @@ public:
 	void AddGameObject(GameObject* object);
 	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);
 	void SelectObject(GameObject* object);
-	
+	void DeleteGameObject(GameObject* object);
+
 private:
 	std::vector<Primitive*> primitives;
 

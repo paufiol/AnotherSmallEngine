@@ -28,20 +28,27 @@ private:
 //Methods
 public:
 	GameObject(string name);
+	~GameObject();
 
 	bool Enable(); //Start up + bool toggle
 	bool Disable();//Clean up + bool toggle
 	
 	void Update();
+	void CleanUp();
 
 	void SetParent(GameObject* _parent);
 	void SetName(const char* _name);
 
+	//Component handling
 	Component* AddComponent(Component* component);
 	Component* GetComponent(ComponentType type);
 	std::vector<Component*> GetComponents(ComponentType type);
+	void EraseComponents();
+
+	//Children handling
 	GameObject* AddChildren(GameObject* children);
-	bool EraseChildren(GameObject* children);
+	void EraseChild(GameObject* child);	//Delete specific child
+	void EraseAllChildren();			//Delete them all
 	
 	bool selected = false;
 private:

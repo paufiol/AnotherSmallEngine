@@ -31,6 +31,13 @@ void ComponentMesh::Update() {
 
 }
 
+void ComponentMesh::CleanUp()
+{
+	delete[] mesh->indices;
+	delete[] mesh->normals;
+	delete[] mesh->vertices;
+}
+
 void ComponentMesh::DrawInspector() {
 	
 	if(ImGui::CollapsingHeader("Component Mesh"))

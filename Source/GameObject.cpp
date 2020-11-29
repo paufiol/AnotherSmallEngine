@@ -14,6 +14,12 @@ GameObject::GameObject(std::string name): name(name), active(true)
 	this->parent = nullptr;	// May crash HERE, at the moment it's necesary
 }
 
+GameObject::~GameObject() 
+{
+	//EraseAllChildren();
+	//EraseComponents();
+}
+
 bool GameObject::Enable() //Start up + bool toggle
 {
 	if (!active) {
@@ -34,14 +40,25 @@ bool GameObject::Disable() //Start up + bool toggle
 	return false;
 }
 
-void GameObject::Update() //Start up + bool toggle
+void GameObject::Update()
 {
-	std::vector<Component*>::iterator item = components.begin();
-	bool ret = true;
-	
-	for (; item != components.end() && ret == true; ++item) {
-		(*item)->Update();
+	if (!components.empty()) 
+	{
+		std::vector<Component*>::iterator item = components.begin();
+		bool ret = true;
+
+		for (; item != components.end() && ret == true; ++item) {
+			(*item)->Update();
+		}
 	}
+}
+
+void GameObject::CleanUp()
+{
+	EraseAllChildren();
+	
+	EraseComponents();
+
 }
 
 void GameObject::SetParent(GameObject* _parent)
@@ -99,13 +116,24 @@ Component* GameObject::AddComponent(Component* component)
 	return ret;
 }
 
+void GameObject::EraseComponents() 
+{
+	if(!components.empty())
+	{
+		for (uint i = 0; i < components.size(); ++i)
+		{
+			components[i]->CleanUp();
+		}
+	}
+}
+
 GameObject* GameObject::AddChildren(GameObject* children) 
 {
 	if (this->parent != nullptr)
 	{
 		GameObject* parentObject = this->parent;
 
-		while (parentObject != App->scene_intro->root_object)	//Iterate all parents to avoid parenting a parent to its own child
+		while (parentObject != App->scene->root_object)	//Iterate all parents to avoid parenting a parent to its own child
 		{
 			if (parentObject == children)
 			{
@@ -121,7 +149,7 @@ GameObject* GameObject::AddChildren(GameObject* children)
 	
 	if (children->parent != nullptr) 
 	{
-		children->parent->EraseChildren(children);
+		children->parent->EraseChild(children);
 		children->SetParent(this);
 	}
 	else if (children->parent == nullptr)
@@ -132,18 +160,43 @@ GameObject* GameObject::AddChildren(GameObject* children)
 	return children;
 }
 
-bool GameObject::EraseChildren(GameObject* child)
+void GameObject::EraseChild(GameObject* child)
 {
-	for (uint i = 0; i < children.size(); ++i)
+	if (!children.empty())
 	{
-		if (children[i] == child)
+		for (uint i = 0; i < children.size(); ++i)
 		{
-			children.erase(children.begin() + i);
-			return true;
+			if (children[i] == child)
+			{
+				children[i]->CleanUp();
+				delete children[i];
+				children.erase(children.begin() + i);
+			}
 		}
 	}
+}
 
-	return false;
+void GameObject::EraseAllChildren()
+{
+	if (!children.empty())
+	{
+		for (uint i = 0; i < children.size(); ++i)
+		{
+
+			for (uint j = 0; j < App->scene->game_objects.size(); j++)
+			{
+				if (children[i] == App->scene->game_objects[j]) {
+					App->scene->game_objects.erase(App->scene->game_objects.begin() + j);
+					break;
+				}
+			}
+			
+			children[i]->CleanUp();
+
+			delete children[i];
+		}
+		children.clear();
+	}
 }
 
 Component* GameObject::GetComponent(ComponentType type)

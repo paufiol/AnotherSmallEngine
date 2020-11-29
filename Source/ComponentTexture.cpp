@@ -39,6 +39,11 @@ void ComponentTexture::Update() {
 
 }
 
+void ComponentTexture::CleanUp()
+{
+	delete rMaterial;
+}
+
 void ComponentTexture::DrawInspector() {
 
 	if (ImGui::CollapsingHeader("Component Texture"))
