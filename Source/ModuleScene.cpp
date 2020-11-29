@@ -67,7 +67,7 @@ update_status ModuleScene::Update(float dt)
 	
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
-		App->scene_intro->DeleteGameObject(App->scene_intro->selected_object);
+		App->scene->DeleteGameObject(App->scene->selected_object);
 
 	return UPDATE_CONTINUE;
 }

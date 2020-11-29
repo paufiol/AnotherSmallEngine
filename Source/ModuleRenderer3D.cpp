@@ -120,10 +120,10 @@ bool ModuleRenderer3D::Init()
 	UseCheckerTexture();
 
 	//Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
-	//ComponentTexture* tempCompTex = new ComponentTexture(App->scene_intro->selected_object);
+	//ComponentTexture* tempCompTex = new ComponentTexture(App->scene->selected_object);
 	//tempCompTex->SetTexture(Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png"), "Assets/Textures/BakerHouse.png");
 
-	//App->scene_intro->selected_object->AddComponent(tempCompTex);
+	//App->scene->selected_object->AddComponent(tempCompTex);
 
 	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
@@ -200,23 +200,23 @@ void ModuleRenderer3D::IterateMeshDraw()
 		//LOG("Mesh rendered with %d vertices", Importer::MeshImporter::meshes[i]->size[Mesh::vertex]);
 	}*/
 
-	for (uint i = 0; i < App->scene_intro->game_objects.size(); i++) 
+	for (uint i = 0; i < App->scene->game_objects.size(); i++) 
 	{
-		if (!App->scene_intro->game_objects.at(i)->active && !App->scene_intro->game_objects.at(i)->children.empty()) break;
+		if (!App->scene->game_objects.at(i)->active && !App->scene->game_objects.at(i)->children.empty()) break;
 
-		if (App->scene_intro->game_objects[i]->GetComponent(ComponentType::Mesh) != nullptr)
+		if (App->scene->game_objects[i]->GetComponent(ComponentType::Mesh) != nullptr)
 		{
 			
-			std::vector<Component*> meshComponents = App->scene_intro->game_objects[i]->GetComponents(ComponentType::Mesh);
+			std::vector<Component*> meshComponents = App->scene->game_objects[i]->GetComponents(ComponentType::Mesh);
 			std::vector<Component*>::iterator item = meshComponents.begin();
 
 			for (; item != meshComponents.end(); ++item) {
 				
-				if (!App->scene_intro->game_objects.at(i)->active) break;
+				if (!App->scene->game_objects.at(i)->active) break;
 
-				ComponentTexture* componentTex = (ComponentTexture*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Material);
+				ComponentTexture* componentTex = (ComponentTexture*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
 				ComponentMesh* tempComponentMesh = (ComponentMesh*)(*item);
-				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Transform);
+				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
 					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->GetId());
@@ -256,7 +256,7 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, uint id)
 		glBindTexture(GL_TEXTURE_2D, checkerID);
 	}
 	
-	if (!App->scene_intro->root_object->children.empty())
+	if (!App->scene->root_object->children.empty())
 	{
 		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());

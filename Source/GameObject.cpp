@@ -133,7 +133,7 @@ GameObject* GameObject::AddChildren(GameObject* children)
 	{
 		GameObject* parentObject = this->parent;
 
-		while (parentObject != App->scene_intro->root_object)	//Iterate all parents to avoid parenting a parent to its own child
+		while (parentObject != App->scene->root_object)	//Iterate all parents to avoid parenting a parent to its own child
 		{
 			if (parentObject == children)
 			{
@@ -183,10 +183,10 @@ void GameObject::EraseAllChildren()
 		for (uint i = 0; i < children.size(); ++i)
 		{
 
-			for (uint j = 0; j < App->scene_intro->game_objects.size(); j++)
+			for (uint j = 0; j < App->scene->game_objects.size(); j++)
 			{
-				if (children[i] == App->scene_intro->game_objects[j]) {
-					App->scene_intro->game_objects.erase(App->scene_intro->game_objects.begin() + j);
+				if (children[i] == App->scene->game_objects[j]) {
+					App->scene->game_objects.erase(App->scene->game_objects.begin() + j);
 					break;
 				}
 			}

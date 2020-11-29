@@ -33,7 +33,7 @@ void Importer::SceneImporter::ImportScene(const char* scenePath)
 	{
 		const aiScene* aiScene = aiImportFileFromMemory(buffer, size, aiProcessPreset_TargetRealtime_MaxQuality, nullptr);
 
-		Importer::SceneImporter::IterateNodes(scenePath, aiScene, aiScene->mRootNode, App->scene_intro->root_object);
+		Importer::SceneImporter::IterateNodes(scenePath, aiScene, aiScene->mRootNode, App->scene->root_object);
 	}
 
 }
@@ -125,13 +125,13 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 	
 	//---------------------------------------------------------------------------------
 	//if (node->mParent == nullptr)
-	//	tempObject->SetParent(App->scene_intro->root_object);
+	//	tempObject->SetParent(App->scene->root_object);
 
 	//else 
 	//	tempObject->SetParent(parent);
 
 	parent->AddChildren(tempObject);
-	App->scene_intro->game_objects.push_back(tempObject);
+	App->scene->game_objects.push_back(tempObject);
 	
 	tempObject->transform->UpdateTransform(position, scale, rotation);
 

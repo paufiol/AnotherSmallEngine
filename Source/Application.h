@@ -23,7 +23,7 @@ class Application
 public:
 	ModuleWindow* window;
 	ModuleInput* input;
-	ModuleScene* scene_intro;
+	ModuleScene* scene;
 	ModuleRenderer3D* renderer3D;
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;

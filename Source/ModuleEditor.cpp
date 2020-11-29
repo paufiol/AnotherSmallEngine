@@ -314,27 +314,27 @@ void ModuleEditor::InspectorWindow()
 	{
 		ImGui::Begin("Inspector", &show_inspector_window);
 
-		if(App->scene_intro->selected_object != nullptr)
+		if(App->scene->selected_object != nullptr)
 		{
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 			char tempName[64];
-			strcpy_s(tempName, App->scene_intro->selected_object->name.c_str());
+			strcpy_s(tempName, App->scene->selected_object->name.c_str());
 			if (ImGui::InputText("Game Object Name", tempName, IM_ARRAYSIZE(tempName), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				App->scene_intro->selected_object->SetName(tempName);
+				App->scene->selected_object->SetName(tempName);
 			}
 			ImGui::Separator();
 
 			if (ImGui::Checkbox("Object Enabled", &enableObject))
 			{
-				enableObject ? App->scene_intro->selected_object->Enable() : App->scene_intro->selected_object->Disable();
+				enableObject ? App->scene->selected_object->Enable() : App->scene->selected_object->Disable();
 			}
 
-			for (uint m = 0; m < App->scene_intro->selected_object->components.size(); m++)
+			for (uint m = 0; m < App->scene->selected_object->components.size(); m++)
 			{
-				if (App->scene_intro->selected_object->selected)
+				if (App->scene->selected_object->selected)
 				{
-					App->scene_intro->selected_object->components[m]->DrawInspector();
+					App->scene->selected_object->components[m]->DrawInspector();
 				}
 
 			}
@@ -342,15 +342,15 @@ void ModuleEditor::InspectorWindow()
 			//DEBUG, might keep.
 			if (ImGui::CollapsingHeader("Parent"))
 			{
-				if (App->scene_intro->selected_object->parent != nullptr) {
-					ImGui::Text("%s", App->scene_intro->selected_object->parent->name.c_str());
+				if (App->scene->selected_object->parent != nullptr) {
+					ImGui::Text("%s", App->scene->selected_object->parent->name.c_str());
 				}
 				else ImGui::Text("No Parent");
 			}
 			
 			if (ImGui::Button("delete Object"))
 			{
-				App->scene_intro->DeleteGameObject(App->scene_intro->selected_object);
+				App->scene->DeleteGameObject(App->scene->selected_object);
 			}
 		}
 		ImGui::End();
@@ -361,17 +361,17 @@ void ModuleEditor::DrawHierarchyLevel(GameObject* rootObject)
 {
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
 	if(rootObject->children.empty()) treeFlags |= ImGuiTreeNodeFlags_Leaf ;
-	if (rootObject == App->scene_intro->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Framed;
+	if (rootObject == App->scene->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Framed;
 	ImGui::AlignTextToFramePadding();
 
 	if (ImGui::TreeNodeEx(rootObject->name.c_str(), treeFlags))
 	{
 		if (ImGui::IsItemClicked())						// To select Scene or the House needs to be opened
 		{
-			App->scene_intro->SelectObject(rootObject);
+			App->scene->SelectObject(rootObject);
 			rootObject->selected = true;
 		}
-		if (rootObject != App->scene_intro->root_object)
+		if (rootObject != App->scene->root_object)
 		{	
 			if (ImGui::BeginDragDropSource())
 			{
@@ -409,7 +409,7 @@ void ModuleEditor::HierarchyWindow()
 	{
 		ImGui::Begin("Hierarchy", &show_hierarchy_window);
 		
-		DrawHierarchyLevel(App->scene_intro->root_object);
+		DrawHierarchyLevel(App->scene->root_object);
 
 
 		ImGui::End();
