@@ -83,9 +83,10 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 					texName = "Assets/Textures/" + texName + "." + texExtension;
 
 					rMaterial = Importer::TextureImporter::ImportTexture(texName.c_str());
-					ComponentTexture* tempCompTex = new ComponentTexture(tempObject, rMaterial);
-					tempObject->AddComponent(tempCompTex);
+					
 				}
+				ComponentTexture* tempCompTex = new ComponentTexture(tempObject, rMaterial);
+				tempObject->AddComponent(tempCompTex);
 			}
 		}
 	}
@@ -120,20 +121,14 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 		rotation.z *= aiRotation.z;
 		rotation.w *= aiRotation.w;
 	}
-
-	ComponentTransform* tempCompTransform = new ComponentTransform(tempObject);
 	
 	//---------------------------------------------------------------------------------
-	//if (node->mParent == nullptr)
-	//	tempObject->SetParent(App->scene_intro->root_object);
-
-	//else 
-	//	tempObject->SetParent(parent);
 
 	parent->AddChildren(tempObject);
+	tempObject->transform->UpdateTransform(position, scale, rotation);
 	App->scene_intro->game_objects.push_back(tempObject);
 	
-	tempObject->transform->UpdateTransform(position, scale, rotation);
+
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
 	{

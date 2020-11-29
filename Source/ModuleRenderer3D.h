@@ -13,6 +13,7 @@
 
 
 class ResourceMesh;
+class ResourceMaterial;
 
 class ModuleRenderer3D : public Module
 {
@@ -29,7 +30,7 @@ public:
 
 	void UseCheckerTexture();
 	void IterateMeshDraw();
-	void DrawMesh(ResourceMesh* mesh, float4x4 transform, uint id = 0);
+	void DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial = nullptr);
 
 	void DrawNormals(ResourceMesh* mesh);
 

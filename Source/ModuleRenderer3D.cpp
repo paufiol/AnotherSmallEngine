@@ -219,7 +219,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene_intro->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetTexture()->GetId());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial());
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
@@ -235,14 +235,18 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 }
 
-void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, uint id)
+void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial)
 {
 
-
-	if (App->editor->drawTexture && !App->editor->drawCheckerTex)
+	if (rMaterial->GetTexture().id == 0)														// If the Material Component does not have a Texture Resource.
+	{
+		Color color = rMaterial->GetColor();
+		glColor4f(color.r, color.g, color.b, color.a);												// Apply the diffuse color to the mesh.
+	}
+	else if (App->editor->drawTexture && !App->editor->drawCheckerTex)
 	{
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, id);
+		glBindTexture(GL_TEXTURE_2D, rMaterial->GetTexture().id);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -261,7 +265,6 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, uint id)
 		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());
 
-		glLineWidth(2);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);

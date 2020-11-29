@@ -51,7 +51,7 @@ void ComponentTransform::Update()
 void ComponentTransform::UpdateTransform(float3 _position, float3 _scale, Quat _rotation)
 {
 	local_transform = float4x4::FromTRS(_position, _rotation, _scale);
-	UpdateEulerAngles();
+
 	UpdateGlobalTransform();
 }
 
@@ -60,8 +60,6 @@ void ComponentTransform::UpdateLocalTransform()
 {
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	UpdateEulerAngles();
-	
-	updateGlobalTrans = true;
 	UpdateGlobalTransform();
 
 }
@@ -77,7 +75,6 @@ void ComponentTransform::UpdateGlobalTransform()
 
 	UpdateTRS();
 
-	updateGlobalTrans = false;
 	for (uint i = 0; i < owner->children.size(); i++)
 	{
 		owner->children.at(i)->transform->UpdateGlobalTransform();
@@ -100,11 +97,11 @@ void ComponentTransform::UpdateEulerAngles()
 
 void ComponentTransform::SetEulerRotation(float3 eulerAngles)
 {
-	float3 temp = (eulerAngles - eulerRotation) * DEGTORAD;
+	float3 temp = eulerAngles  * DEGTORAD;
 	Quat quaternion = Quat::FromEulerXYZ(temp.x, temp.y, temp.z);
-	rotation = rotation * quaternion;
-	eulerRotation = eulerAngles;
-	UpdateLocalTransform();
+	rotation =  quaternion;
+	eulerRotation = temp;
+	UpdateLocalTransform(); 
 }
 
 
@@ -115,6 +112,6 @@ void ComponentTransform::DrawInspector()
 	{
 		if (ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
 		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
-		if (ImGui::DragFloat3("Rotation", (float*)&_eulerRotation, 0.06f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(_eulerRotation); }
+		if (ImGui::DragFloat3("Rotation", (float*)&eulerRotation, 0.06f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(eulerRotation); }
 	}
 }
