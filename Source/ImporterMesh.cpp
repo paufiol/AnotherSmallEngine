@@ -47,9 +47,9 @@ vector<ResourceMesh*> Importer::MeshImporter::LoadMeshes(const aiScene* scene, c
 
         if (scene->mMeshes[node->mMeshes[i]]->HasNormals())
         {
-            tempMesh->size[ResourceMesh::normal] = scene->mMeshes[i]->mNumVertices;
+            tempMesh->size[ResourceMesh::normal] = scene->mMeshes[node->mMeshes[i]]->mNumVertices;
             tempMesh->normals = new float[tempMesh->size[ResourceMesh::normal] * 3];
-            memcpy(tempMesh->normals, scene->mMeshes[i]->mNormals, sizeof(float) * tempMesh->size[ResourceMesh::normal] * 3);
+            memcpy(tempMesh->normals, scene->mMeshes[node->mMeshes[i]]->mNormals, sizeof(float) * tempMesh->size[ResourceMesh::normal] * 3);
         }
 
         if (scene->mMeshes[node->mMeshes[i]]->HasTextureCoords(0))

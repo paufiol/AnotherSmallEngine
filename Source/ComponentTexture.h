@@ -11,7 +11,7 @@ class ComponentTexture : public Component {
 public:
 
 private:
-	ResourceMaterial* rMaterial;
+	ResourceMaterial* rMaterial = nullptr;
 
 	//Methods
 public:

@@ -40,7 +40,40 @@ void Importer::SceneImporter::ImportScene(const char* scenePath)
 
 void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene* aiScene, aiNode* node, GameObject* parent)
 {
-	GameObject* tempObject = new GameObject(node->mName.C_Str());
+	GameObject* tempObject = new GameObject();
+
+	//Importing Transforms-----------------------------------------------------------
+	aiVector3D		aiPosition;
+	aiVector3D		aiScale;
+	aiQuaternion	aiRotation;
+
+	node->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
+
+	float3	position(aiPosition.x, aiPosition.y, aiPosition.z);
+	float3	scale(aiScale.x, aiScale.y, aiScale.z);
+	Quat	rotation(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
+	Quat	tempRotation;
+
+	while (strstr(node->mName.C_Str(), "_$AssimpFbx$_") != nullptr && node->mNumChildren == 1)
+	{
+		node = node->mChildren[0];
+		node->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
+
+		tempRotation = Quat(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
+
+		position.x += aiPosition.x;
+		position.y += aiPosition.y;
+		position.z += aiPosition.z;
+
+		scale.x *= aiScale.x;
+		scale.y *= aiScale.y;
+		scale.z *= aiScale.z;
+
+		rotation = rotation * tempRotation;
+
+	}
+
+
 
 	if (node->mNumMeshes > 0)
 	{
@@ -72,7 +105,7 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 				string		texName;
 				string		texExtension;
 
-				if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == aiReturn_SUCCESS)										// Could also get specular and ambient occlusion colours.
+				if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)										// Could also get specular and ambient occlusion colours.
 				{
 					rMaterial->SetColor(Color(color.r, color.g, color.b, color.a));
 				}
@@ -91,41 +124,14 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 		}
 	}
 
-	//Importing Transforms-----------------------------------------------------------
-	aiVector3D		aiPosition;
-	aiVector3D		aiScale;
-	aiQuaternion	aiRotation;
-
-	node->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
-
-	float3	position(aiPosition.x, aiPosition.y, aiPosition.z);
-	float3	scale(aiScale.x, aiScale.y, aiScale.z);
-	Quat	rotation(aiRotation.x, aiRotation.y, aiRotation.z, aiRotation.w);
-
-
-	while (strstr(node->mName.C_Str(), "_$AssimpFbx$_") != nullptr && node->mNumChildren == 1)
-	{
-		node = node->mChildren[0];
-		node->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
-
-		position.x += aiPosition.x;
-		position.y += aiPosition.y;
-		position.z += aiPosition.z;
-
-		scale.x *= aiScale.x;
-		scale.y *= aiScale.y;
-		scale.z *= aiScale.z;
-
-		rotation.x *= aiRotation.x;
-		rotation.y *= aiRotation.y;
-		rotation.z *= aiRotation.z;
-		rotation.w *= aiRotation.w;
-	}
-	
 	//---------------------------------------------------------------------------------
+	tempObject->SetName(node->mName.C_Str());
+	
 	parent->AddChildren(tempObject);
+
 	tempObject->transform->UpdateTransform(position, scale, rotation);
-	App->scene_intro->game_objects.push_back(tempObject);
+
+	App->scene->game_objects.push_back(tempObject);
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
 	{

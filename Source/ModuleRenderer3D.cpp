@@ -237,27 +237,24 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial)
 {
+	if (rMaterial != nullptr)
+	{
+		if (rMaterial->GetId() == 0)
+		{
+			Color color = rMaterial->GetColor();
+			glColor4f(color.r, color.g, color.b, color.a);
+		}
+		else if (App->editor->drawTexture && !App->editor->drawCheckerTex)
+		{
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, rMaterial->GetId());
 
-	if (rMaterial->GetTexture().id == 0)														// If the Material Component does not have a Texture Resource.
-	{
-		Color color = rMaterial->GetColor();
-		glColor4f(color.r, color.g, color.b, color.a);												// Apply the diffuse color to the mesh.
-	}
-	else if (App->editor->drawTexture && !App->editor->drawCheckerTex)
-	{
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, rMaterial->GetTexture().id);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	}
-	else if (!App->editor->drawTexture && App->editor->drawCheckerTex)
-	{
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, checkerID);
+		}
+		else if (!App->editor->drawTexture && App->editor->drawCheckerTex)
+		{
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, checkerID);
+		}
 	}
 	
 	if (!App->scene->root_object->children.empty())
@@ -294,12 +291,15 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 
 
 		glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 	else
 	{
 		LOG("Unable to render meshes (No meshes loaded)");
 	}
 	
+
+
 }
 
 void ModuleRenderer3D::UseCheckerTexture() {

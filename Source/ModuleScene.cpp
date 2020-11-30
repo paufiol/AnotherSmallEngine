@@ -51,7 +51,7 @@ bool ModuleScene::CleanUp()
 update_status ModuleScene::Update(float dt)
 {
 
-	Plane p(vec3(0, 1, 0));
+	Plane p(vec3(0, -1, 0));
 	p.axis = true;
 	p.Render();
 

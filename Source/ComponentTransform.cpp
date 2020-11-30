@@ -84,8 +84,6 @@ void ComponentTransform::UpdateGlobalTransform()
 	{
 		owner->children.at(i)->transform->UpdateGlobalTransform();
 	}
-
-	LOG("Global transform of %s updated", owner->name.c_str());
 }
 
 void ComponentTransform::UpdateTRS()

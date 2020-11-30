@@ -8,7 +8,6 @@ class ComponentMesh;
 class ComponentTexture;
 enum class ComponentType;
 
-using namespace std;
 class GameObject {
 //Properties
 public:
@@ -27,7 +26,7 @@ private:
 
 //Methods
 public:
-	GameObject(string name);
+	GameObject(std::string name = "Game_Object");
 	~GameObject();
 
 	bool Enable(); //Start up + bool toggle
