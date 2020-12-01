@@ -368,9 +368,7 @@ void ModuleEditor::InspectorWindow()
 					App->scene->selected_object->components[m]->DrawInspector();
 				}
 
-			}
-
-			
+			}	
 		}
 		ImGui::End();
 	}

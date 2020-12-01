@@ -46,7 +46,7 @@ public:
 
 	//Children handling
 	GameObject* AddChildren(GameObject* children);
-	void EraseChild(GameObject* child);	//Delete specific child
+	void EraseChild(GameObject* child, bool deleteChild = true);	//Delete specific child
 	void EraseAllChildren();			//Delete them all
 	
 	bool selected = false;

@@ -138,7 +138,7 @@ GameObject* GameObject::AddChildren(GameObject* children)
 			if (parentObject == children)
 			{
 				LOG("ERROR: Can't add %s to %s, they are already parented", children->name.c_str(), this->name.c_str());
-				return children;
+				return nullptr;
 			}
 			else if (parentObject->parent != nullptr)
 			{
@@ -149,7 +149,7 @@ GameObject* GameObject::AddChildren(GameObject* children)
 	
 	if (children->parent != nullptr) 
 	{
-		children->parent->EraseChild(children);
+		children->parent->EraseChild(children, false); //EraseChild Deletes the Child right now
 		children->SetParent(this);
 	}
 	else if (children->parent == nullptr)
@@ -160,7 +160,7 @@ GameObject* GameObject::AddChildren(GameObject* children)
 	return children;
 }
 
-void GameObject::EraseChild(GameObject* child)
+void GameObject::EraseChild(GameObject* child, bool deleteChild)
 {
 	if (!children.empty())
 	{
@@ -168,8 +168,12 @@ void GameObject::EraseChild(GameObject* child)
 		{
 			if (children[i] == child)
 			{
-				children[i]->CleanUp();
-				delete children[i];
+				if (deleteChild)
+				{
+					children[i]->CleanUp();
+				
+					delete children[i];
+				}
 				children.erase(children.begin() + i);
 			}
 		}
