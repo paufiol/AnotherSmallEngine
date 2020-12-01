@@ -319,7 +319,7 @@ void ModuleEditor::InspectorWindow()
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() * 0.33f);
 			char tempName[64];
 			strcpy_s(tempName, App->scene->selected_object->name.c_str());
-			if (ImGui::InputText("Game Object Name", tempName, IM_ARRAYSIZE(tempName), ImGuiInputTextFlags_EnterReturnsTrue))
+			if (ImGui::InputText("Name", tempName, IM_ARRAYSIZE(tempName), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				App->scene->selected_object->SetName(tempName);
 			}
@@ -330,6 +330,37 @@ void ModuleEditor::InspectorWindow()
 				enableObject ? App->scene->selected_object->Enable() : App->scene->selected_object->Disable();
 			}
 
+			ImGui::Text("Parent: ");
+			ImGui::SameLine();
+			if (App->scene->selected_object->parent != nullptr)
+			{
+				ImGui::TextColored(GREEN, "%s", App->scene->selected_object->parent->name.c_str());
+			}
+			else ImGui::Text("No Parent");
+
+
+			if (ImGui::Button("Delete Object"))
+			{
+				ImGui::OpenPopup("Delete Object", ImGuiPopupFlags_None);
+			}
+			if (ImGui::BeginPopupModal("Delete Object", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("This action cannot be undone!\n Are you sure? \n\n");
+				ImGui::Separator();
+
+				if (ImGui::Button("Delete", ImVec2(120, 0))) 
+				{ 
+					App->scene->DeleteGameObject(App->scene->selected_object);
+					ImGui::CloseCurrentPopup(); 
+				}
+				ImGui::SetItemDefaultFocus();
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+				ImGui::EndPopup();
+			}
+
+			ImGui::Separator();
+
 			for (uint m = 0; m < App->scene->selected_object->components.size(); m++)
 			{
 				if (App->scene->selected_object->selected)
@@ -338,20 +369,8 @@ void ModuleEditor::InspectorWindow()
 				}
 
 			}
+
 			
-			//DEBUG, might keep.
-			if (ImGui::CollapsingHeader("Parent"))
-			{
-				if (App->scene->selected_object->parent != nullptr) {
-					ImGui::Text("%s", App->scene->selected_object->parent->name.c_str());
-				}
-				else ImGui::Text("No Parent");
-			}
-			
-			if (ImGui::Button("delete Object"))
-			{
-				App->scene->DeleteGameObject(App->scene->selected_object);
-			}
 		}
 		ImGui::End();
 	}

@@ -5,7 +5,8 @@
 
 using namespace std;
 
-class ResourceMesh {
+class ResourceMesh 
+{
 public:
 
 	uint* indices = nullptr;

@@ -86,6 +86,7 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 			
 			ComponentMesh* tempCompMesh = new ComponentMesh(tempObject);
 			tempCompMesh->SetMesh(meshes[i]);
+			tempCompMesh->SetPath(scenePath);
 			tempObject->AddComponent(tempCompMesh);
 
 			LOG("Imported the mesh of the node: %s", node->mName.C_Str());

@@ -40,13 +40,28 @@ void ComponentMesh::CleanUp()
 
 void ComponentMesh::DrawInspector() {
 	
-	if(ImGui::CollapsingHeader("Component Mesh"))
+	if(ImGui::CollapsingHeader("Component Mesh"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		ImGui::Text("Path: %s", path.c_str());
-		ImGui::Text("Index: %d", mesh->size[0]);
-		ImGui::Text("Vertices: %d", mesh->size[1]);
-		ImGui::Text("Normals: %d", mesh->size[2]);
-		ImGui::Text("texture: %d", mesh->size[3]);
+		ImGui::Text("Path: ");
+		ImGui::SameLine();
+		ImGui::TextColored(GREEN, "%s", path.c_str());
+
+		ImGui::Text("Index: ");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", mesh->size[0]);
+
+		ImGui::Text("Vertices: ");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", mesh->size[1]);
+
+		ImGui::Text("Normals: ");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", mesh->size[2]);
+
+		ImGui::Text("Texture Coords: ");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", mesh->size[3]);
+
 	}
 }
 

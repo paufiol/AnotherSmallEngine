@@ -16,8 +16,6 @@
 #include "ComponentTexture.h"
 #include "ComponentTransform.h"
 
-
-
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
 
@@ -145,7 +143,20 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
-	
+	//Scene Grid
+	glLineWidth(1.0f);
+	glBegin(GL_LINES);
+	glColor4f(0.7f, 0.7f, 0.7f, 0.7f);
+	float z = 60.0f;
+	for (float x = -60; x <= z; x += 2.0f)
+	{
+		glVertex3f(x, -1.0f, -z);
+		glVertex3f(x, -1.0f, z);
+		glVertex3f(-z, -1.0f, x);
+		glVertex3f(z, -1.0f, x);
+	}
+
+	glEnd();
 
 	return UPDATE_CONTINUE;
 }

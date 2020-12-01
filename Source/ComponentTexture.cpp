@@ -46,10 +46,14 @@ void ComponentTexture::CleanUp()
 
 void ComponentTexture::DrawInspector() {
 
-	if (ImGui::CollapsingHeader("Component Texture"))
+	if (ImGui::CollapsingHeader("Component Texture"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		ImGui::Text("Path: %s", rMaterial->GetPath());
-		ImGui::Text("Id: %d", rMaterial->GetId());
+		ImGui::Text("Path: ");
+		ImGui::SameLine();
+		ImGui::TextColored(GREEN,"%s", rMaterial->GetPath().c_str());
+		ImGui::Text("Id: ");
+		ImGui::SameLine();
+		ImGui::TextColored(YELLOW, "%d", rMaterial->GetId());
 	}
 }
 

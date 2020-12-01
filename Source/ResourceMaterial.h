@@ -3,11 +3,12 @@
 
 #include "Globals.h"
 #include "Color.h"
+#include <string>
 
 struct Texture
 {
 	uint id = 0;
-	const char* path = nullptr;
+	std::string path;
 };
 
 
@@ -25,7 +26,7 @@ public:
 	inline Texture GetTexture() { return texture; }
 	inline Color GetColor() const { return color; }
 	inline uint GetId() const { return texture.id; }
-	inline const char* GetPath() const { return texture.path; }
+	inline std::string GetPath() const { return texture.path; }
 	
 	inline void SetColor(Color color) { this->color = color; }
 

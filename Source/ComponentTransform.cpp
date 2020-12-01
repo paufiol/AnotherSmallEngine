@@ -108,13 +108,12 @@ void ComponentTransform::SetEulerRotation(float3 eulerAngles)
 }
 
 
-void ComponentTransform::DrawInspector() 
+void ComponentTransform::DrawInspector()
 {
-	
-	if (ImGui::CollapsingHeader("Component Transform"))
+	if (ImGui::CollapsingHeader("Component Transform"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
 		if (ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
 		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
-		if (ImGui::DragFloat3("Rotation", (float*)&eulerRotation, 0.06f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(eulerRotation); }
+		if (ImGui::DragFloat3("Rotation", (float*)&eulerRotation, 0.08f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(eulerRotation); }
 	}
 }

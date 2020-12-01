@@ -2,7 +2,7 @@
 #define __ImporterMesh__
 
 #include "Globals.h"
-#include <string.h>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -16,8 +16,6 @@ namespace Importer
 	namespace MeshImporter
 	{
 		vector<ResourceMesh*> LoadMeshes(const aiScene* scene, const aiNode* node);
-
-
 	}
 }
 
