@@ -1,6 +1,6 @@
 #include "ImporterScene.h"
 #include "ImporterMesh.h"
-#include "ImporterTexture.h"
+#include "ImporterMaterials.h"
 
 #include "Application.h"
 #include "GameObject.h"
@@ -99,28 +99,8 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 			{
 				aiMaterial* material = aiScene->mMaterials[aiTempMesh->mMaterialIndex];
 
-				ResourceMaterial* rMaterial = new ResourceMaterial();
-
-				aiColor4D	color;
-				aiString	texPath;
-				string		texName;
-				string		texExtension;
-
-				if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)										// Could also get specular and ambient occlusion colours.
-				{
-					rMaterial->SetColor(Color(color.r, color.g, color.b, color.a));
-				}
-				if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS)
-				{
-					App->fileSystem->SplitFilePath(texPath.C_Str(), nullptr, &texName, &texExtension);
-
-					texName = "Assets/Textures/" + texName + "." + texExtension;
-
-					rMaterial = Importer::TextureImporter::ImportTexture(texName.c_str());
-					
-				}
-				ComponentTexture* tempCompTex = new ComponentTexture(tempObject, rMaterial);
-				tempObject->AddComponent(tempCompTex);
+				Importer::MaterialsImporter::ImportMaterial(material,tempObject);
+				
 			}
 		}
 	}

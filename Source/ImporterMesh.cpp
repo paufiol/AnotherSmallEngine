@@ -68,3 +68,80 @@ vector<ResourceMesh*> Importer::MeshImporter::LoadMeshes(const aiScene* scene, c
     }
     return meshes;
 }
+
+uint64 Importer::MeshImporter::Save(const ResourceMesh* mesh, char** buffer)
+{
+    char* cursor; // Used to point where to write the next chunk of information
+    uint bytes;   // The amount of bytes each parameter use
+    uint fullSize;// The amount of bytes it takes to save the mesh
+
+    fullSize = sizeof(mesh->size) + sizeof(uint)
+        * mesh->size[ResourceMesh::index] + sizeof(uint)
+        * mesh->size[ResourceMesh::vertex] + sizeof(float) * 3
+        * mesh->size[ResourceMesh::normal] + sizeof(float) * 3
+        * mesh->size[ResourceMesh::texture] + sizeof(float) * 2;
+
+    *buffer = new char[fullSize];
+    cursor = *buffer;
+
+    // Store ranges
+    bytes = sizeof(mesh->size);
+    memcpy(cursor, mesh->size, bytes);
+    cursor += bytes;
+
+    // Store indices
+    bytes = sizeof(uint) * mesh->size[ResourceMesh::index];
+    memcpy(cursor, mesh->indices, bytes);
+    cursor += bytes;
+
+    // Store vertices
+    bytes = sizeof(uint) * mesh->size[ResourceMesh::vertex];
+    memcpy(cursor, mesh->vertices, bytes);
+    cursor += bytes;
+
+    // Store normals
+    bytes = sizeof(uint) * mesh->size[ResourceMesh::normal];
+    memcpy(cursor, mesh->normals, bytes);
+    cursor += bytes;
+
+    // Store Texture Coordinates
+    bytes = sizeof(uint) * mesh->size[ResourceMesh::texture];
+    memcpy(cursor, mesh->texCoords, bytes);
+    cursor += bytes;
+
+    return fullSize;
+}
+
+void Importer::MeshImporter::Load(ResourceMesh* mesh, char* buffer)
+{
+    char* cursor = buffer;
+    uint bytes;
+
+    bytes = sizeof(mesh->size);
+    memcpy(mesh->size, cursor, bytes);
+    cursor += bytes;
+
+    // Load indices
+    bytes = sizeof(uint) * mesh->size[ResourceMesh::index];
+    mesh->indices = new uint[mesh->size[ResourceMesh::index]];
+    memcpy(mesh->indices, cursor, bytes);
+    cursor += bytes;
+
+    // Load vertices
+    bytes = sizeof(float) * mesh->size[ResourceMesh::vertex];
+    mesh->vertices = new float[mesh->size[ResourceMesh::vertex]];
+    memcpy(mesh->vertices, cursor, bytes);
+    cursor += bytes;
+
+    // Load normals
+    bytes = sizeof(float) * mesh->size[ResourceMesh::normal];
+    mesh->normals = new float[mesh->size[ResourceMesh::normal]];
+    memcpy(mesh->normals, cursor, bytes);
+    cursor += bytes;
+
+    // Load Texture Coordinates
+    bytes = sizeof(float) * mesh->size[ResourceMesh::texture];
+    mesh->texCoords = new float[mesh->size[ResourceMesh::texture]];
+    memcpy(mesh->texCoords, cursor, bytes);
+    cursor += bytes;
+}
