@@ -8,6 +8,7 @@ enum class ComponentType {
 	Transform,
 	Mesh,
 	Material,
+	Camera
 };
 
 class Component {
@@ -19,7 +20,7 @@ public:
 
 private:
 
-	
+
 	//Methods
 public:
 	virtual void Enable() {};

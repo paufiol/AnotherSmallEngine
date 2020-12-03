@@ -1,8 +1,7 @@
 #ifndef __PATHNODE_H__
 #define __PATHNODE_H__
 
-#include <string>
-#include <vector>
+#include "Globals.h"
 
 struct PathNode
 {

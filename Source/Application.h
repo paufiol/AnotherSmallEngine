@@ -1,11 +1,8 @@
 #ifndef __Application__
 #define __Application__
 
-#include <vector>
-#include <string>
 #include "Globals.h"
 #include "Timer.h"
-
 
 class Module;												
 class ModuleWindow;
@@ -15,8 +12,6 @@ class ModuleRenderer3D;
 class ModuleEditor;
 class ModuleCamera3D;
 class ModuleFileSystem;
-
-
 
 class Application
 {

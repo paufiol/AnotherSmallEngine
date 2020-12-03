@@ -3,7 +3,6 @@
 
 #include "Globals.h"
 #include "Color.h"
-#include <string>
 
 struct Texture
 {

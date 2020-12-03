@@ -2,7 +2,6 @@
 #define __MODULEFILESYSTEM_H__
 
 #include "Module.h"
-#include <vector>
 #include "Globals.h"
 
 struct SDL_RWops;

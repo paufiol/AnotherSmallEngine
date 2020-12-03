@@ -2,8 +2,6 @@
 #define __ImporterMesh__
 
 #include "Globals.h"
-#include <string>
-#include <vector>
 
 using namespace std;
 

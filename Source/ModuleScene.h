@@ -2,9 +2,6 @@
 #include "Module.h"
 #include "Globals.h"
 
-#include <vector>
-#include <string>
-
 class GameObject;
 class Primitive;
 

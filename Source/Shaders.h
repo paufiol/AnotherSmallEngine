@@ -3,8 +3,6 @@
 
 #include <OpenGL.h>
 #include "Globals.h"
-#include <string>
-#include <vector>
 #include <fstream>
 #include <sstream>
 #include <iostream>

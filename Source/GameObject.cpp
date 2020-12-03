@@ -5,7 +5,8 @@
 #include "ComponentTransform.h"
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
-#include <vector>
+#include "ComponentCamera.h"
+#include "Globals.h"
 
 
 GameObject::GameObject(std::string name): name(name), active(true)
@@ -89,10 +90,10 @@ Component* GameObject::AddComponent(Component* component)
 {
 	Component* ret = nullptr;
 
-	switch (component->type)
+	switch (component->type) //This could probably be done with a template Component or smth
 	{
 	case(ComponentType::Error):
-		//LOG("Component Type Error! Something broke...");
+		LOG("Component Type Error! Something broke...");
 		break;
 	case(ComponentType::Transform):
 		ret = new ComponentTransform(this);
@@ -108,7 +109,9 @@ Component* GameObject::AddComponent(Component* component)
 	case(ComponentType::Mesh):
 		ret = new ComponentMesh(this);
 		break;
-
+	case(ComponentType::Camera):
+		ret = new ComponentCamera(this);
+		break;
 	}
 	
 	//components.push_back(ret);

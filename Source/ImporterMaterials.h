@@ -2,10 +2,6 @@
 #define __ImporterMaterials__
 
 #include "Globals.h"
-#include <string.h>
-#include <vector>
-
-using namespace std;
 
 struct aiMaterial;
 class ResourceMaterial;
@@ -28,6 +24,4 @@ namespace Importer
 		void InitDevil();
 	}
 }
-
-
 #endif //__ImporterMaterials__

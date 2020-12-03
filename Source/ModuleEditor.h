@@ -1,7 +1,5 @@
 #ifndef __ModuleEditor_H__
 #define __ModuleEditor_H__
-#include <vector>
-#include <string>
 #include "Module.h"
 #include "Dependencies/ImGui/imgui.h"
 #include "Globals.h"

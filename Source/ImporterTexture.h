@@ -2,7 +2,6 @@
 #define __TextureImporter_H__
 
 #include "Globals.h"
-#include <vector>
 #include "OpenGL.h"
 
 using namespace std;

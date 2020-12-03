@@ -38,8 +38,8 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* material, GameObjec
 
 	aiColor4D	color;
 	aiString	texPath;
-	string		texName;
-	string		texExtension;
+	std::string		texName;
+	std::string		texExtension;
 
 	if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS)										// Could also get specular and ambient occlusion colours.
 	{
