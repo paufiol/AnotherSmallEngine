@@ -223,6 +223,9 @@
     <ClCompile Include="Dependencies\MathGeoLib\include\Time\Clock.cpp">
       <Filter>Dependencies\MathGeoLib\Time</Filter>
     </ClCompile>
+    <ClCompile Include="JsonConfig.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
@@ -560,6 +563,9 @@
     </ClInclude>
     <ClInclude Include="Dependencies\MathGeoLib\include\MathGeoLibFwd.h">
       <Filter>Dependencies\MathGeoLib</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonConfig.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

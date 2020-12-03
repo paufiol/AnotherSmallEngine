@@ -184,6 +184,7 @@
     <ClInclude Include="ImporterMaterials.h" />
     <ClInclude Include="ImporterMesh.h" />
     <ClInclude Include="ImporterScene.h" />
+    <ClInclude Include="JsonConfig.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="PathNode.h" />
@@ -262,6 +263,7 @@
     <ClCompile Include="ImporterMaterials.cpp" />
     <ClCompile Include="ImporterMesh.cpp" />
     <ClCompile Include="ImporterScene.cpp" />
+    <ClCompile Include="JsonConfig.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
