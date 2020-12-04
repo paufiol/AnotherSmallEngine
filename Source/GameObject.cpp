@@ -86,6 +86,18 @@ void GameObject::SetName(const char* _name)
 	name = _name;
 }
 
+bool GameObject::IsSelected()
+{
+	if (this->name == App->scene->selected_object->name) return true;
+	else return false;
+}
+
+bool GameObject::IsRootObject()
+{
+	if (this->name == App->scene->root_object->name) return true;
+	else return false;
+}
+
 Component* GameObject::AddComponent(Component* component)
 {
 	Component* ret = nullptr;
@@ -203,6 +215,28 @@ void GameObject::EraseAllChildren()
 			delete children[i];
 		}
 		children.clear();
+	}
+}
+
+void GameObject::FillGameObjectArray(GameObject* gameObject, std::vector<GameObject*> array)
+{
+	if (gameObject != nullptr)
+	{
+		if (gameObject == App->scene->root_object)
+		{
+			array.push_back(gameObject);
+		}
+		else
+		{
+			array.push_back(gameObject);   //The same as the one above (FOR NOW)
+		}
+
+		if (gameObject->children.size() > 0)
+		{
+			for (int i = 0; i < gameObject->children.size(); ++i)
+				FillGameObjectArray(gameObject->children[i], array);
+		}
+
 	}
 }
 

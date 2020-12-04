@@ -1,9 +1,19 @@
 #include "JsonConfig.h"
 
+JsonConfig::JsonConfig()
+{
+    value = json_value_init_object();
+    node = json_value_get_object(value);
+}
+
 JsonConfig::JsonConfig(string path, JSON_Object* object, JSON_Value* value)
     : path(path), node(object), value(value)
 {
 
+}
+
+JsonConfig::JsonConfig(JSON_Object* jsonObject) : node(jsonObject)
+{
 }
 
 JsonConfig::~JsonConfig()
@@ -111,13 +121,31 @@ ArrayConfig JsonConfig::GetArray(string name)
 
 }
 
+ArrayConfig JsonConfig::SetArray(const string name)
+{
+    json_object_set_value(node, name.c_str(), json_value_init_array());
+    return ArrayConfig(json_object_get_array(node, name.c_str()));
+}
+
+
+ArrayConfig::ArrayConfig()
+{
+    jArray = json_value_get_array(json_value_init_array());
+}
 
 ArrayConfig::ArrayConfig(JSON_Array* jArray) : jArray(jArray)
 {
-
+  
 }
 
 ArrayConfig::~ArrayConfig()
 {
 
+}
+
+JsonConfig ArrayConfig::AddNode()
+{
+    json_array_append_value(jArray, json_value_init_object());
+    index++;
+    return JsonConfig(json_array_get_object(jArray, index - 1));
 }

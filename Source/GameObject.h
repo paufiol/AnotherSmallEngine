@@ -12,15 +12,18 @@ class GameObject {
 //Properties
 public:
 	std::string name;
+	unsigned long long 	UID = 0;
 
-	std::vector<Component*> components;
-	bool active;
+
+
 
 	GameObject* parent;
 	std::vector<GameObject*> children;
 
+	std::vector<Component*> components;
 	ComponentTransform* transform = nullptr;
 	ComponentTexture* texture = nullptr;
+	bool active;
 private:
 
 
@@ -38,6 +41,8 @@ public:
 	void SetParent(GameObject* _parent);
 	void SetName(const char* _name);
 
+	bool IsSelected();
+	bool IsRootObject();
 	//Component handling
 	Component* AddComponent(Component* component);
 	Component* GetComponent(ComponentType type);
@@ -48,7 +53,8 @@ public:
 	GameObject* AddChildren(GameObject* children);
 	void EraseChild(GameObject* child, bool deleteChild = true);	//Delete specific child
 	void EraseAllChildren();			//Delete them all
-	
+	void FillGameObjectArray(GameObject* gameObject, std::vector<GameObject*> array);
+
 	bool selected = false;
 private:
 	
