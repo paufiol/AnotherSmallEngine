@@ -20,7 +20,9 @@ private:
 
 public:
 
+	JsonConfig();
 	JsonConfig(const string path, JSON_Object* object, JSON_Value* value);
+	JsonConfig(JSON_Object* jsonObject);
 	~JsonConfig();
 
 
@@ -43,7 +45,7 @@ public:
 	void SetQuat(const string name, const Quat quat);
 
 	ArrayConfig GetArray(const string name);
-	//ArrayConfig SetArray(const string name);
+	ArrayConfig SetArray(const string name);
 
 
 };
@@ -52,10 +54,11 @@ class ArrayConfig {
 private:
 
 	JSON_Array* jArray;
-
+	uint index = 0;
 
 public:
 
+	ArrayConfig();
 	ArrayConfig(JSON_Array* jArray);
 	~ArrayConfig();
 
@@ -76,6 +79,7 @@ public:
 
 	//JsonConfig GetNode(string name, const uint index);
 	//JsonConfig SetNode(string name);
+	JsonConfig AddNode();
 
 	//uint Size();
 

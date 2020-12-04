@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "ModuleFileSystem.h"
 #include "ModuleScene.h"
+#include "JsonConfig.h"
 
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
@@ -118,4 +119,35 @@ void Importer::SceneImporter::IterateNodes(const char* scenePath, const aiScene*
 	{
 		SceneImporter::IterateNodes(scenePath, aiScene, node->mChildren[i], tempObject);
 	}
+}
+
+void Importer::SceneImporter::Save(GameObject* gameObject, std::string scene)
+{
+	JsonConfig jsonFile;
+	ArrayConfig jsonGOArray = jsonFile.SetArray("GameObjects");
+
+	std::vector<GameObject*> GOarray;
+	
+	gameObject->FillGameObjectArray(gameObject, GOarray);
+
+	for (uint i = 0; i < GOarray.size(); i++)
+	{
+		JsonConfig& sceneConfig = jsonGOArray.AddNode();
+
+		sceneConfig.SetString("Name", GOarray[i]->name.c_str());
+		sceneConfig.SetNumber("UID", GOarray[i]->UID);
+		sceneConfig.SetNumber("Parent UID", GOarray[i]->IsRootObject() ? GOarray[i]->parent->UID : 0);
+		sceneConfig.SetBool("IsSelected", GOarray[i]->IsSelected());
+		//config.SetBool("IsOpenHeriarchy")
+
+		ArrayConfig jsonCompArray = sceneConfig.SetArray("Components");
+
+		for (int j = 0; j < GOarray[i]->components.size(); ++j)
+		{
+			Component* component = GOarray[i]->components[j];
+			JsonConfig& compConfig = jsonCompArray.AddNode();
+		}
+	}
+
+
 }

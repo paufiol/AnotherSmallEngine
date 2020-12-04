@@ -713,6 +713,215 @@
     </ClInclude>
     <ClInclude Include="DrawPrism.h">
       <Filter>Helpers</Filter>
+    <ClInclude Include="Dependencies\SDL\include\begin_code.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\close_code.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_assert.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_atomic.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_audio.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_bits.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_blendmode.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_clipboard.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_config.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_cpuinfo.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_egl.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_endian.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_error.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_events.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_filesystem.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_gamecontroller.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_gesture.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_haptic.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_hints.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_joystick.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_keyboard.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_keycode.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_loadso.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_log.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_main.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_messagebox.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_mouse.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_mutex.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_name.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengl.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengl_glext.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengles.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengles2.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengles2_gl2.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengles2_gl2ext.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengles2_gl2platform.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_opengles2_khrplatform.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_pixels.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_platform.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_power.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_quit.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_rect.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_render.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_revision.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_rwops.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_scancode.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_shape.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_stdinc.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_surface.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_system.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_syswm.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_assert.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_common.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_compare.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_crc32.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_font.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_fuzzer.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_harness.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_images.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_log.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_md5.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_test_random.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_thread.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_timer.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_touch.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_types.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_version.h">
+      <Filter>Dependencies\SDL</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\SDL\include\SDL_video.h">
+      <Filter>Dependencies\SDL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -784,6 +993,9 @@
     </Filter>
     <Filter Include="Dependencies\Glew">
       <UniqueIdentifier>{78489f80-4368-43a7-bc68-a8c4f723baa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\SDL">
+      <UniqueIdentifier>{ec3b86be-8001-4269-aa85-18dd9a169ed8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
