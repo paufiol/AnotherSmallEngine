@@ -10,11 +10,13 @@
 #include "ImporterTexture.h"
 
 #include "GameObject.h"
+#include "DrawPrism.h"
 
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentTexture.h"
 #include "ComponentTransform.h"
+#include "ComponentCamera.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -156,6 +158,12 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glVertex3f(z, -1.0f, x);
 	}
 
+	if (camera != nullptr) {
+		vec* frustum_corners;
+		frustum_corners = camera->GetFrustumPoints();
+		DrawPrism(frustum_corners, Color(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+
 	glEnd();
 
 	return UPDATE_CONTINUE;
@@ -168,6 +176,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glDisable(GL_TEXTURE_CUBE_MAP); }
 	
 	IterateMeshDraw();
+
+
 
 	App->editor->DrawGUI();
 

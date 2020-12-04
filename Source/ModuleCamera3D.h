@@ -3,6 +3,12 @@
 #include "Globals.h"
 #include "glmath.h"
 
+#include "Dependencies/MathGeoLib/include/Geometry/Frustum.h"
+#include "Dependencies/MathGeoLib/include/Math/float4x4.h"
+#include "Dependencies/MathGeoLib/include/Math/float3.h"
+
+class ComponentCamera;
+
 class ModuleCamera3D : public Module
 {
 public:

@@ -22,6 +22,8 @@ public:
 	void SelectObject(GameObject* object);
 	void DeleteGameObject(GameObject* object);
 
+	GameObject* CreateGameCamera();
+
 private:
 	std::vector<Primitive*> primitives;
 

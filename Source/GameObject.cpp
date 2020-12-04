@@ -88,35 +88,31 @@ void GameObject::SetName(const char* _name)
 
 Component* GameObject::AddComponent(Component* component)
 {
-	Component* ret = nullptr;
 
 	switch (component->type) //This could probably be done with a template Component or smth
 	{
 	case(ComponentType::Error):
 		LOG("Component Type Error! Something broke...");
+		
 		break;
 	case(ComponentType::Transform):
-		ret = new ComponentTransform(this);
 		transform = (ComponentTransform*)component;
 		break;
 	case(ComponentType::Material):
 		if (this->GetComponent(ComponentType::Material) != nullptr) {
 			return nullptr;
 		}
-		ret = new ComponentTexture(this);
 		texture = (ComponentTexture*)component;
 		break;
 	case(ComponentType::Mesh):
-		ret = new ComponentMesh(this);
 		break;
 	case(ComponentType::Camera):
-		ret = new ComponentCamera(this);
 		break;
 	}
 	
 	//components.push_back(ret);
 	components.push_back(component);
-	return ret;
+	return component;
 }
 
 void GameObject::EraseComponents() 
@@ -243,7 +239,3 @@ std::vector<Component*> GameObject::GetComponents(ComponentType type)
 
 	return ret;
 }
-
-
-
-

@@ -11,7 +11,7 @@
 
 #define MAX_LIGHTS 8
 
-
+class ComponentCamera;
 class ResourceMesh;
 class ResourceMaterial;
 
@@ -54,4 +54,5 @@ public:
 	ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
 
+	ComponentCamera* camera = nullptr;
 };

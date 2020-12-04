@@ -1,15 +1,18 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ModuleCamera3D.h"
+#include "ModuleRenderer3D.h"
 #include "Primitive.h"
 #include "GameObject.h"
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
 #include "ImporterScene.h"
 #include "ImporterMesh.h"
 #include "ResourceMesh.h"
 #include "ModuleInput.h"
 #include "ResourceMaterial.h"
+
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -30,6 +33,8 @@ bool ModuleScene::Start()
 	
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
+
+	CreateGameCamera();
 
 	//CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
 	////CreateGameObject("Street Environment", "Assets/Models/Street_environment.FBX", "Assets/Textures/Street_environment1.png");
@@ -59,7 +64,6 @@ update_status ModuleScene::Update(float dt)
 	{
 		primitives[n]->Update();
 	}
-	
 
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 		App->scene->DeleteGameObject(App->scene->selected_object);
@@ -189,6 +193,22 @@ void ModuleScene::DeleteGameObject(GameObject* object)
 			}
 		}
 	}
+}
+
+GameObject* ModuleScene::CreateGameCamera() {
+
+	GameObject* ret = new GameObject("Game Camera");
+
+	AddGameObject(ret);
+
+	ret->SetParent(root_object);
+
+	//(ComponentTransform*)ret->GetComponent(ComponentType::Camera)->
+	ret->AddComponent((Component*)new ComponentCamera(ret));
+
+	App->renderer3D->camera = (ComponentCamera*)ret->GetComponent(ComponentType::Camera);
+
+	return ret;
 }
 
 void ModuleScene::SelectObject(GameObject* object)

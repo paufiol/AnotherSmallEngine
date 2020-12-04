@@ -711,6 +711,9 @@
     <ClInclude Include="Dependencies\Glew\include\GL\wglew.h">
       <Filter>Dependencies\Glew</Filter>
     </ClInclude>
+    <ClInclude Include="DrawPrism.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Dependencies">
