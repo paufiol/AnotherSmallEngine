@@ -112,7 +112,6 @@ ArrayConfig JsonConfig::GetArray(string name)
 }
 
 
-
 ArrayConfig::ArrayConfig(JSON_Array* jArray) : jArray(jArray)
 {
 
