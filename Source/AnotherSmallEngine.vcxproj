@@ -228,7 +228,6 @@
     <ClInclude Include="Dependencies\MathGeoLib\include\Time\Clock.h" />
     <ClInclude Include="Dependencies\Parson\parson.h" />
     <ClInclude Include="Dependencies\PhysFS\include\physfs.h" />
-    <ClInclude Include="DrawPrism.h" />
     <ClInclude Include="Dependencies\SDL\include\begin_code.h" />
     <ClInclude Include="Dependencies\SDL\include\close_code.h" />
     <ClInclude Include="Dependencies\SDL\include\SDL.h" />

@@ -10,7 +10,6 @@
 #include "ImporterTexture.h"
 
 #include "GameObject.h"
-#include "DrawPrism.h"
 
 #include "Component.h"
 #include "ComponentMesh.h"
@@ -161,7 +160,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	if (camera != nullptr) {
 		vec* frustum_corners;
 		frustum_corners = camera->GetFrustumPoints();
-		DrawPrism(frustum_corners, Color(1.0f, 0.0f, 0.0f, 1.0f));
+		DrawCuboid(frustum_corners, Color(1.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	glEnd();
@@ -254,9 +253,9 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 				vec* corners = new vec[8];
 				App->scene->game_objects[i]->aabb.GetCornerPoints(corners);
-				DrawPrism(corners, Color(1.0f,0.7f,0.7f,0.75f));
+				DrawCuboid(corners, Color(1.0f,0.7f,0.7f,0.75f));
 				App->scene->game_objects[i]->obb.GetCornerPoints(corners);
-				DrawPrism(corners, Color(0.7f, 0.7f, 1.0f, 0.75f));
+				DrawCuboid(corners, Color(0.7f, 0.7f, 1.0f, 0.75f));
 
 				delete[] corners;
 
@@ -417,4 +416,48 @@ void ModuleRenderer3D::SetPolygonssmooth(bool state) {
 		glEnable(GL_POLYGON_SMOOTH);
 	else if (state == true)
 		glDisable(GL_POLYGON_SMOOTH);
+}
+
+void ModuleRenderer3D::DrawCuboid(const float3* corners, Color color) {
+	
+	glColor4f(color.r, color.g, color.b, color.a);
+
+	//Between-planes right
+	glVertex3fv((GLfloat*)&corners[1]);
+	glVertex3fv((GLfloat*)&corners[5]);
+	glVertex3fv((GLfloat*)&corners[7]);
+	glVertex3fv((GLfloat*)&corners[3]);
+
+	//Between-planes left
+	glVertex3fv((GLfloat*)&corners[4]);
+	glVertex3fv((GLfloat*)&corners[0]);
+	glVertex3fv((GLfloat*)&corners[2]);
+	glVertex3fv((GLfloat*)&corners[6]);
+
+	//Far plane horizontal
+	glVertex3fv((GLfloat*)&corners[5]);
+	glVertex3fv((GLfloat*)&corners[4]);
+	glVertex3fv((GLfloat*)&corners[6]);
+	glVertex3fv((GLfloat*)&corners[7]);
+
+	//Near plane horizontal
+	glVertex3fv((GLfloat*)&corners[0]);
+	glVertex3fv((GLfloat*)&corners[1]);
+	glVertex3fv((GLfloat*)&corners[3]);
+	glVertex3fv((GLfloat*)&corners[2]);
+
+	//Near plane vertical
+	glVertex3fv((GLfloat*)&corners[1]);
+	glVertex3fv((GLfloat*)&corners[3]);
+	glVertex3fv((GLfloat*)&corners[0]);
+	glVertex3fv((GLfloat*)&corners[2]);
+
+	//Far plane vertical
+	glVertex3fv((GLfloat*)&corners[5]);
+	glVertex3fv((GLfloat*)&corners[7]);
+	glVertex3fv((GLfloat*)&corners[4]);
+	glVertex3fv((GLfloat*)&corners[6]);
+
+	glColor4f(1.0, 1.0, 1.0, 1.0);
+
 }

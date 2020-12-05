@@ -24,19 +24,19 @@ public:
 	void DrawInspector() override;
 	void CleanUp() override;
 
-	float GetFOV();
+	float GetFOV() const;
 	void SetFOV(float fov);
 	
-	float GetAspectRatio();
+	float GetAspectRatio() const;
 	void SetAspectRatio(float AspectRatio);
 	
-	float GetNearPlane();
+	float GetNearPlane() const;
 	void SetNearPlane(float distance);
 
-	float GetFarPlane();
+	float GetFarPlane() const;
 	void SetFarPlane(float distance);
 
-	vec* GetFrustumPoints();
+	vec* GetFrustumPoints() const;
 
 	ComponentCamera(GameObject* parent);
 private:
