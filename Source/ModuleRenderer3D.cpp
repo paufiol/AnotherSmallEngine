@@ -248,6 +248,19 @@ void ModuleRenderer3D::IterateMeshDraw()
 					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform());
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
+
+				glLineWidth(1.0f);
+				glBegin(GL_LINES);
+
+				vec* corners = new vec[8];
+				App->scene->game_objects[i]->aabb.GetCornerPoints(corners);
+				DrawPrism(corners, Color(1.0f,0.7f,0.7f,0.75f));
+				App->scene->game_objects[i]->obb.GetCornerPoints(corners);
+				DrawPrism(corners, Color(0.7f, 0.7f, 1.0f, 0.75f));
+
+				delete[] corners;
+
+				glEnd();
 			}
 
 		}

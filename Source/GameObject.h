@@ -1,6 +1,7 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "Globals.h"
+#include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
+#include "Dependencies/MathGeoLib/include/Geometry/OBB.h"
 
 class Component;
 class ComponentTransform;
@@ -14,9 +15,6 @@ public:
 	std::string name;
 	unsigned long long 	UID = 0;
 
-
-
-
 	GameObject* parent;
 	std::vector<GameObject*> children;
 
@@ -24,6 +22,11 @@ public:
 	ComponentTransform* transform = nullptr;
 	ComponentTexture* texture = nullptr;
 	bool active;
+
+
+	AABB	aabb;
+	OBB		obb;
+
 private:
 
 
@@ -41,8 +44,13 @@ public:
 	void SetParent(GameObject* _parent);
 	void SetName(const char* _name);
 
+	//BoundingBox Handling
+	const AABB& GetAABB() const;
+	const OBB& GetOBB() const;
+
 	bool IsSelected();
 	bool IsRootObject();
+
 	//Component handling
 	Component* AddComponent(Component* component);
 	Component* GetComponent(ComponentType type);
@@ -57,5 +65,5 @@ public:
 
 	bool selected = false;
 private:
-	
+	void UpdateAABB();
 };

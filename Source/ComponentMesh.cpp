@@ -19,6 +19,14 @@ ComponentMesh::ComponentMesh(GameObject* owner, const char* meshPath, ResourceMe
 	type = ComponentType::Mesh;
 }
 
+const AABB& ComponentMesh::GetAABB() const
+{
+	if (mesh->ID != 0)//Uncertain on what ID 0 is
+		return mesh->aabb;
+	else
+		return AABB(float3(-.5f, -.5f, .5f), float3(.5f, .5f, .5f));
+}
+
 void ComponentMesh::Enable() {
 
 }

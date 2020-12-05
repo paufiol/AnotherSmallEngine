@@ -26,6 +26,9 @@ vector<ResourceMesh*> Importer::MeshImporter::LoadMeshes(const aiScene* scene, c
         memcpy(tempMesh->vertices, scene->mMeshes[node->mMeshes[i]]->mVertices, sizeof(float) * tempMesh->size[ResourceMesh::vertex] * 3);
         LOG("New mesh with %d vertices", tempMesh->size[ResourceMesh::vertex]);
 
+        //Why no entrar
+        tempMesh->CreateAABB();
+
         if (scene->mMeshes[node->mMeshes[i]]->HasFaces())
         {
             tempMesh->size[ResourceMesh::index] = scene->mMeshes[node->mMeshes[i]]->mNumFaces * 3;

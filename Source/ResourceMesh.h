@@ -2,8 +2,10 @@
 #define __ResourceMesh_H__
 
 #include "Globals.h"
+#include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
 
 using namespace std;
+
 
 class ResourceMesh 
 {
@@ -25,7 +27,7 @@ public:
 	uint ID[NONE];
 	uint size[NONE];
 
-	//AABB aabb;
+	AABB aabb;
 public:
 
     ResourceMesh();
@@ -34,9 +36,7 @@ public:
     void DrawNormals();
     void DrawTexCoords();
 	void SetUpBuffers(ResourceMesh* mesh);
-	void CreateAABB(); //Yet to implement
-
-
+	void CreateAABB();
 
 };
 #endif //__ResourceMesh_H__

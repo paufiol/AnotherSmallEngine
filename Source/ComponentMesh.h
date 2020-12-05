@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "glmath.h"
+#include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
 
 struct ResourceMesh;
 
@@ -28,5 +29,8 @@ public:
 
 	ComponentMesh(GameObject* parent); 
 	ComponentMesh(GameObject* parent, const char* meshPath, ResourceMesh* _mesh = nullptr);
+
+	const AABB& GetAABB() const;
+
 private:
 };

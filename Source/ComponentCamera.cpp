@@ -44,7 +44,6 @@ float ComponentCamera::GetAspectRatio()
 	return frustum.AspectRatio();
 }
 
-
 void ComponentCamera::SetFOV(float fov) 
 {
 	frustum.SetVerticalFovAndAspectRatio(fov * DEGTORAD, ((float)App->window->Width() / (float)App->window->Height()));

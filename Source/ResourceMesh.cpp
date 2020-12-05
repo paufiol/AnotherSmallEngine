@@ -1,6 +1,6 @@
 #include "ResourceMesh.h"
 #include "ModuleRenderer3D.h"
-
+#include "Globals.h"
 ResourceMesh::ResourceMesh()
 {
 
@@ -52,5 +52,12 @@ void ResourceMesh::SetUpBuffers(ResourceMesh* mesh)
     glGenBuffers(1, (GLuint*)&mesh->ID[ResourceMesh::texture]);
     glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::texture]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * mesh->size[ResourceMesh::texture] * 2, mesh->texCoords, GL_STATIC_DRAW);
+}
+
+void ResourceMesh::CreateAABB()
+{
+    LOG("Pasa por AABBCreate");
+    aabb.SetNegativeInfinity();
+    aabb.Enclose((math::vec*)vertices, size[vertex]);
 }
 

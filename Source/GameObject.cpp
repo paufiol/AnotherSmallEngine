@@ -50,6 +50,10 @@ void GameObject::Update()
 
 		for (; item != components.end() && ret == true; ++item) {
 			(*item)->Update();
+			if((*item)->type == ComponentType::Mesh)
+			{
+				UpdateAABB();
+			}
 		}
 	}
 }
@@ -84,6 +88,46 @@ void GameObject::SetParent(GameObject* _parent)
 void GameObject::SetName(const char* _name)
 {
 	name = _name;
+}
+
+const AABB& GameObject::GetAABB() const
+{
+	return aabb;
+}
+
+const OBB& GameObject::GetOBB() const
+{
+	return obb;
+}
+
+void GameObject::UpdateAABB()
+{
+	//C_Mesh* mesh = GetComponent <C_Mesh>();
+	std::vector<Component*> meshes = GetComponents(ComponentType::Mesh);
+	
+	if (!meshes.empty()) 
+	{
+		for (uint i = 0; i < meshes.size(); ++i)
+		{
+			//Weird shenanigans because GetComponents should be a template return 
+			ComponentMesh* temp_mesh = (ComponentMesh*)meshes[i];
+
+			AABB temp_aabb = temp_mesh->GetAABB();
+			obb = temp_mesh->GetAABB();
+
+			ComponentTransform* transform = (ComponentTransform*)GetComponent(ComponentType::Transform);
+			obb.Transform(transform->GetGlobalTransform());
+
+			aabb.SetNegativeInfinity();
+			aabb.Enclose(obb);
+		}
+	}
+	else
+	{
+		aabb.SetNegativeInfinity();
+		aabb.SetFromCenterAndSize(transform->GetPosition(), float3(1, 1, 1));
+		obb = aabb;
+	}
 }
 
 bool GameObject::IsSelected()
