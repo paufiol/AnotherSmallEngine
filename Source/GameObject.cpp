@@ -49,10 +49,21 @@ void GameObject::Update()
 		std::vector<Component*>::iterator item = components.begin();
 		bool ret = true;
 
-		for (; item != components.end() && ret == true; ++item) {
+		for (; item != components.end() && ret == true; ++item) 
+		{
 			(*item)->Update();
-			if((*item)->type == ComponentType::Mesh)
+
+			float4x4 global_parent = float4x4::identity;
+			if (transform && transform->updatedtransform)
 			{
+				if (parent) 
+				{
+					ComponentTransform* tmp = (ComponentTransform*)parent->GetComponent(ComponentType::Transform);
+					(*item)->OnUpdateTransform(transform->GetGlobalTransform(), tmp->GetGlobalTransform());
+				}
+				else
+					(*item)->OnUpdateTransform(transform->GetGlobalTransform());
+				
 				UpdateAABB();
 			}
 		}

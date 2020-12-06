@@ -13,7 +13,7 @@
 class ComponentTransform : public Component {
 	//Properties
 public:
-
+	bool updatedtransform = false;
 
 private:
 	float3		position = float3(0.f, 0.f, 0.f);
@@ -27,6 +27,8 @@ private:
 	float4x4	global_transform;
 	
 	bool updateGlobalTrans = false;
+
+
 	//Methods
 public:
 	void Enable() override;

@@ -1,7 +1,8 @@
 #pragma once
-#include <string>
+#include "Dependencies/MathGeoLib/include/Math/float4x4.h"
 
 class GameObject;
+
 
 enum class ComponentType {
 	Error = -1,
@@ -30,6 +31,8 @@ public:
 	virtual void CleanUp() {};
 
 	virtual void DrawInspector() {};
+
+	virtual void OnUpdateTransform(const float4x4& global, const float4x4& parent_global = float4x4::identity);
 
 	Component(GameObject* owner) : active(true), owner(owner), type(ComponentType::Error) {};
 private:

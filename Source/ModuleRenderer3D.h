@@ -42,6 +42,11 @@ public:
 	void SetCubemap(bool active);
 	void SetPolygonssmooth(bool active);
 
+private:
+	bool DoesIntersect(const AABB& aabb);
+
+	void DrawCuboid(const float3* corners, Color color);
+
 public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;
@@ -55,6 +60,4 @@ public:
 	GLuint newTexture = 0;
 
 	ComponentCamera* camera = nullptr;
-
-	void DrawCuboid(const float3* corners, Color color);
 };

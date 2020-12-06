@@ -3,7 +3,8 @@
 #include "Component.h"
 //#include "glmath.h"
 
-#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
+//#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
+#include "Dependencies/MathGeoLib/include/Math/float4x4.h"
 #include "Dependencies/MathGeoLib/include/Geometry/Frustum.h"
 
 class ComponentCamera : public Component {
@@ -13,6 +14,8 @@ public:
 	Frustum frustum;
 
 	bool active_camera;
+	bool frustum_culling;
+	bool draw_boundingboxes;
 
 private:
 
@@ -37,6 +40,8 @@ public:
 	void SetFarPlane(float distance);
 
 	vec* GetFrustumPoints() const;
+
+	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global) override;
 
 	ComponentCamera(GameObject* parent);
 private:

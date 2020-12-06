@@ -8,6 +8,7 @@
 
 #include "glmath.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
+#include "Dependencies/MathGeoLib/include/Math/Quat.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 
@@ -18,11 +19,15 @@ ComponentCamera::ComponentCamera(GameObject* owner) : active_camera(false), Comp
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
 
-	frustum.SetViewPlaneDistances(0.1f, 100.0f);
+	frustum.SetViewPlaneDistances(5.0f, 100.0f);
 	frustum.SetPerspective(1.0f, 1.0f);
-	SetFOV(80.0f);
+	SetFOV(50.0f);
 
 	type = ComponentType::Camera;
+
+	draw_boundingboxes = true;
+	frustum_culling = false;
+	active_camera = false;
 }
 
 void ComponentCamera::Enable() {}
@@ -81,6 +86,21 @@ vec* ComponentCamera::GetFrustumPoints() const
 	return frustum_corners;
 }
 
+void ComponentCamera::OnUpdateTransform(const float4x4& global, const float4x4& parent_global)
+{
+	frustum.SetFront(global.WorldZ());
+	frustum.SetUp(global.WorldY());
+
+	//Init just in case
+	float3 position = float3::zero;
+	float3 scale = float3::one;
+	Quat   rotation = Quat::identity;
+
+	global.Decompose(position, rotation, scale);
+
+	frustum.SetPos(position);
+}
+
 void ComponentCamera::DrawInspector() 
 {
 
@@ -88,6 +108,10 @@ void ComponentCamera::DrawInspector()
 	{
 		if (ImGui::Checkbox("Viewport Camera", &active_camera)) {}
 		
+		if (ImGui::Checkbox("Frustum Culling", &frustum_culling)) {}
+
+		if (ImGui::Checkbox("Draw Bounding Boxes", &draw_boundingboxes)) {}
+
 		//Set FOV
 		float Inspector_FOV = GetFOV();
 		if (ImGui::SliderFloat("FOV", &Inspector_FOV, 30, 120, "%0.2f", ImGuiSliderFlags_None)) { SetFOV(Inspector_FOV); }
@@ -101,5 +125,7 @@ void ComponentCamera::DrawInspector()
 		if (ImGui::DragFloat("Far plane", &FarPlane)) { SetFarPlane(FarPlane); }
 
 		//Add Toggle for frustum draw?
+
+
 	}
 }

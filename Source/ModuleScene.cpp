@@ -39,7 +39,7 @@ bool ModuleScene::Start()
 	//Importer::SceneImporter::ImportScene("Assets/Models/BakerHouse.FBX");
 
 	Importer::SceneImporter::ImportScene("Assets/Models/Street_environment.FBX");
-	Importer::SceneImporter::Save(root_object, "Assets/Models/Street_environment.FBX");
+	//Importer::SceneImporter::Save(root_object, "Assets/Models/Street_environment.FBX");
 	return ret;
 }
 
