@@ -16,6 +16,7 @@
 #include "ComponentTexture.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+#include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -158,6 +159,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	}
 
 	if (camera != nullptr) {
+		glLineWidth(2.0f);
 		vec* frustum_corners;
 		frustum_corners = camera->GetFrustumPoints();
 		DrawCuboid(frustum_corners, Color(1.0f, 0.0f, 0.0f, 1.0f));
@@ -239,37 +241,45 @@ void ModuleRenderer3D::IterateMeshDraw()
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial(), App->scene->game_objects[i]);
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform(), nullptr, App->scene->game_objects[i]);
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 
-				glLineWidth(1.0f);
-				glBegin(GL_LINES);
+				if (camera->draw_boundingboxes) {
+					glLineWidth(2.0f);
+					glBegin(GL_LINES);
 
-				vec* corners = new vec[8];
-				App->scene->game_objects[i]->aabb.GetCornerPoints(corners);
-				DrawCuboid(corners, Color(1.0f,0.7f,0.7f,0.75f));
-				App->scene->game_objects[i]->obb.GetCornerPoints(corners);
-				DrawCuboid(corners, Color(0.7f, 0.7f, 1.0f, 0.75f));
+					vec* corners = new vec[8];
+					App->scene->game_objects[i]->aabb.GetCornerPoints(corners);
+					DrawCuboid(corners, Color(1.0f,0.7f,0.7f,0.75f));
+					App->scene->game_objects[i]->obb.GetCornerPoints(corners);
+					DrawCuboid(corners, Color(0.7f, 0.7f, 1.0f, 0.75f));
 
-				delete[] corners;
+					delete[] corners;
 
-				glEnd();
+					glEnd();
+				}
 			}
-
 		}
-	
 	}
-
 }
 
-void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial)
+void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial, GameObject* meshOwner)
 {
+	
+	if (camera->frustum_culling) 
+	{
+		if(!DoesIntersect(meshOwner->aabb))
+		{
+			return;
+		}
+	}
+	
 	if (rMaterial != nullptr)
 	{
 		if (rMaterial->GetId() == 0)
@@ -294,7 +304,6 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 	{
 		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());
-
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -330,9 +339,6 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 	{
 		LOG("Unable to render meshes (No meshes loaded)");
 	}
-	
-
-
 }
 
 void ModuleRenderer3D::UseCheckerTexture() {
@@ -356,7 +362,6 @@ void ModuleRenderer3D::UseCheckerTexture() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 64, 64,
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
-
 }
 
 void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh)
@@ -416,6 +421,40 @@ void ModuleRenderer3D::SetPolygonssmooth(bool state) {
 		glEnable(GL_POLYGON_SMOOTH);
 	else if (state == true)
 		glDisable(GL_POLYGON_SMOOTH);
+}
+
+bool ModuleRenderer3D::DoesIntersect(const AABB& aabb) {
+
+	static vec aabb_corners[8];
+	aabb.GetCornerPoints(aabb_corners);
+
+	static Plane frustum_planes[6];
+	camera->frustum.GetPlanes(frustum_planes);
+
+	//int iTotalIn = 0;
+
+	for(int p = 0; p < 6; p++)
+	{
+		int iInCount = 8;
+		int iPtIn = 1;
+
+		for(int i = 0; i < 8; i++)
+		{
+			if(frustum_planes[p].IsOnPositiveSide(aabb_corners[i]))
+			{
+				iPtIn = 0;
+				--iInCount;
+			}
+		}
+
+		if (iInCount == 0) return false;
+
+		//iTotalIn += iPtIn;
+	}
+
+	//if (iTotalIn == 6) return true;
+
+	return true;
 }
 
 void ModuleRenderer3D::DrawCuboid(const float3* corners, Color color) {

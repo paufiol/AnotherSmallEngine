@@ -14,6 +14,7 @@
 class ComponentCamera;
 class ResourceMesh;
 class ResourceMaterial;
+class GameObject;
 
 class ModuleRenderer3D : public Module
 {
@@ -30,7 +31,7 @@ public:
 
 	void UseCheckerTexture();
 	void IterateMeshDraw();
-	void DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial = nullptr);
+	void DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial = nullptr, GameObject* meshOwner = nullptr);
 
 	void DrawNormals(ResourceMesh* mesh);
 
@@ -41,6 +42,11 @@ public:
 	void SetTexture2D(bool active);
 	void SetCubemap(bool active);
 	void SetPolygonssmooth(bool active);
+
+private:
+	bool DoesIntersect(const AABB& aabb);
+
+	void DrawCuboid(const float3* corners, Color color);
 
 public:
 	Light lights[MAX_LIGHTS];
@@ -55,6 +61,4 @@ public:
 	GLuint newTexture = 0;
 
 	ComponentCamera* camera = nullptr;
-
-	void DrawCuboid(const float3* corners, Color color);
 };

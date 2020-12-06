@@ -232,6 +232,7 @@
     <ClCompile Include="Random.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="Component.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
