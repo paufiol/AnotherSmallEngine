@@ -21,7 +21,7 @@ public:
 	void DrawInspector() override; 
 	void CleanUp() override;
 
-	inline ResourceMaterial* GetMaterial() { return rMaterial; }
+	inline ResourceMaterial* GetMaterial() const { return rMaterial; }
 
 	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0
 	ComponentTexture(GameObject* parent, const char* texturePath, uint id);

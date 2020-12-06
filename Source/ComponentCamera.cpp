@@ -6,7 +6,6 @@
 #include "Globals.h"
 #include "ModuleWindow.h"
 
-#include "DrawPrism.h"
 #include "glmath.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 
@@ -34,12 +33,12 @@ void ComponentCamera::Update() {}
 
 void ComponentCamera::CleanUp() {}
 
-float ComponentCamera::GetFOV() 
+float ComponentCamera::GetFOV() const
 {
 	return frustum.VerticalFov() * RADTODEG;
 }
 
-float ComponentCamera::GetAspectRatio()
+float ComponentCamera::GetAspectRatio() const
 {
 	return frustum.AspectRatio();
 }
@@ -54,7 +53,7 @@ void ComponentCamera::SetAspectRatio(float aspectratio) {
 	frustum.SetHorizontalFovAndAspectRatio(frustum.HorizontalFov(), aspectratio);
 }
 
-float ComponentCamera::GetNearPlane()
+float ComponentCamera::GetNearPlane() const
 {
 	return frustum.NearPlaneDistance();
 }
@@ -64,7 +63,7 @@ void ComponentCamera::SetNearPlane(float distance)
 	frustum.SetViewPlaneDistances(distance, frustum.FarPlaneDistance());
 }
 
-float ComponentCamera::GetFarPlane()
+float ComponentCamera::GetFarPlane() const
 {
 	return frustum.FarPlaneDistance();
 }
@@ -74,7 +73,7 @@ void ComponentCamera::SetFarPlane(float distance)
 	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), distance);
 }
 
-vec* ComponentCamera::GetFrustumPoints()
+vec* ComponentCamera::GetFrustumPoints() const
 {
 	static vec frustum_corners[8];
 	frustum.GetCornerPoints(frustum_corners);
@@ -100,5 +99,7 @@ void ComponentCamera::DrawInspector()
 		//Set FarPlane
 		float FarPlane = GetFarPlane();
 		if (ImGui::DragFloat("Far plane", &FarPlane)) { SetFarPlane(FarPlane); }
+
+		//Add Toggle for frustum draw?
 	}
 }

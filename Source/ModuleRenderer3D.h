@@ -55,4 +55,6 @@ public:
 	GLuint newTexture = 0;
 
 	ComponentCamera* camera = nullptr;
+
+	void DrawCuboid(const float3* corners, Color color);
 };

@@ -56,7 +56,6 @@ void ResourceMesh::SetUpBuffers(ResourceMesh* mesh)
 
 void ResourceMesh::CreateAABB()
 {
-    LOG("Pasa por AABBCreate");
     aabb.SetNegativeInfinity();
     aabb.Enclose((math::vec*)vertices, size[vertex]);
 }
