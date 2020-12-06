@@ -139,8 +139,8 @@ void Importer::SceneImporter::Save(GameObject* gameObject, std::string scene)
 		JsonConfig& sceneConfig = jsonGOArray.AddNode();
 
 		sceneConfig.SetString("Name", GOarray[i]->name.c_str());
-		sceneConfig.SetNumber("UID", GOarray[i]->UID);
-		sceneConfig.SetNumber("Parent UID", GOarray[i]->IsRootObject() ? GOarray[i]->parent->UID : 0);
+		sceneConfig.SetNumber("UID", GOarray[i]->GetUID());
+		sceneConfig.SetNumber("Parent UID", GOarray[i]->IsRootObject() ? GOarray[i]->parent->GetUID() : 0);
 		sceneConfig.SetBool("IsSelected", GOarray[i]->IsSelected());
 		//config.SetBool("IsOpenHeriarchy")
 
@@ -188,6 +188,13 @@ void Importer::SceneImporter::Save(GameObject* gameObject, std::string scene)
 
 	char* buffer = nullptr;
 	uint size = jsonFile.SerializeConfig(&buffer);
-	App->fileSystem->Save(scene.c_str(), buffer, size);
+
+	string sceneName;
+
+	App->fileSystem->SplitFilePath(scene.c_str(), nullptr, &sceneName, nullptr);
+
+	string pathToSave = SCENES_PATH + sceneName + ".json";
+	LOG("Scene path:", pathToSave.c_str());
+	App->fileSystem->Save(pathToSave.c_str(), buffer, size);
 
 }

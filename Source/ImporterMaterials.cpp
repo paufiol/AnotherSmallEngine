@@ -1,3 +1,5 @@
+#include "Globals.h"
+
 #include "Application.h"
 #include "ModuleFileSystem.h"
 
@@ -56,6 +58,9 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* material, GameObjec
 	}
 	ComponentTexture* tempCompTex = new ComponentTexture(tempObject, rMaterial);
     tempObject->AddComponent(tempCompTex);
+
+	char* buffer = nullptr;
+	Save(rMaterial, &buffer);
 }
 
 
@@ -103,6 +108,9 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	bytes = sizeof(float) * 4;
 	memcpy(cursor, color, bytes);
 	cursor += bytes;
+
+	std::string path = MATERIALS_PATH + std::to_string(rMaterial->GetUID()) + MATERIAL_EXTENSION;
+	App->fileSystem->Save(path.c_str(), *buffer, size);
 
 	return size;
 }

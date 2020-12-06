@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ImporterMesh.h"
+#include "ModuleFileSystem.h"
 
 #include "GameObject.h"
 #include "ComponentMesh.h"
@@ -68,6 +69,10 @@ vector<ResourceMesh*> Importer::MeshImporter::LoadMeshes(const aiScene* scene, c
         }
         tempMesh->SetUpBuffers(tempMesh);
         meshes.push_back(tempMesh);
+
+        char* buffer = nullptr;
+        uint64 size = Importer::MeshImporter::Save(tempMesh, &buffer);
+        
     }
     return meshes;
 }
@@ -78,11 +83,18 @@ uint64 Importer::MeshImporter::Save(const ResourceMesh* mesh, char** buffer)
     uint bytes;   // The amount of bytes each parameter use
     uint fullSize;// The amount of bytes it takes to save the mesh
 
+    //uint ranges[5] = { 
+    //    mesh->size[ResourceMesh::index], 
+    //    mesh->size[ResourceMesh::vertex], 
+    //    mesh->size[ResourceMesh::normal],
+    //    mesh->size[ResourceMesh::texture] 
+    //};
+
     fullSize = sizeof(mesh->size) + sizeof(uint)
-        * mesh->size[ResourceMesh::index] + sizeof(uint)
-        * mesh->size[ResourceMesh::vertex] + sizeof(float) * 3
-        * mesh->size[ResourceMesh::normal] + sizeof(float) * 3
-        * mesh->size[ResourceMesh::texture] + sizeof(float) * 2;
+        + mesh->size[ResourceMesh::index] * sizeof(uint)
+        + mesh->size[ResourceMesh::vertex] * sizeof(float) * 3
+        + mesh->size[ResourceMesh::normal] * sizeof(float) * 3
+        + mesh->size[ResourceMesh::texture] * sizeof(float) * 2;
 
     *buffer = new char[fullSize];
     cursor = *buffer;
@@ -108,9 +120,16 @@ uint64 Importer::MeshImporter::Save(const ResourceMesh* mesh, char** buffer)
     cursor += bytes;
 
     // Store Texture Coordinates
-    bytes = sizeof(uint) * mesh->size[ResourceMesh::texture];
-    memcpy(cursor, mesh->texCoords, bytes);
-    cursor += bytes;
+    if (mesh->size[ResourceMesh::texture] > 0)
+    {
+        bytes = sizeof(uint) * mesh->size[ResourceMesh::texture];
+        memcpy(cursor, mesh->texCoords, bytes);
+        cursor += bytes;
+    }
+
+
+    string path = MESHES_PATH + std::to_string(mesh->GetUID()) + MESH_EXTENSION;
+    App->fileSystem->Save(path.c_str(), *buffer, fullSize);
 
     return fullSize;
 }

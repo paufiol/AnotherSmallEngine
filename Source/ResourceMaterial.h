@@ -3,6 +3,7 @@
 
 #include "Globals.h"
 #include "Color.h"
+#include "Resource.h"
 
 struct Texture
 {
@@ -11,7 +12,7 @@ struct Texture
 };
 
 
-class ResourceMaterial
+class ResourceMaterial : public Resource
 {
 public:
 

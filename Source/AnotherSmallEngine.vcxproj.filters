@@ -229,6 +229,9 @@
     <ClCompile Include="Dependencies\Parson\parson.c">
       <Filter>Dependencies\Parson</Filter>
     </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
@@ -921,6 +924,18 @@
     <ClInclude Include="Dependencies\SDL\include\SDL_video.h">
       <Filter>Dependencies\SDL</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\PCG\pcg_extras.hpp">
+      <Filter>Dependencies\PCG</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\PCG\pcg_random.hpp">
+      <Filter>Dependencies\PCG</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\PCG\pcg_uint128.hpp">
+      <Filter>Dependencies\PCG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Dependencies">
@@ -994,6 +1009,9 @@
     </Filter>
     <Filter Include="Dependencies\SDL">
       <UniqueIdentifier>{ec3b86be-8001-4269-aa85-18dd9a169ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\PCG">
+      <UniqueIdentifier>{dd1b85b4-b216-41fc-bffa-ccd419e152a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

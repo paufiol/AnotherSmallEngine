@@ -10,7 +10,7 @@
 
 
 GameObject::GameObject(std::string name): name(name), active(true), 
-UID((unsigned __int32)randomGen.Int())
+UID(randomNum.GenerateRandomInt())
 {
 	AddComponent(new ComponentTransform(this));
 	this->parent = nullptr;	// May crash HERE, at the moment it's necesary
@@ -89,6 +89,11 @@ void GameObject::SetParent(GameObject* _parent)
 void GameObject::SetName(const char* _name)
 {
 	name = _name;
+}
+
+const uint32 GameObject::GetUID() const
+{
+	return UID;
 }
 
 const AABB& GameObject::GetAABB() const

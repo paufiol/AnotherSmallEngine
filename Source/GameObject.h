@@ -1,8 +1,8 @@
 #pragma once
 #include "Globals.h"
+#include "Random.h"
 #include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
 #include "Dependencies/MathGeoLib/include/Geometry/OBB.h"
-#include "Dependencies/MathGeoLib/include/Algorithm/Random/LCG.h"
 
 class Component;
 class ComponentTransform;
@@ -14,7 +14,7 @@ class GameObject {
 //Properties
 public:
 	std::string name;
-	unsigned long long 	UID = 0;
+
 
 	GameObject* parent;
 	std::vector<GameObject*> children;
@@ -29,8 +29,10 @@ public:
 	OBB		obb;
 
 private:
-	LCG randomGen;
 
+	uint32 	UID;
+
+	Random randomNum;
 //Methods
 public:
 	GameObject(std::string name = "Game_Object");
@@ -44,6 +46,8 @@ public:
 
 	void SetParent(GameObject* _parent);
 	void SetName(const char* _name);
+
+	const uint32 GetUID() const;
 
 	//BoundingBox Handling
 	const AABB& GetAABB() const;

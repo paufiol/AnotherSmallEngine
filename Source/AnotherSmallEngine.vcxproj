@@ -227,6 +227,9 @@
     <ClInclude Include="Dependencies\MathGeoLib\include\Math\vec2d.h" />
     <ClInclude Include="Dependencies\MathGeoLib\include\Time\Clock.h" />
     <ClInclude Include="Dependencies\Parson\parson.h" />
+    <ClInclude Include="Dependencies\PCG\pcg_extras.hpp" />
+    <ClInclude Include="Dependencies\PCG\pcg_random.hpp" />
+    <ClInclude Include="Dependencies\PCG\pcg_uint128.hpp" />
     <ClInclude Include="Dependencies\PhysFS\include\physfs.h" />
     <ClInclude Include="Dependencies\SDL\include\begin_code.h" />
     <ClInclude Include="Dependencies\SDL\include\close_code.h" />
@@ -309,6 +312,7 @@
     <ClInclude Include="ModuleFileSystem.h" />
     <ClInclude Include="PathNode.h" />
     <ClInclude Include="ComponentCamera.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ResourceMesh.h" />
@@ -389,6 +393,7 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="ResourceMaterial.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />

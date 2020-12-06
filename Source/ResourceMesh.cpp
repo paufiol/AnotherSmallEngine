@@ -1,9 +1,13 @@
 #include "ResourceMesh.h"
 #include "ModuleRenderer3D.h"
 #include "Globals.h"
-ResourceMesh::ResourceMesh()
+ResourceMesh::ResourceMesh() : Resource(ResourceType::Mesh)
 {
-
+    for (uint i = 0; i < NONE; i++)
+    {
+        ID[i] = 0;
+        size[i] = 0;
+    }
 }
 ResourceMesh::~ResourceMesh() {}
 

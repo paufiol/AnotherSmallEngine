@@ -1,7 +1,7 @@
 #include "Resource.h"
 
 
-Resource::Resource()
+Resource::Resource(ResourceType type) : type(type), UID(randomNum.GenerateRandomInt())
 {
 
 }
@@ -9,4 +9,9 @@ Resource::Resource()
 Resource::~Resource()
 {
 
+}
+
+const uint32 Resource::GetUID() const
+{
+	return UID;
 }

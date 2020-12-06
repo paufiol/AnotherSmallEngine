@@ -3,11 +3,11 @@
 
 #include "Globals.h"
 #include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
-
+#include "Resource.h"
 using namespace std;
 
 
-class ResourceMesh 
+class ResourceMesh : public Resource
 {
 public:
 
