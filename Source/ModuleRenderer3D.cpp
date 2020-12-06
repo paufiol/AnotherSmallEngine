@@ -241,12 +241,12 @@ void ModuleRenderer3D::IterateMeshDraw()
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial(), App->scene->game_objects[i]);
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 				else 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform());
+					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform(), nullptr, App->scene->game_objects[i]);
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 
@@ -269,12 +269,15 @@ void ModuleRenderer3D::IterateMeshDraw()
 	}
 }
 
-void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial)
+void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial, GameObject* meshOwner)
 {
 	
-	
-	if (camera->frustum_culling && !DoesIntersect(mesh->aabb)) {
-		return;
+	if (camera->frustum_culling) 
+	{
+		if(!DoesIntersect(meshOwner->aabb))
+		{
+			return;
+		}
 	}
 	
 	if (rMaterial != nullptr)
