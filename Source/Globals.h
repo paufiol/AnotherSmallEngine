@@ -51,7 +51,10 @@ enum update_status
 #define TEXTURES_PATH "Library/Textures/"
 #define SCENES_PATH "Library/Scenes/"
 
-
+#define MESH_EXTENSION ".asemesh"
+#define MATERIAL_EXTENSION	".asemat"
+#define SCENE_EXTENSION	".asescene"
+#define TEXTURE_EXTENSION ".asetex"
 
 // Deletes a buffer
 #define RELEASE( x )\

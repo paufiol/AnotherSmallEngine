@@ -17,6 +17,8 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
+	void SaveScene();
+
 	void AddGameObject(GameObject* object);
 	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);
 	void SelectObject(GameObject* object);

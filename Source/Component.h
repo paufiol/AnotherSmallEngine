@@ -30,6 +30,7 @@ public:
 	virtual void CleanUp() {};
 
 	virtual void DrawInspector() {};
+
 	Component(GameObject* owner) : active(true), owner(owner), type(ComponentType::Error) {};
 private:
 

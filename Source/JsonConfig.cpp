@@ -1,5 +1,5 @@
 #include "JsonConfig.h"
-
+#include "Color.h"
 JsonConfig::JsonConfig()
 {
     value = json_value_init_object();
@@ -22,6 +22,22 @@ JsonConfig::~JsonConfig()
     {
         json_value_free(value);
     }
+}
+
+uint JsonConfig::SerializeConfig(char** buffer)
+{
+    uint size = (uint)json_serialization_size_pretty(value);
+    *buffer = new char[size];
+    JSON_Status status = json_serialize_to_buffer_pretty(value, *buffer, size);
+
+    if (status == JSONFailure)
+    {
+        LOG("ERROR: Not able to serialize.");
+        RELEASE_ARRAY(buffer);
+        size = 0;
+    }
+
+    return size;
 }
 
 double JsonConfig::GetNumber(string name)
@@ -52,6 +68,28 @@ bool JsonConfig::GetBool(const string name)
 void JsonConfig::SetBool(string name, bool boolean)
 {
     json_object_set_boolean(node, name.c_str(), boolean);
+}
+
+Color JsonConfig::GetColor(const string name)
+{
+    JSON_Array* arr = json_object_get_array(json_value_get_object(value), name.data());
+
+    Color color;
+    color.r = json_array_get_number(arr, 0);
+    color.g = json_array_get_number(arr, 1);
+    color.b = json_array_get_number(arr, 2);
+    color.a = json_array_get_number(arr, 3);
+
+    return color;
+}
+
+void JsonConfig::SetColor(const string name, const Color color)
+{
+    json_object_set_number(node, name.c_str(), color.r);
+    json_object_set_number(node, name.c_str(), color.g);
+    json_object_set_number(node, name.c_str(), color.b);
+    json_object_set_number(node, name.c_str(), color.a);
+
 }
 
 

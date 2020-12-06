@@ -11,9 +11,11 @@
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 
+#include "Component.h"
 #include "ComponentMesh.h"
-#include "ComponentTransform.h"
 #include "ComponentTexture.h"
+#include "ComponentTransform.h"
+#include "ComponentCamera.h"
 
 #include "Dependencies/Assimp/include/cimport.h"
 #include "Dependencies/Assimp/include/scene.h"
@@ -130,6 +132,8 @@ void Importer::SceneImporter::Save(GameObject* gameObject, std::string scene)
 	
 	gameObject->FillGameObjectArray(gameObject, GOarray);
 
+
+
 	for (uint i = 0; i < GOarray.size(); i++)
 	{
 		JsonConfig& sceneConfig = jsonGOArray.AddNode();
@@ -146,8 +150,44 @@ void Importer::SceneImporter::Save(GameObject* gameObject, std::string scene)
 		{
 			Component* component = GOarray[i]->components[j];
 			JsonConfig& compConfig = jsonCompArray.AddNode();
+						
+			ComponentTexture* componentTex = (ComponentTexture*)GOarray[i]->GetComponent(ComponentType::Material);
+			ComponentTransform* componentTransform = (ComponentTransform*)GOarray[i]->GetComponent(ComponentType::Transform);
+			ComponentCamera* componentCamera = (ComponentCamera*)GOarray[i]->GetComponent(ComponentType::Camera);
+
+			switch (component->type)
+			{
+			case (ComponentType::Mesh):
+				compConfig.SetString("Type", "Mesh");
+				break;
+			case (ComponentType::Material):
+				
+				compConfig.SetString("Type", "Material");
+				if(componentTex->GetMaterial()->GetId() != 0)
+					compConfig.SetNumber("Texture ID", componentTex->GetMaterial()->GetId());
+				else
+				{
+					compConfig.SetColor("Color", componentTex->GetMaterial()->GetColor());
+				}
+				break;
+			case (ComponentType::Transform):
+				
+				compConfig.SetString("Type", "Transform");
+				compConfig.SetFloat3("Position", componentTransform->GetPosition());
+				compConfig.SetFloat3("Scale", componentTransform->GetScale());
+				compConfig.SetQuat("Rotation", componentTransform->GetRotation());
+				break;
+			case(ComponentType::Camera):
+				
+				compConfig.SetBool("Is Active", componentCamera->active_camera);
+				break;
+			}
+
 		}
 	}
 
+	char* buffer = nullptr;
+	uint size = jsonFile.SerializeConfig(&buffer);
+	App->fileSystem->Save(scene.c_str(), buffer, size);
 
 }

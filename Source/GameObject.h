@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
 #include "Dependencies/MathGeoLib/include/Geometry/OBB.h"
+#include "Dependencies/MathGeoLib/include/Algorithm/Random/LCG.h"
 
 class Component;
 class ComponentTransform;
@@ -28,7 +29,7 @@ public:
 	OBB		obb;
 
 private:
-
+	LCG randomGen;
 
 //Methods
 public:

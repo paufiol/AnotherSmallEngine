@@ -36,11 +36,10 @@ bool ModuleScene::Start()
 
 	CreateGameCamera();
 
-	//CreateGameObject("House", "Assets/Models/BakerHouse.FBX","Assets/Textures/BakerHouse.png");
-	////CreateGameObject("Street Environment", "Assets/Models/Street_environment.FBX", "Assets/Textures/Street_environment1.png");
-
 	//Importer::SceneImporter::ImportScene("Assets/Models/BakerHouse.FBX");
+
 	Importer::SceneImporter::ImportScene("Assets/Models/Street_environment.FBX");
+	Importer::SceneImporter::Save(root_object, "Assets/Models/Street_environment.FBX");
 	return ret;
 }
 

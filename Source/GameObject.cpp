@@ -9,7 +9,8 @@
 #include "Globals.h"
 
 
-GameObject::GameObject(std::string name): name(name), active(true)
+GameObject::GameObject(std::string name): name(name), active(true), 
+UID((unsigned __int32)randomGen.Int())
 {
 	AddComponent(new ComponentTransform(this));
 	this->parent = nullptr;	// May crash HERE, at the moment it's necesary

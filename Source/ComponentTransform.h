@@ -34,6 +34,7 @@ public:
 	void Disable() override;
 	void DrawInspector() override;
 	void CleanUp() override;
+	Component* GetComponent(ComponentType type);
 
 	void UpdateTransform(float3 position, float3 scale, Quat rotation);
 
