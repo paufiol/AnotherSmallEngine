@@ -206,7 +206,7 @@ GameObject* ModuleScene::CreateGameCamera() {
 	//(ComponentTransform*)ret->GetComponent(ComponentType::Camera)->
 	ret->AddComponent((Component*)new ComponentCamera(ret));
 
-	App->renderer3D->camera = (ComponentCamera*)ret->GetComponent(ComponentType::Camera);
+	App->camera->gameCamera = (ComponentCamera*)ret->GetComponent(ComponentType::Camera);
 
 	return ret;
 }
