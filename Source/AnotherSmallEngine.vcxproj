@@ -53,7 +53,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\Glew\include\GL;$(SolutionDir)\Source\Dependencies\SDL\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\Glew\include\GL;$(SolutionDir)\Source\Dependencies\SDL\include;$(SolutionDir)\Source\Dependencies\ImGui;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <AdditionalUsingDirectories>$(ProjectDir);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
       <PreprocessorDefinitions>WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -76,7 +76,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>false</ExceptionHandling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\Glew\include\GL;$(SolutionDir)\Source\Dependencies\SDL\include;C:\Users\aitor\Desktop\AnotherSmallEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Source\Dependencies\Glew\include\GL;$(SolutionDir)\Source\Dependencies\SDL\include;$(SolutionDir)\Source\Dependencies\ImGui;C:\Users\aitor\Desktop\AnotherSmallEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -143,6 +143,11 @@
     <ClInclude Include="Dependencies\Glew\include\GL\glew.h" />
     <ClInclude Include="Dependencies\Glew\include\GL\glxew.h" />
     <ClInclude Include="Dependencies\Glew\include\GL\wglew.h" />
+    <ClInclude Include="Dependencies\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="Dependencies\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="Dependencies\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="Dependencies\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="Dependencies\ImGui\imconfig.h" />
     <ClInclude Include="Dependencies\ImGui\imgui.h" />
     <ClInclude Include="Dependencies\ImGui\imgui_impl_opengl3.h" />
@@ -335,6 +340,10 @@
     <ClCompile Include="ComponentTexture.cpp" />
     <ClCompile Include="ComponentMesh.cpp" />
     <ClCompile Include="ComponentTransform.cpp" />
+    <ClCompile Include="Dependencies\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="Dependencies\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="Dependencies\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_draw.cpp" />
