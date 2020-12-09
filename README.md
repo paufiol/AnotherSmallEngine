@@ -20,22 +20,24 @@ This project is been created as part of CITM's Game Engine course under supervis
 * Texture Loading
 * Drag & Drop of Models and Textures
 * GameObject and Components
+* Resource Management
+    * Assets window
+    * Custom File Formats generated within Library on file import
+* Camera(s) with frustum culling
+* Objects have Bounding Boxes for Optimisation
+* Object transformation via Gizmos
+
 ****
 ## How to Use
 * **Mouse Wheel:** Zooms camera forward and backwards.
 * **Alt + Right click**: Rotate camera over mouse position or else selected game object.
-* **W:** Moves the camera forward.
-* **A:** Moves the camera to the left.
-* **S:** Moves the camera backwards.
-* **D:** Moves the camera to the right.
-* **Z:** Moves the camera upwards.
-* **X:** Moves the camera downwards.
-* **Shift:** Duplicate camera speed.
-* **F:** Centers the reference point on the selected model.
+* **Alt + Center click(wheel)** Pan camera.
+* **Left click** Select object / Use Gizmo.
 ****
 ## Libraries used
 * STL (Standard Template Library)
 * ImGui
+    * ImGuizmo
 * OpenGL 
 * Glew 
 * MatGeoLib
