@@ -5,6 +5,7 @@
 #include "Primitive.h"
 #include "GameObject.h"
 #include "ComponentTexture.h"
+#include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "ImporterScene.h"
@@ -12,7 +13,10 @@
 #include "ResourceMesh.h"
 #include "ModuleInput.h"
 #include "ResourceMaterial.h"
+#include "ResourceMesh.h"
+#include <map>
 
+#include "Dependencies/MathGeoLib/include/Geometry/Triangle.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -209,6 +213,71 @@ GameObject* ModuleScene::CreateGameCamera() {
 	App->camera->gameCamera = (ComponentCamera*)ret->GetComponent(ComponentType::Camera);
 
 	return ret;
+}
+
+void ModuleScene::TestGameObjectSelection(const LineSegment& ray)
+{
+	std::vector<GameObject*> game_object_candidates;
+
+	for (uint i = 0; i < game_objects.size(); i++)
+	{
+		//We don't test against meshless components. 
+		if (game_objects[i]->GetComponent(ComponentType::Mesh) == nullptr) 
+		{
+			continue;
+		}
+		
+		if (ray.Intersects(game_objects[i]->aabb)) 
+		{
+			if(ray.Intersects(game_objects[i]->obb))
+			{
+				game_object_candidates.push_back(game_objects[i]);
+			}
+		}
+	}
+	
+	for (uint i = 0; i < game_object_candidates.size(); i++)
+	{
+		ComponentMesh* mesh_to_test = (ComponentMesh*)game_object_candidates[i]->GetComponent(ComponentType::Mesh);
+		ResourceMesh* mesh = mesh_to_test->GetMesh();
+		if (mesh != nullptr)
+		{
+			LineSegment local_ray = ray;
+			
+			ComponentTransform* c_transform = (ComponentTransform*)game_object_candidates[i]->GetComponent(ComponentType::Transform);
+			
+			local_ray.Transform(c_transform->GetGlobalTransform().Inverted());
+			
+			//Iterate points in a mesh jump 3 by 3 because triangles
+			for(uint j = 0; j < mesh->size[mesh->index]; j += 3)
+			{
+				uint triangle_indices[3] = {mesh->indices[j] * 3, mesh->indices[j + 1] * 3, mesh->indices[j + 2] * 3 };
+				
+
+				vec point_a(&mesh->vertices[triangle_indices[0]]);
+
+				vec point_b(&mesh->vertices[triangle_indices[1]]);
+
+				vec point_c(&mesh->vertices[triangle_indices[2]]);
+				
+				Triangle triangle(point_a, point_b, point_c);
+
+				if(local_ray.Intersects(triangle, nullptr, nullptr))//Great constructor GeoLib
+				{
+					selected_object = game_object_candidates[i];
+					break;
+				}
+			}
+		}
+	}
+}
+
+bool ModuleScene::PerTriangleTest(const ResourceMesh* mesh)
+{
+	float3 closest_triangle;
+
+
+	return false;
 }
 
 void ModuleScene::SelectObject(GameObject* object)

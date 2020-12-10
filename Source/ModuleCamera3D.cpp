@@ -4,6 +4,7 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "ComponentCamera.h"
+#include "ModuleWindow.h"
 #include "ModuleScene.h"
 #include "ModuleEditor.h"
 
@@ -108,8 +109,8 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 		{
-			//float2 mousePos = ();
-			//currentCamera->OnClick();
+			
+			currentCamera->OnClick(App->input->GetMouseX(), App->window->Height() - App->input->GetMouseY());
 
 			//RAYCAST BULLSHIT HERE
 		}

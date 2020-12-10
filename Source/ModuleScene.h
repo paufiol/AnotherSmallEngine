@@ -1,10 +1,11 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
 
 class GameObject;
 class Primitive;
-
+class ResourceMesh;
 
 class ModuleScene : public Module
 {
@@ -25,6 +26,11 @@ public:
 	void DeleteGameObject(GameObject* object);
 
 	GameObject* CreateGameCamera();
+
+	void TestGameObjectSelection(const LineSegment& ray);
+
+private:
+	bool PerTriangleTest(const ResourceMesh* mesh);
 
 private:
 	std::vector<Primitive*> primitives;

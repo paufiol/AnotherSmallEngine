@@ -6,12 +6,14 @@
 #include "Globals.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
+#include "ModuleScene.h"
+
 
 #include "glmath.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/float3x3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
-#include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
+
 
 #include "Dependencies/ImGUI/imgui.h"
 
@@ -24,6 +26,7 @@ ComponentCamera::ComponentCamera(GameObject* owner) : active_camera(false), Comp
 
 	frustum.SetViewPlaneDistances(1.0f, 1000.0f);
 	frustum.SetPerspective(1.0f, 1.0f);
+	SetAspectRatio((float)App->window->Width() / (float)App->window->Height());
 	SetFOV(50.0f);
 
 	Look(float3(0.0f, 0.0f, 0.0f));
@@ -194,14 +197,6 @@ void ComponentCamera::Zoom(float motion_z)
 	if (!looking) 
 	{
 		float dist = looking_at.Distance(frustum.Pos());
-
-		//Use?
-		if (dist < 15.0f)
-			motion_z *= 0.75f;
-		else if (dist < 7.5f)
-			motion_z *= 0.5f;
-		else if (dist < 1.0f && motion_z > 0)
-			motion_z = 0;
 	}
 
 	float3 vec = frustum.Front() * motion_z;
@@ -238,12 +233,15 @@ void ComponentCamera::LookAt(float motion_x, float motion_y)
 
 void ComponentCamera::OnClick(float pos_x, float pos_y)
 {
-	float normalPos_x = pos_x / (float)App->window->width;
-	float normalPos_y = pos_y / (float)App->window->height;
+	float normalPos_x = pos_x / (float)App->window->Width();
+	float normalPos_y = pos_y / (float)App->window->Height();
+
+	normalPos_x = (normalPos_x - 0.5) / 0.5;
+	normalPos_y = (normalPos_y - 0.5) / 0.5;
 
 	latest_ray = frustum.UnProjectLineSegment(normalPos_x, normalPos_y);
-	latest_ray;
-	//LLamar aquí el OnClickSelection
+	
+	App->scene->TestGameObjectSelection(latest_ray);
 }
 
 void ComponentCamera::DrawInspector() 
