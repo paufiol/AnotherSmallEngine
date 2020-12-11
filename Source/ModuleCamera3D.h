@@ -6,6 +6,7 @@
 #include "Dependencies/MathGeoLib/include/Geometry/Frustum.h"
 #include "Dependencies/MathGeoLib/include/Math/float4x4.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
+#include "Dependencies/MathGeoLib/include/Math/float2.h"
 
 class ComponentCamera;
 
@@ -34,8 +35,16 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
+	
+	ComponentCamera* editorCamera; 
+	ComponentCamera* gameCamera;
+
+	ComponentCamera* currentCamera;
+
+	float3	reference; 
 
 private:
+
 
 	mat4x4 ViewMatrix, ViewMatrixInverse;
 };

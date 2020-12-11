@@ -59,6 +59,4 @@ public:
 
 	ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
-
-	ComponentCamera* camera = nullptr;
 };

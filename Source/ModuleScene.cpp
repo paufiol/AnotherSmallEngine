@@ -6,6 +6,7 @@
 #include "Primitive.h"
 #include "GameObject.h"
 #include "ComponentTexture.h"
+#include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "ImporterScene.h"
@@ -13,7 +14,13 @@
 #include "ResourceMesh.h"
 #include "ModuleInput.h"
 #include "ResourceMaterial.h"
+#include "ResourceMesh.h"
+#include "ModuleWindow.h"
+#include "ModuleEditor.h"
+#include <map>
 
+#include "Dependencies/MathGeoLib/include/Geometry/Triangle.h"
+//#include "Dependencies/ImGuizmo/ImGuizmo.h"
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
@@ -21,6 +28,8 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 	game_objects.push_back(root_object);
 	root_object->parent = nullptr;
 	selected_object = root_object;
+
+	ImGuizmo::Enable(true);
 }
 
 ModuleScene::~ModuleScene()
@@ -83,6 +92,18 @@ update_status ModuleScene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
 		App->scene->DeleteGameObject(App->scene->selected_object);
 
+	if(!App->editor->isUserTyping)
+	{
+		if (App->input->GetKey(SDL_SCANCODE_W)) gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+		if (App->input->GetKey(SDL_SCANCODE_E)) gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+		if (App->input->GetKey(SDL_SCANCODE_R)) gizmoOperation = ImGuizmo::OPERATION::SCALE;
+
+	}
+
+
+	//Donde lo meto?
+	ImGuizmoHandling();
+
 	return UPDATE_CONTINUE;
 }
 
@@ -125,55 +146,6 @@ GameObject* ModuleScene::CreateGameObject(string name, GameObject* parent)
 	game_objects.push_back(tempObject);
 	
 	return tempObject;
-	
-	//GameObject* tempGO = new GameObject(name);
-	//int meshNum = 1;
-	//if (meshPath != nullptr)
-	//{
-	//	//vector<ResourceMesh*> meshes = Importer::MeshImporter::LoadMeshes(meshPath);
-	//	tempGO->SetParent(root_object);
-	//	root_object->AddChildren(tempGO);
-	//	game_objects.push_back(tempGO);
-	//	if (meshes.size() == 1)
-	//	{
-	//		ComponentMesh* compMesh = new ComponentMesh(tempGO, meshPath, meshes.front());
-	//		if (texturePath != nullptr)
-	//		{
-	//			ComponentTexture* compTex = new ComponentTexture(tempGO, texturePath);
-	//			compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
-	//			tempGO->AddComponent(compTex);
-	//		}
-	//		tempGO->AddComponent(compMesh);
-
-	//	}
-	//	else if (meshes.size() > 1)
-	//	{
-	//		vector<Mesh*>::iterator iterator = meshes.begin();
-	//		for (; iterator != meshes.end(); iterator++)
-	//		{
-	//			string tempName = "Mesh ";
-	//			string stringSize = to_string(meshNum);
-	//			tempName += stringSize;
-
-	//			GameObject* childGO = new GameObject(tempName);
-	//			ComponentMesh* newComp = new ComponentMesh(childGO, meshPath, (*iterator));
-	//			if (texturePath != nullptr)
-	//			{
-	//				ComponentTexture* compTex = new ComponentTexture(childGO, texturePath);
-	//				compTex->SetTexture(Importer::TextureImporter::Import(texturePath), texturePath);
-	//				childGO->AddComponent(compTex);
-	//			}
-	//			childGO->AddComponent(newComp);
-
-	//			childGO->SetParent(tempGO);
-	//			tempGO->AddChildren(childGO);
-	//			game_objects.push_back(childGO);
-	//			meshNum++;
-	//		}
-	//	}
-
-	//	
-	//}
 }
 
 void ModuleScene::AddGameObject(GameObject* object)
@@ -203,8 +175,6 @@ void ModuleScene::DeleteGameObject(GameObject* object)
 				
 				object->CleanUp();
 			
-				
-				//delete object;
 			}
 		}
 	}
@@ -221,9 +191,100 @@ GameObject* ModuleScene::CreateGameCamera() {
 	//(ComponentTransform*)ret->GetComponent(ComponentType::Camera)->
 	ret->AddComponent((Component*)new ComponentCamera(ret));
 
-	App->renderer3D->camera = (ComponentCamera*)ret->GetComponent(ComponentType::Camera);
+	App->camera->gameCamera = (ComponentCamera*)ret->GetComponent(ComponentType::Camera);
 
 	return ret;
+}
+
+void ModuleScene::TestGameObjectSelection(const LineSegment& ray)
+{
+	std::vector<GameObject*> game_object_candidates;
+
+	for (uint i = 0; i < game_objects.size(); i++)
+	{
+		//We don't test against meshless components. 
+		if (game_objects[i]->GetComponent(ComponentType::Mesh) == nullptr) 
+		{
+			continue;
+		}
+		
+		if (ray.Intersects(game_objects[i]->aabb)) 
+		{
+			if(ray.Intersects(game_objects[i]->obb))
+			{
+				game_object_candidates.push_back(game_objects[i]);
+			}
+		}
+	}
+	
+	for (uint i = 0; i < game_object_candidates.size(); i++)
+	{
+		ComponentMesh* mesh_to_test = (ComponentMesh*)game_object_candidates[i]->GetComponent(ComponentType::Mesh);
+		ResourceMesh* mesh = mesh_to_test->GetMesh();
+		if (mesh != nullptr)
+		{
+			LineSegment local_ray = ray;
+			
+			ComponentTransform* c_transform = (ComponentTransform*)game_object_candidates[i]->GetComponent(ComponentType::Transform);
+			
+			local_ray.Transform(c_transform->GetGlobalTransform().Inverted());
+			
+			//Iterate points in a mesh jump 3 by 3 because triangles
+			for(uint j = 0; j < mesh->size[mesh->index]; j += 3)
+			{
+				uint triangle_indices[3] = {mesh->indices[j] * 3, mesh->indices[j + 1] * 3, mesh->indices[j + 2] * 3 };
+				
+
+				vec point_a(&mesh->vertices[triangle_indices[0]]);
+
+				vec point_b(&mesh->vertices[triangle_indices[1]]);
+
+				vec point_c(&mesh->vertices[triangle_indices[2]]);
+				
+				Triangle triangle(point_a, point_b, point_c);
+
+				if(local_ray.Intersects(triangle, nullptr, nullptr))//Great constructor GeoLib
+				{
+					selected_object = game_object_candidates[i];
+					break;
+				}
+			}
+		}
+	}
+}
+
+void ModuleScene::ImGuizmoHandling()
+{
+	if (selected_object == nullptr) return; 
+
+	ComponentTransform* selected_transform = (ComponentTransform*)selected_object->GetComponent(ComponentType::Transform);
+
+	float4x4 viewMatrix = App->camera->currentCamera->frustum.ViewMatrix();
+	viewMatrix.Transpose();
+	float4x4 projectionMatrix = App->camera->currentCamera->frustum.ProjectionMatrix();
+	projectionMatrix.Transpose();
+	float4x4 modelProjection = selected_transform->GetGlobalTransform();
+	modelProjection.Transpose();
+
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetRect(0.0f, 0.0f, App->window->Width(), App->window->Height());
+
+	//gizmoOperation
+	float modelPtr[16];
+	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
+	ImGuizmo::MODE finalMode = (gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImGuizmo::MODE::LOCAL : gizmoMode);
+	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr);
+
+	if (ImGuizmo::IsUsing())
+	{
+		float4x4 newMatrix;
+		newMatrix.Set(modelPtr);
+		modelProjection = newMatrix.Transposed();
+		
+		
+		//Set Global Transform 
+		selected_transform->SetGlobalTransform(modelProjection);
+	}
 }
 
 void ModuleScene::SelectObject(GameObject* object)

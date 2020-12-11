@@ -64,6 +64,11 @@ void ComponentTransform::UpdateTransform(float3 _position, float3 _scale, Quat _
 
 void ComponentTransform::UpdateLocalTransform()
 {
+	if (scale.x < 0.1f)  scale.x = 0.1f;
+	if (scale.y < 0.1f)  scale.y = 0.1f;
+	if (scale.z < 0.1f)  scale.z = 0.1f;
+	
+	
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	UpdateEulerAngles();
 	UpdateGlobalTransform();
@@ -106,6 +111,11 @@ void ComponentTransform::SetEulerRotation(float3 eulerAngles)
 	rotation =  quaternion;
 	eulerRotation = temp;
 	UpdateLocalTransform(); 
+}
+
+void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
+{
+	global_transform = new_matrix;
 }
 
 

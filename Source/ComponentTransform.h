@@ -44,6 +44,7 @@ public:
 	void inline SetRotation(Quat rotation) { this->rotation = rotation; UpdateLocalTransform();};
 	void SetEulerRotation(float3 euler_angles);
 	void inline SetScale(float3 scale) { this->scale = scale; UpdateLocalTransform();};
+	void SetGlobalTransform(float4x4 global_matrix);
 
 	float3 inline GetPosition() const { return this->position ; };
 	Quat inline GetRotation() const { return this->rotation; };

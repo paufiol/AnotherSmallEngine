@@ -1,10 +1,13 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
+
+#include "Dependencies/ImGuizmo/ImGuizmo.h"
 
 class GameObject;
 class Primitive;
-
+class ResourceMesh;
 
 class ModuleScene : public Module
 {
@@ -28,8 +31,18 @@ public:
 
 	GameObject* CreateGameCamera();
 
+	void TestGameObjectSelection(const LineSegment& ray);
+	void ImGuizmoHandling();
+
+private:
+
+	
+
 private:
 	std::vector<Primitive*> primitives;
+
+	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+	ImGuizmo::MODE gizmoMode = ImGuizmo::MODE::WORLD;
 
 public:
 	std::vector<GameObject*> game_objects;

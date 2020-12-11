@@ -89,6 +89,7 @@ public:
 
 	bool scrollDown = true;
 	bool GUIhovered = false;
+	bool isUserTyping = false; 
 
 	bool enableObject = true;
 };

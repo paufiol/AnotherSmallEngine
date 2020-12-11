@@ -81,7 +81,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(0.f, 0.f, 0.f, 1.f);
+		glClearColor(.1f, .1f, .1125f, 1.f);
 
 		//Check for error
 		error = glGetError();
@@ -140,7 +140,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadMatrixf(App->camera->GetRawViewMatrix());
 
 	// light 0 on cam pos
-	lights[0].SetPos(App->camera->Position.x, App->camera->Position.y, App->camera->Position.z);
+	lights[0].SetPos(App->camera->currentCamera->frustum.Pos().x, App->camera->currentCamera->frustum.Pos().y, App->camera->currentCamera->frustum.Pos().z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
@@ -158,10 +158,10 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glVertex3f(z, -1.0f, x);
 	}
 
-	if (camera != nullptr) {
+	if (App->camera->gameCamera != nullptr) {
 		glLineWidth(2.0f);
 		vec* frustum_corners;
-		frustum_corners = camera->GetFrustumPoints();
+		frustum_corners = App->camera->gameCamera->GetFrustumPoints();
 		DrawCuboid(frustum_corners, Color(1.0f, 0.0f, 0.0f, 1.0f));
 	}
 
@@ -250,7 +250,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 
-				if (camera->draw_boundingboxes) {
+				if (App->camera->gameCamera->draw_boundingboxes) {
 					glLineWidth(2.0f);
 					glBegin(GL_LINES);
 
@@ -272,7 +272,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial, GameObject* meshOwner)
 {
 	
-	if (camera->frustum_culling) 
+	if (App->camera->gameCamera->frustum_culling) 
 	{
 		if(!DoesIntersect(meshOwner->aabb))
 		{
@@ -429,7 +429,7 @@ bool ModuleRenderer3D::DoesIntersect(const AABB& aabb) {
 	aabb.GetCornerPoints(aabb_corners);
 
 	static Plane frustum_planes[6];
-	camera->frustum.GetPlanes(frustum_planes);
+	App->camera->gameCamera->frustum.GetPlanes(frustum_planes);
 
 	//int iTotalIn = 0;
 
