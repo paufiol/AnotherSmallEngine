@@ -2,7 +2,6 @@
 #include "ModuleFileSystem.h"
 
 #include "ModuleResource.h"
-#include "Resource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ResourceScene.h"
@@ -118,7 +117,7 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 	
 
 	RELEASE_ARRAY(buffer);
-	UnloadResource(resource->GetUID());
+	//UnloadResource(resource->GetUID());
 
 	return resource->GetUID();
 }

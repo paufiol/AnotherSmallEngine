@@ -39,7 +39,7 @@ public:
 	void SaveResource(Resource* resource);
 	Resource* LoadResource(uint32 UID, Resource* resource = nullptr);
 	Resource* AccesResource(uint32 UID);
-	uint32 UnloadResource(uint32 ID);
+	//uint32 UnloadResource(uint32 ID);
 
 public:
 
