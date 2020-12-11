@@ -113,6 +113,11 @@ void ComponentTransform::SetEulerRotation(float3 eulerAngles)
 	UpdateLocalTransform(); 
 }
 
+void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
+{
+	global_transform = new_matrix;
+}
+
 
 void ComponentTransform::DrawInspector()
 {

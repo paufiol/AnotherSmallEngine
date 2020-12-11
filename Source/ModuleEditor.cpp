@@ -11,6 +11,8 @@
 #include "Dependencies/ImGUI/imgui_impl_sdl.h"
 #include "Dependencies/ImGUI/imgui_impl_opengl3.h"
 
+#include "Dependencies/ImGuizmo/ImGuizmo.h"
+
 #include "Dependencies/Glew/include/GL/glew.h"
 #include "Dependencies/SDL/include/SDL_opengl.h"
 
@@ -56,6 +58,7 @@ update_status ModuleEditor::PreUpdate(float dt)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	return ret;
 }
@@ -72,6 +75,7 @@ update_status ModuleEditor::Update(float dt)
 	if (show_demo_window) ImGui::ShowDemoWindow(&show_demo_window);
 	HierarchyWindow();
 	InspectorWindow();
+	App->scene->ImGuizmoHandling();
 	GUIisHovered();
 	ImGui::End();
 
@@ -112,6 +116,7 @@ void ModuleEditor::GUIisHovered()
 {
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.WantCaptureMouse ? GUIhovered = true : GUIhovered = false;
+	io.WantCaptureKeyboard ? isUserTyping = true : isUserTyping = false;
 }
 
 bool ModuleEditor::MainMenuBar()

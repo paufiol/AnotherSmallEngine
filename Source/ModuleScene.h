@@ -3,6 +3,8 @@
 #include "Globals.h"
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
 
+#include "Dependencies/ImGuizmo/ImGuizmo.h"
+
 class GameObject;
 class Primitive;
 class ResourceMesh;
@@ -28,12 +30,17 @@ public:
 	GameObject* CreateGameCamera();
 
 	void TestGameObjectSelection(const LineSegment& ray);
+	void ImGuizmoHandling();
 
 private:
-	bool PerTriangleTest(const ResourceMesh* mesh);
+
+	
 
 private:
 	std::vector<Primitive*> primitives;
+
+	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+	ImGuizmo::MODE gizmoMode = ImGuizmo::MODE::WORLD;
 
 public:
 	std::vector<GameObject*> game_objects;
