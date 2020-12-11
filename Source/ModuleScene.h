@@ -17,6 +17,8 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
+
+	void LoadModel(const char* path);
 	void SaveScene();
 
 	void AddGameObject(GameObject* object);

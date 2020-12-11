@@ -9,6 +9,18 @@ ResourceMesh::ResourceMesh() : Resource(ResourceType::Mesh)
         size[i] = 0;
     }
 }
+ResourceMesh::ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name) : Resource(ResourceType::Mesh)
+{
+    this->name = name;
+    this->libraryFile = libraryFile;
+    this->assetsFile = assetsFile;
+
+    for (uint i = 0; i < NONE; i++)
+    {
+        ID[i] = 0;
+        size[i] = 0;
+    }
+}
 ResourceMesh::~ResourceMesh() {}
 
 

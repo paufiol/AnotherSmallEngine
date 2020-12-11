@@ -12,6 +12,7 @@ class ModuleRenderer3D;
 class ModuleEditor;
 class ModuleCamera3D;
 class ModuleFileSystem;
+class ModuleResources;
 
 class Application
 {
@@ -23,7 +24,7 @@ public:
 	ModuleCamera3D* camera;
 	ModuleEditor* editor;
 	ModuleFileSystem* fileSystem ;
-
+	ModuleResources* resources;
 
 	bool debug = false;
 	bool renderPrimitives = false;

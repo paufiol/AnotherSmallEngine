@@ -6,6 +6,15 @@ JsonConfig::JsonConfig()
     node = json_value_get_object(value);
 }
 
+JsonConfig::JsonConfig(const char* buffer)
+{
+    value = json_parse_string(buffer);
+    if (value)
+    {
+        node = json_value_get_object(value);
+    }
+}
+
 JsonConfig::JsonConfig(string path, JSON_Object* object, JSON_Value* value)
     : path(path), node(object), value(value)
 {
@@ -150,7 +159,7 @@ void JsonConfig::SetQuat(const string name, const Quat quat)
 }
 
 
-ArrayConfig JsonConfig::GetArray(string name)
+ArrayConfig JsonConfig::GetArray(string name) const
 {
     if (json_object_has_value_of_type(node, name.c_str(), JSONArray))
     {
@@ -173,7 +182,7 @@ ArrayConfig::ArrayConfig()
 
 ArrayConfig::ArrayConfig(JSON_Array* jArray) : jArray(jArray)
 {
-  
+    index = json_array_get_count(jArray);
 }
 
 ArrayConfig::~ArrayConfig()
@@ -186,4 +195,14 @@ JsonConfig ArrayConfig::AddNode()
     json_array_append_value(jArray, json_value_init_object());
     index++;
     return JsonConfig(json_array_get_object(jArray, index - 1));
+}
+
+JsonConfig ArrayConfig::GetNode(uint index) const
+{
+	return JsonConfig(json_array_get_object(jArray, index));
+}
+
+uint ArrayConfig::GetSize() const
+{
+    return index;
 }

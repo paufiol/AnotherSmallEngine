@@ -7,13 +7,14 @@ using namespace std;
 
 struct aiScene;
 struct aiNode;
+struct aiMesh;
 class ResourceMesh;
 
 namespace Importer
 {
 	namespace MeshImporter
 	{
-		vector<ResourceMesh*> LoadMeshes(const aiScene* scene, const aiNode* node);
+		void LoadMeshes(ResourceMesh* mesh, const aiMesh* aiMesh);
 
 		uint64 Save(const ResourceMesh* mesh, char** buffer);
 

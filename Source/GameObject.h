@@ -10,6 +10,8 @@ class ComponentMesh;
 class ComponentTexture;
 enum class ComponentType;
 
+class ResourceScene;
+
 class GameObject {
 //Properties
 public:
@@ -67,6 +69,8 @@ public:
 	void EraseChild(GameObject* child, bool deleteChild = true);	//Delete specific child
 	void EraseAllChildren();			//Delete them all
 	void FillGameObjectArray(GameObject* gameObject, std::vector<GameObject*> array);
+
+	void CreateGOfromResource(ResourceScene* model);
 
 	bool selected = false;
 private:

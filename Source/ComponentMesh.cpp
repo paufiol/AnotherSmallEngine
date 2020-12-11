@@ -82,3 +82,8 @@ void ComponentMesh::SetPath(std::string path)
 {
 	this->path = path;
 }
+
+void ComponentMesh::SetResourceID(uint32 ID)
+{
+	mesh->UID = ID;
+}

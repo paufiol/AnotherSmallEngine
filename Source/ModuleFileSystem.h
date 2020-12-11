@@ -13,9 +13,7 @@ struct aiFileIO;
 class Config;
 struct PathNode;
 
-#define ASSETS_FOLDER "Assets/"
-#define MODELS_FOLDER "Assets/Models/"
-#define TEXTURES_FOLDER "Assets/Textures/"
+
 
 
 class ModuleFileSystem : public Module

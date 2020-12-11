@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "Globals.h"
 #include "glmath.h"
 #include "Dependencies/MathGeoLib/include/Geometry/AABB.h"
 
@@ -26,6 +27,7 @@ public:
 
 	void SetMesh(ResourceMesh* mesh);
 	void SetPath(std::string path);
+	void SetResourceID(uint32 ID);
 
 	ComponentMesh(GameObject* parent); 
 	ComponentMesh(GameObject* parent, const char* meshPath, ResourceMesh* _mesh = nullptr);

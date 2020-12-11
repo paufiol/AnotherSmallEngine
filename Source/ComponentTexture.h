@@ -22,6 +22,7 @@ public:
 	void CleanUp() override;
 
 	inline ResourceMaterial* GetMaterial() const { return rMaterial; }
+	inline void SetMaterial(ResourceMaterial* resourceMaterial) { rMaterial = resourceMaterial; }
 
 	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0
 	ComponentTexture(GameObject* parent, const char* texturePath, uint id);

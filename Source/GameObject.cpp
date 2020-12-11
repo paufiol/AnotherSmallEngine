@@ -9,6 +9,9 @@
 #include "Globals.h"
 
 
+#include "ModuleResource.h"
+#include "ResourceScene.h"
+
 GameObject::GameObject(std::string name): name(name), active(true), 
 UID(randomNum.GenerateRandomInt())
 {
@@ -295,6 +298,20 @@ void GameObject::FillGameObjectArray(GameObject* gameObject, std::vector<GameObj
 		}
 
 	}
+}
+
+void GameObject::CreateGOfromResource(ResourceScene* model)
+{
+	//App->resources->AccesResource
+	//
+	//GameObject* tempGameObject = new GameObject(model->name.c_str());
+
+
+
+
+
+
+
 }
 
 Component* GameObject::GetComponent(ComponentType type)

@@ -5,14 +5,14 @@
 
 struct aiMaterial;
 class ResourceMaterial;
-class GameObject;
+class ResourceTexture;
 
 namespace Importer
 {
 	namespace MaterialsImporter
 	{
 		
-		void ImportMaterial(aiMaterial* material, GameObject* tempObject);
+		void ImportMaterial(aiMaterial* material, ResourceMaterial* resourceMaterial);
 		uint64 Save(ResourceMaterial* rMaterial, char** buffer);
 		void Load(ResourceMaterial* rMaterial, char* buffer);
 
@@ -20,8 +20,10 @@ namespace Importer
 
 	namespace TextureImporter
 	{
-		ResourceMaterial* ImportTexture(const char* file);
 		void InitDevil();
+		void ImportTexture(ResourceTexture* rMaterial, const char* buffer, uint size);
+		uint64 Save(const ResourceTexture* rMaterial, char** buffer);
+		void Load(ResourceTexture* rMaterial, char* buffer, uint size);
 	}
 }
 #endif //__ImporterMaterials__

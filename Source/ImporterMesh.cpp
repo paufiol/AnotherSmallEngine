@@ -15,66 +15,60 @@
 
 #pragma comment (lib, "Dependencies/Assimp/libx86/assimp.lib")
 
-vector<ResourceMesh*> Importer::MeshImporter::LoadMeshes(const aiScene* scene, const aiNode* node)
+void Importer::MeshImporter::LoadMeshes(ResourceMesh* mesh, const aiMesh* aiMesh)
 {
-    vector<ResourceMesh*> meshes;
-    for (int i = 0; i < node->mNumMeshes; i++)
+    mesh->size[ResourceMesh::vertex] = aiMesh->mNumVertices;
+    mesh->vertices = new float[mesh->size[ResourceMesh::vertex] * 3];
+    memcpy(mesh->vertices, aiMesh->mVertices, sizeof(float) * mesh->size[ResourceMesh::vertex] * 3);
+    LOG("New mesh with %d vertices", mesh->size[ResourceMesh::vertex]);
+
+    mesh->CreateAABB();
+
+    if (aiMesh->HasFaces())
     {
-        ResourceMesh* tempMesh = new ResourceMesh();
-
-        tempMesh->size[ResourceMesh::vertex] = scene->mMeshes[node->mMeshes[i]]->mNumVertices;
-        tempMesh->vertices = new float[tempMesh->size[ResourceMesh::vertex] * 3];
-        memcpy(tempMesh->vertices, scene->mMeshes[node->mMeshes[i]]->mVertices, sizeof(float) * tempMesh->size[ResourceMesh::vertex] * 3);
-        LOG("New mesh with %d vertices", tempMesh->size[ResourceMesh::vertex]);
-
-        //Why no entrar
-        tempMesh->CreateAABB();
-
-        if (scene->mMeshes[node->mMeshes[i]]->HasFaces())
+        mesh->size[ResourceMesh::index] = aiMesh->mNumFaces * 3;
+        mesh->indices = new uint[mesh->size[ResourceMesh::index]];
+        for (uint f = 0; f < aiMesh->mNumFaces; ++f)
         {
-            tempMesh->size[ResourceMesh::index] = scene->mMeshes[node->mMeshes[i]]->mNumFaces * 3;
-            tempMesh->indices = new uint[tempMesh->size[ResourceMesh::index]];
-            for (uint f = 0; f < scene->mMeshes[node->mMeshes[i]]->mNumFaces; ++f)
+            if (aiMesh->mFaces[f].mNumIndices != 3)
             {
-                if (scene->mMeshes[node->mMeshes[i]]->mFaces[f].mNumIndices != 3)
-                {
-                    LOG("Mesh face with less or more than 3 indices!");
-                }
-                else
-                {
-                    memcpy(&tempMesh->indices[f * 3], scene->mMeshes[node->mMeshes[i]]->mFaces[f].mIndices, 3 * sizeof(uint));
-                }
+                LOG("Mesh face with less or more than 3 indices!");
             }
-
-            LOG("With %d indices", tempMesh->size[ResourceMesh::index]);
-        }
-
-        if (scene->mMeshes[node->mMeshes[i]]->HasNormals())
-        {
-            tempMesh->size[ResourceMesh::normal] = scene->mMeshes[node->mMeshes[i]]->mNumVertices;
-            tempMesh->normals = new float[tempMesh->size[ResourceMesh::normal] * 3];
-            memcpy(tempMesh->normals, scene->mMeshes[node->mMeshes[i]]->mNormals, sizeof(float) * tempMesh->size[ResourceMesh::normal] * 3);
-        }
-
-        if (scene->mMeshes[node->mMeshes[i]]->HasTextureCoords(0))
-        {
-            tempMesh->size[ResourceMesh::texture] = scene->mMeshes[node->mMeshes[i]]->mNumVertices;
-            tempMesh->texCoords = new float[scene->mMeshes[node->mMeshes[i]]->mNumVertices * 2];
-
-            for (int j = 0; j < tempMesh->size[ResourceMesh::texture]; j++)
+            else
             {
-                tempMesh->texCoords[j * 2] = scene->mMeshes[node->mMeshes[i]]->mTextureCoords[0][j].x;
-                tempMesh->texCoords[j * 2 + 1] = scene->mMeshes[node->mMeshes[i]]->mTextureCoords[0][j].y;
+                memcpy(&mesh->indices[f * 3], aiMesh->mFaces[f].mIndices, 3 * sizeof(uint));
             }
         }
-        tempMesh->SetUpBuffers(tempMesh);
-        meshes.push_back(tempMesh);
 
-        char* buffer = nullptr;
-        uint64 size = Importer::MeshImporter::Save(tempMesh, &buffer);
-        
+        LOG("With %d indices", mesh->size[ResourceMesh::index]);
     }
-    return meshes;
+
+    if (aiMesh->HasNormals())
+    {
+        mesh->size[ResourceMesh::normal] = aiMesh->mNumVertices;
+        mesh->normals = new float[mesh->size[ResourceMesh::normal] * 3];
+        memcpy(mesh->normals, aiMesh->mNormals, sizeof(float) * mesh->size[ResourceMesh::normal] * 3);
+    }
+
+    if (aiMesh->HasTextureCoords(0))
+    {
+        mesh->size[ResourceMesh::texture] = aiMesh->mNumVertices;
+        mesh->texCoords = new float[aiMesh->mNumVertices * 2];
+
+        for (int j = 0; j < mesh->size[ResourceMesh::texture]; j++)
+        {
+            mesh->texCoords[j * 2] = aiMesh->mTextureCoords[0][j].x;
+            mesh->texCoords[j * 2 + 1] = aiMesh->mTextureCoords[0][j].y;
+        }
+    }
+    
+    
+    
+    mesh->SetUpBuffers(mesh); // This have to go out
+    //meshes.push_back(tempMesh);
+
+    /*char* buffer = nullptr;
+    uint64 size = Importer::MeshImporter::Save(tempMesh, &buffer);*/
 }
 
 uint64 Importer::MeshImporter::Save(const ResourceMesh* mesh, char** buffer)
@@ -128,8 +122,8 @@ uint64 Importer::MeshImporter::Save(const ResourceMesh* mesh, char** buffer)
     }
 
 
-    string path = MESHES_PATH + std::to_string(mesh->GetUID()) + MESH_EXTENSION;
-    App->fileSystem->Save(path.c_str(), *buffer, fullSize);
+    //string path = MESHES_PATH + std::to_string(mesh->GetUID()) + MESH_EXTENSION;
+    //App->fileSystem->Save(path.c_str(), *buffer, fullSize);
 
     return fullSize;
 }
