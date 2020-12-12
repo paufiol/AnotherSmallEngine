@@ -9,6 +9,8 @@ ResourceTexture::ResourceTexture(const char* assetsFile, const char* libraryFile
 
 ResourceTexture::ResourceTexture() : Resource(ResourceType::Texture)
 {
+	id = 0;
+	path = "";
 }
 
 ResourceTexture::~ResourceTexture()

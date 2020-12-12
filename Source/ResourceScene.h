@@ -11,7 +11,7 @@ struct ModelContainer
 {
 	ModelContainer(uint32 ID, const char* name = "",  const float3& position = float3::zero, const float3& scale = float3::one, const Quat& rotation = Quat::identity, uint32 parentID = 0)
 		: name(name), 
-		ID(ID), //WE NEED TO RANDOMIZE THIS VALUE
+		ID(ID),
 		parentID(parentID),
 		materialID(-1),
 		meshID(-1),
@@ -41,7 +41,7 @@ public:
 	~ResourceScene();
 
 public:
-	GameObject* rootObject = nullptr;
+	//GameObject* rootObject = nullptr;
 
 	std::vector<ModelContainer> models;
 };

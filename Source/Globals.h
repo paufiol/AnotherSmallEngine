@@ -64,6 +64,7 @@ enum update_status
 #define MATERIAL_EXTENSION	".asemat"
 #define SCENE_EXTENSION	".asescene"
 #define TEXTURE_EXTENSION ".asetex"
+#define ASE_EXTENSION ".ASE"
 
 // Deletes a buffer
 #define RELEASE( x )\

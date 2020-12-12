@@ -22,7 +22,7 @@ uint32 Random::GenerateRandomInt()
 	pcg_extras::seed_seq_from<std::random_device> seed;
 	pcg32 rng(seed);
 
-	std::uniform_int_distribution<uint32> uniform_dist1(0, 4294967295);
+	std::uniform_int_distribution<uint32> uniform_dist1(0, 429496);
 	int num = num = uniform_dist1(rng);
 
 	return num;

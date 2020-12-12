@@ -20,14 +20,14 @@ class Resource
 {
 public:
 	ResourceType type = ResourceType::None;
-	uint32 UID;
+	uint32 UID = 0;
 
 
-	std::string assetsFile;
-	std::string libraryFile;
+	std::string assetsFile = "";
+	std::string libraryFile = "";
 	uint referenceCount = 0;
 
-	std::string name;
+	std::string name = "";
 protected:
 	Random randomNum;
 public:
