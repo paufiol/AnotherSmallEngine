@@ -160,4 +160,6 @@ void Importer::MeshImporter::Load(ResourceMesh* mesh, char* buffer)
     mesh->texCoords = new float[mesh->size[ResourceMesh::texture]];
     memcpy(mesh->texCoords, cursor, bytes);
     cursor += bytes;
+
+   // mesh->CreateAABB();
 }

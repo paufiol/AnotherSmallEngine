@@ -33,7 +33,7 @@ public:
 	void IterateMeshDraw();
 	void DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial = nullptr, GameObject* meshOwner = nullptr);
 
-	void DrawNormals(ResourceMesh* mesh);
+	void DrawNormals(ResourceMesh* mesh, float4x4 transform);
 
 	void SetDepthtest(bool active);
 	void SetCullface(bool active);

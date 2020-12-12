@@ -8,6 +8,7 @@ ResourceMesh::ResourceMesh() : Resource(ResourceType::Mesh)
         ID[i] = 0;
         size[i] = 0;
     }
+    aabb.SetNegativeInfinity();
 }
 ResourceMesh::ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name) : Resource(ResourceType::Mesh)
 {
@@ -20,6 +21,7 @@ ResourceMesh::ResourceMesh(const char* assetsFile, const char* libraryFile, cons
         ID[i] = 0;
         size[i] = 0;
     }
+    aabb.SetNegativeInfinity();
 }
 ResourceMesh::~ResourceMesh() {}
 
