@@ -58,7 +58,7 @@ void ComponentTransform::UpdateTransform(float3 _position, float3 _scale, Quat _
 	local_transform = float4x4::FromTRS(_position, _rotation, _scale);
 	UpdateEulerAngles();
 	UpdateGlobalTransform();
-
+	updatedtransform = true;
 }
 
 
@@ -72,7 +72,7 @@ void ComponentTransform::UpdateLocalTransform()
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	UpdateEulerAngles();
 	UpdateGlobalTransform();
-
+	updatedtransform = true;
 }
 
 void ComponentTransform::UpdateGlobalTransform()

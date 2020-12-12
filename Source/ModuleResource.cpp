@@ -229,6 +229,9 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 	case ResourceType::Model:
 		resource = new ResourceScene(assetsFile, MODELS_PATH, name);
 		break;
+	default:
+		resource = new Resource();
+		break;
 	}
 
 	if (resource->type != ResourceType::None)

@@ -223,10 +223,13 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		{
 			ComponentMesh* tempCompMesh = new ComponentMesh(tempGameObject);
 			ResourceMesh* tempResourceMesh = (ResourceMesh*)App->resources->AccesResource(meshUID);	
+
 			tempCompMesh->SetMesh(tempResourceMesh);
 			tempGameObject->AddComponent(tempCompMesh);
 			//tempCompMesh->SetResourceID(meshUID);
 			//Link resource with component
+
+
 		}
 		if (materialUID != 0)
 		{

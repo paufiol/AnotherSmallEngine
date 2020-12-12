@@ -17,6 +17,7 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 #include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
+#include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -244,12 +245,12 @@ void ModuleRenderer3D::IterateMeshDraw()
 				if (componentTex != nullptr) 
 				{
 					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial(), App->scene->game_objects[i]);
-					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
+					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform());
 				}
 				else 
 				{
 					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform(), nullptr, App->scene->game_objects[i]);
-					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
+					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform());
 				}
 
 				if (drawboundingboxes) {
@@ -366,15 +367,25 @@ void ModuleRenderer3D::UseCheckerTexture() {
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 }
 
-void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh)
+void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh, float4x4 transform)
 {
 	glBegin(GL_LINES);
 	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 
+	
+	
 	for (uint i = 0; i < mesh->size[ResourceMesh::vertex] * 3; i +=3)
 	{
-	    glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
-	    glVertex3f(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]);
+		LineSegment NormalDirection(vec(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]), 
+									vec(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]));
+
+		NormalDirection.Transform(transform);
+
+	   // glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
+	   // glVertex3f(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]);
+
+		glVertex3f(NormalDirection.a.x, NormalDirection.a.y, NormalDirection.a.z);
+		glVertex3f(NormalDirection.b.x, NormalDirection.b.y, NormalDirection.b.z);
 	}
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

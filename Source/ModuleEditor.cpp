@@ -34,7 +34,7 @@ void SetupStyleFromHue()
 	static float col_back_sat = 59.f / 255.f;
 	static float col_back_val = 40.f / 255.f;
 
-	ImGui::Begin("Hue Style");
+	ImGui::Begin("Style");
 	ImGui::SliderInt("master hue", &hue, 0, 255);
 
 	float dummy;
@@ -52,6 +52,10 @@ void SetupStyleFromHue()
 	ImGui::ColorEdit3("back", &rgb.x);
 	ImGui::ColorConvertRGBtoHSV(rgb.x, rgb.y, rgb.z, dummy, col_back_sat, col_back_val);
 
+	ImGui::Separator();
+
+
+	ImGui::ShowStyleEditor();
 	ImGui::End();
 #endif
 
@@ -188,21 +192,6 @@ update_status ModuleEditor::Update(float dt)
 	InspectorWindow();
 
 	SetupStyleFromHue();
-
-	
-	
-	ImGui::Begin("Style Editor");
-	ImGui::ShowStyleEditor();
-	/*
-		ImGuiIO& io = ImGui::GetIO();
-	ImGui::Text("WantCaptureMouse: %d", io.WantCaptureMouse);
-	ImGui::Text("WantCaptureKeyboard: %d", io.WantCaptureKeyboard);
-	ImGui::Text("WantTextInput: %d", io.WantTextInput);
-	ImGui::Text("WantSetMousePos: %d", io.WantSetMousePos);
-	ImGui::Text("NavActive: %d, NavVisible: %d", io.NavActive, io.NavVisible);
-	*/
-	ImGui::End();
-
 	
 
 	GUIisHovered();

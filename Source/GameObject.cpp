@@ -18,6 +18,9 @@ UID(randomNum.GenerateRandomInt())
 {
 	AddComponent(new ComponentTransform(this));
 	this->parent = nullptr;	// May crash HERE, at the moment it's necesary
+	
+	aabb.SetNegativeInfinity();
+	obb.SetNegativeInfinity();
 }
 
 GameObject::~GameObject() 
@@ -149,15 +152,6 @@ void GameObject::UpdateAABB()
 		aabb.SetFromCenterAndSize(transform->GetPosition(), float3(1, 1, 1));
 		obb = aabb;
 	}
-}
-
-bool GameObject::operator<(const GameObject* object2) const
-{
-	//this.
-	
-
-
-	return false;
 }
 
 bool GameObject::IsSelected()
@@ -312,28 +306,11 @@ void GameObject::FillGameObjectArray(GameObject* gameObject, std::vector<GameObj
 
 void GameObject::CreateGOfromResource(ResourceScene* model)
 {
-	//App->resources->AccesResource
-	//
-	//GameObject* tempGameObject = new GameObject(model->name.c_str());
-
-
-
-
-
-
 
 }
 
 Component* GameObject::GetComponent(ComponentType type)
 {
-	//std::vector<Component*>::iterator item = components.begin();
-	//
-	//for (; item != components.end(); ++item) {
-
-	//	if ((*item)->type == type) {
-	//		return (*item);
-	//	}
-	//}
 
 	for (uint i = 0; i < components.size(); ++i) {
 
