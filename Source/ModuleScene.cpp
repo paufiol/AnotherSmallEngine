@@ -2,6 +2,7 @@
 #include "ModuleScene.h"
 #include "ModuleCamera3D.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleFileSystem.h"
 #include "Primitive.h"
 #include "GameObject.h"
 #include "ComponentTexture.h"
@@ -45,7 +46,7 @@ bool ModuleScene::Start()
 
 	//Importer::SceneImporter::ImportScene("Assets/Models/BakerHouse.FBX");
 
-	Importer::SceneImporter::ImportScene("Assets/Models/Street_environment.FBX");
+	//Importer::SceneImporter::ImportScene("Assets/Models/Street_environment.FBX");
 	//Importer::SceneImporter::Save(root_object, "Assets/Models/Street_environment.FBX");
 
 	return ret;
@@ -57,6 +58,20 @@ bool ModuleScene::CleanUp()
 	LOG("Unloading Intro scene");
 
 	return true;
+}
+
+void ModuleScene::LoadModel (const char* path)
+{
+	//char* buffer = nullptr;
+	//uint size = App->fileSystem->Load(path, &buffer);
+	//if (size == 0)
+	//{
+	//	LOG("ERROR Could not load %s from Assets!", path);
+	//	return;
+	//}
+
+
+
 }
 
 // Update

@@ -10,6 +10,8 @@ class ComponentMesh;
 class ComponentTexture;
 enum class ComponentType;
 
+class ResourceScene;
+
 class GameObject {
 //Properties
 public:
@@ -68,9 +70,7 @@ public:
 	void EraseAllChildren();			//Delete them all
 	void FillGameObjectArray(GameObject* gameObject, std::vector<GameObject*> array);
 
-	//I just need this to check distance
-	bool operator < (const GameObject* object2) const;
-
+	void CreateGOfromResource(ResourceScene* model);
 
 
 	bool selected = false;

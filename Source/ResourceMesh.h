@@ -30,7 +30,8 @@ public:
 	AABB aabb;
 public:
 
-    ResourceMesh();
+	ResourceMesh(); 
+    ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name = "");
     ~ResourceMesh();
 
     void DrawNormals();

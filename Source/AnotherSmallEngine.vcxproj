@@ -315,10 +315,12 @@
     <ClInclude Include="JsonConfig.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModuleFileSystem.h" />
+    <ClInclude Include="ModuleResource.h" />
     <ClInclude Include="PathNode.h" />
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceFolder.h" />
     <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ResourceMesh.h" />
     <ClInclude Include="ModuleCamera3D.h" />
@@ -330,6 +332,8 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="ResourceScene.h" />
+    <ClInclude Include="ResourceTexture.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -403,8 +407,10 @@
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleFileSystem.cpp" />
+    <ClCompile Include="ModuleResource.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourceFolder.cpp" />
     <ClCompile Include="ResourceMaterial.cpp" />
     <ClCompile Include="ResourceMesh.cpp" />
     <ClCompile Include="ModuleCamera3D.cpp" />
@@ -414,6 +420,8 @@
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="ResourceScene.cpp" />
+    <ClCompile Include="ResourceTexture.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

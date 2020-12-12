@@ -233,6 +233,18 @@
       <Filter>Tools</Filter>
     </ClCompile>
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="ModuleResource.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceFolder.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceScene.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceTexture.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
     <ClCompile Include="Dependencies\ImGuizmo\ImCurveEdit.cpp">
       <Filter>Dependencies\ImGuizmo</Filter>
     </ClCompile>
@@ -948,6 +960,18 @@
     </ClInclude>
     <ClInclude Include="Dependencies\PCG\pcg_uint128.hpp">
       <Filter>Dependencies\PCG</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleResource.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceFolder.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceScene.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceTexture.h">
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="Dependencies\ImGuizmo\ImCurveEdit.h">
       <Filter>Dependencies\ImGuizmo</Filter>

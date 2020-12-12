@@ -4,9 +4,18 @@
 #include "Dependencies/Parson/parson.h"
 #include "Dependencies/MathGeoLib/include/MathGeoLib.h" //To delete
 
-#include <string> //To delete
-
 #include "Globals.h"
+
+
+
+struct json_object_t;
+typedef struct json_object_t JSON_Object;
+
+struct json_value_t;
+typedef struct json_value_t  JSON_Value;
+
+struct json_array_t;
+typedef struct json_array_t  JSON_Array;
 
 using namespace std;
 class Color;
@@ -21,6 +30,7 @@ private:
 public:
 
 	JsonConfig();
+	JsonConfig(const char* buffer);
 	JsonConfig(const string path, JSON_Object* object, JSON_Value* value);
 	JsonConfig(JSON_Object* jsonObject);
 	~JsonConfig();
@@ -45,7 +55,7 @@ public:
 	Quat GetQuat(const string name);
 	void SetQuat(const string name, const Quat quat);
 
-	ArrayConfig GetArray(const string name);
+	ArrayConfig GetArray(const string name) const;
 	ArrayConfig SetArray(const string name);
 
 
@@ -81,6 +91,8 @@ public:
 	//JsonConfig GetNode(string name, const uint index);
 	//JsonConfig SetNode(string name);
 	JsonConfig AddNode();
+	JsonConfig GetNode(uint index) const;
+	uint GetSize() const;
 
 	//uint Size();
 

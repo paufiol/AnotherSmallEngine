@@ -51,6 +51,14 @@ enum update_status
 #define MATERIALS_PATH "Library/Materials/"
 #define TEXTURES_PATH "Library/Textures/"
 #define SCENES_PATH "Library/Scenes/"
+#define MODELS_PATH "Library/Models/"
+
+//#define ASSETS_PATH "Output/Assets"
+#define ASSETS_FOLDER "Assets/"
+#define MODELS_FOLDER "Assets/Models/"
+#define TEXTURES_FOLDER "Assets/Textures/"
+
+
 
 #define MESH_EXTENSION ".asemesh"
 #define MATERIAL_EXTENSION	".asemat"
