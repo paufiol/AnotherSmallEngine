@@ -3,7 +3,7 @@
 
 ResourceScene::ResourceScene() : Resource(ResourceType::Scene)
 {
-	rootObject = new GameObject("Scene");
+	//rootObject = new GameObject("Scene");
 	//models.clear();
 }
 

@@ -302,7 +302,7 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 		}
 	}
 	
-	if (!App->scene->root_object->children.empty())
+	if (!App->scene->root_object->children.empty() && mesh != nullptr)
 	{
 		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
 		glMultMatrixf((float*)&transform.Transposed());
@@ -339,7 +339,7 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 	}
 	else
 	{
-		LOG("Unable to render meshes (No meshes loaded)");
+		//LOG("Unable to render mesh");
 	}
 }
 

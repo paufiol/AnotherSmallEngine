@@ -229,11 +229,15 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 	case ResourceType::Model:
 		resource = new ResourceScene(assetsFile, MODELS_PATH, name);
 		break;
+	default:
+		resource = new Resource();
+		break;
 	}
 
 	if (resource->type != ResourceType::None)
 	{
-		resource->libraryFile += std::to_string(resource->GetUID());
+		resource->libraryFile.append(std::to_string(resource->GetUID()));
+		resource->libraryFile.append(ASE_EXTENSION);
 		importedResources[resource->UID] = resource;
 	}
 
@@ -282,6 +286,7 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 	{
 		
 		Importer::MeshImporter::Load((ResourceMesh*)resource, buffer);
+		
 		break;
 	}
 	case (ResourceType::Material):
@@ -312,6 +317,8 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 
 Resource* ModuleResources::AccesResource(uint32 UID)
 {
+	LOG("Loading: %d", UID);
+
 	std::map<uint32, Resource*>::iterator it = resources.find(UID);
 	if (it != resources.end())
 	{

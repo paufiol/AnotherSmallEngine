@@ -11,8 +11,8 @@ class ComponentMesh : public Component {
 public:
 
 private:
-	ResourceMesh* mesh;
-	std::string path; 
+	ResourceMesh* mesh = nullptr;
+	std::string path = ""; 
 
 	//Methods
 public:

@@ -90,6 +90,9 @@ void Importer::ModelImporter::IterateNodes(const aiScene* aiScene, aiNode* node,
 	//float4x4 transform = float4x4::FromTRS(position, rotation, scale);
 	ModelContainer model(App->resources->GenerateNewUID(), node->mName.C_Str(), position, scale, rotation, ID);
 	
+	LOG("Importing Model: %d", model.ID);
+
+
 	for (uint i = 0; i < node->mNumMeshes && i < 1; i++)
 	{
 		model.meshID = node->mMeshes[i];
@@ -223,6 +226,10 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		{
 			ComponentMesh* tempCompMesh = new ComponentMesh(tempGameObject);
 			ResourceMesh* tempResourceMesh = (ResourceMesh*)App->resources->AccesResource(meshUID);	
+			
+			
+			//LOG("Loading Mesh: %s", tempResourceMesh->name.c_str());
+			
 			tempCompMesh->SetMesh(tempResourceMesh);
 			tempGameObject->AddComponent(tempCompMesh);
 			//tempCompMesh->SetResourceID(meshUID);

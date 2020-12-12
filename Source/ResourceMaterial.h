@@ -43,7 +43,7 @@ public:
 private:
 
 	ResourceTexture texture;
-	Color color;
+	Color color = Color(1.0f,1.0f,1.0f,1.0f);
 
 };
 #endif //__ResoruceMaterial_H__
