@@ -43,6 +43,8 @@ public:
 	void SetCubemap(bool active);
 	void SetPolygonssmooth(bool active);
 
+	void UpdateProjectionMatrix();
+
 private:
 	bool DoesIntersect(const AABB& aabb);
 
