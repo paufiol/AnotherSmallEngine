@@ -68,6 +68,11 @@ public:
 	void EraseAllChildren();			//Delete them all
 	void FillGameObjectArray(GameObject* gameObject, std::vector<GameObject*> array);
 
+	//I just need this to check distance
+	bool operator < (const GameObject* object2) const;
+
+
+
 	bool selected = false;
 private:
 	void UpdateAABB();

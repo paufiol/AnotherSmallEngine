@@ -34,8 +34,6 @@ private:
 
 public:
 	
-	vec3 X, Y, Z, Position, Reference;
-	
 	ComponentCamera* editorCamera; 
 	ComponentCamera* gameCamera;
 

@@ -12,12 +12,6 @@ ModuleCamera3D::ModuleCamera3D(bool start_enabled) : Module(start_enabled)
 {
 	CalculateViewMatrix();
 
-	X = vec3(1.0f, 0.0f, 0.0f);
-	Y = vec3(0.0f, 1.0f, 0.0f);
-	Z = vec3(0.0f, 0.0f, 1.0f);
-
-	Position = vec3(0.0f, 0.0f, 5.0f);
-	Reference = vec3(0.0f, 0.0f, 0.0f);
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -32,6 +26,9 @@ bool ModuleCamera3D::Start()
 	bool ret = true;
 
 	editorCamera = currentCamera = new ComponentCamera(nullptr);
+
+	editorCamera->frustum.SetPos(vec(30.0f, 30.0f, 30.0f));
+	editorCamera->Look(float3(0.0f, 0.0f, 0.0f));
 
 	gameCamera = nullptr;
 
@@ -53,14 +50,6 @@ void ModuleCamera3D::FocusObject()
 	ObjPosition.x = App->scene->selected_object->transform->GetPosition().x;
 	ObjPosition.y = App->scene->selected_object->transform->GetPosition().y;
 	ObjPosition.z = App->scene->selected_object->transform->GetPosition().z;
-
-	vec3 ObjScale;
-
-	ObjScale.x = App->scene->selected_object->transform->GetScale().x;
-	ObjScale.y = App->scene->selected_object->transform->GetScale().y;
-	ObjScale.z = App->scene->selected_object->transform->GetScale().z;
-
-	Position = (ObjPosition + normalize(Position - ObjPosition));
 
 	LookAt(ObjPosition);
 }
@@ -111,12 +100,8 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			
 			currentCamera->OnClick(App->input->GetMouseX(), App->window->Height() - App->input->GetMouseY());
-
-			//RAYCAST BULLSHIT HERE
 		}
 	}
-
-
 
 	return UPDATE_CONTINUE;
 }
@@ -124,59 +109,42 @@ update_status ModuleCamera3D::Update(float dt)
 // -----------------------------------------------------------------
 void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)
 {
-	this->Position = Position;
-	this->Reference = Reference;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
-
-	if(!RotateAroundReference)
-	{
-		this->Reference = this->Position;
-		this->Position += Z * 0.05f;
-	}
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::LookAt( const vec3 &Spot)
 {
-	Reference = Spot;
+	//Reference = Spot;
 
-	Z = normalize(Position - Reference);
-	X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
-	Y = cross(Z, X);
+	//Z = normalize(Position - Reference);
+	//X = normalize(cross(vec3(0.0f, 1.0f, 0.0f), Z));
+	//Y = cross(Z, X);
 }
 
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::Move(const vec3 &Movement)
 {
-	Position += Movement;
-	Reference += Movement;
+	//Position += Movement;
+	//Reference += Movement;
 }
 
 // -----------------------------------------------------------------
 float* ModuleCamera3D::GetRawViewMatrix()
 {
-	CalculateViewMatrix();
 
-
-	return 	currentCamera->GetViewMatrix();
+	return 	currentCamera->GetRawViewMatrix();
 }
 
 mat4x4 ModuleCamera3D::GetViewMatrix()
 {
-	CalculateViewMatrix();
-	return ViewMatrix;
+
+	return currentCamera->GetViewMatrix();
 }
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix() //View Matrix from 
 {
-	
-	
-	
-	ViewMatrix = mat4x4(X.x, Y.x, Z.x, 0.0f, X.y, Y.y, Z.y, 0.0f, X.z, Y.z, Z.z, 0.0f, -dot(X, Position), -dot(Y, Position), -dot(Z, Position), 1.0f);
-	ViewMatrixInverse = inverse(ViewMatrix);
+
 }

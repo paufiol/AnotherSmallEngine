@@ -49,7 +49,8 @@ public:
 
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global) override;
 
-	float* GetViewMatrix();
+	float* GetRawViewMatrix();
+	mat4x4 GetViewMatrix();
 	float* GetProjectionMatrix();
 	
 	void Look(float3& reference);

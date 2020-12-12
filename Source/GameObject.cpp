@@ -6,6 +6,7 @@
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
+#include "ResourceMesh.h"
 #include "Globals.h"
 
 
@@ -145,6 +146,15 @@ void GameObject::UpdateAABB()
 		aabb.SetFromCenterAndSize(transform->GetPosition(), float3(1, 1, 1));
 		obb = aabb;
 	}
+}
+
+bool GameObject::operator<(const GameObject* object2) const
+{
+	//this.
+	
+
+
+	return false;
 }
 
 bool GameObject::IsSelected()
@@ -312,6 +322,11 @@ Component* GameObject::GetComponent(ComponentType type)
 
 		if (components[i]->type == type)
 		{
+			if(components[i]->type == ComponentType::Mesh)
+			{
+				ComponentMesh* comp_mesh = (ComponentMesh*)components[i];
+				if (comp_mesh->GetMesh()->size[comp_mesh->GetMesh()->index] < 20) continue; //Just to ignore the useless mesh that exists in certain buildings
+			}
 			return(components[i]);
 		}
 	}

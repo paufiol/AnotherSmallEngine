@@ -1,35 +1,43 @@
 #pragma once
 
 #include "Application.h"
-#include "ComponentCamera.h"
-#include "GameObject.h"
 #include "Globals.h"
+#include "GameObject.h"
+
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
 #include "ModuleScene.h"
 
+#include "ComponentCamera.h"
+#include "ComponentTransform.h"
 
-#include "glmath.h"
+//#include "glmath.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
 #include "Dependencies/MathGeoLib/include/Math/float3x3.h"
 #include "Dependencies/MathGeoLib/include/Math/Quat.h"
-
 
 #include "Dependencies/ImGUI/imgui.h"
 
 ComponentCamera::ComponentCamera(GameObject* owner) : active_camera(false), Component(owner)
 {
 	frustum.SetKind(FrustumSpaceGL, FrustumRightHanded);
-	frustum.SetPos(float3(-30, 10, -30));
+	frustum.SetPos(float3(0, 0, 0));
 	frustum.SetFront(float3::unitZ);
 	frustum.SetUp(float3::unitY);
+
+	if(owner != nullptr)
+	{
+		ComponentTransform* transform = (ComponentTransform*)owner->GetComponent(ComponentType::Transform);
+		//transform->UpdateTransform(frustum.Pos(), frustum.());
+		transform->UpdateLocalTransform();
+	}
 
 	frustum.SetViewPlaneDistances(1.0f, 1000.0f);
 	frustum.SetPerspective(1.0f, 1.0f);
 	SetAspectRatio((float)App->window->Width() / (float)App->window->Height());
 	SetFOV(50.0f);
 
-	Look(float3(0.0f, 0.0f, 0.0f));
+	//Look(float3(0.0f, 0.0f, 0.0f));
 
 	type = ComponentType::Camera;
 
@@ -73,6 +81,8 @@ float ComponentCamera::GetNearPlane() const
 
 void ComponentCamera::SetNearPlane(float distance)
 {
+	if(distance > 0.0f && distance < frustum.FarPlaneDistance())
+
 	frustum.SetViewPlaneDistances(distance, frustum.FarPlaneDistance());
 }
 
@@ -83,6 +93,8 @@ float ComponentCamera::GetFarPlane() const
 
 void ComponentCamera::SetFarPlane(float distance)
 {
+	if (distance > 0.0f && distance > frustum.NearPlaneDistance())
+
 	frustum.SetViewPlaneDistances(frustum.NearPlaneDistance(), distance);
 }
 
@@ -109,15 +121,47 @@ void ComponentCamera::OnUpdateTransform(const float4x4& global, const float4x4& 
 	frustum.SetPos(position);
 }
 
-float* ComponentCamera::GetViewMatrix()
+float* ComponentCamera::GetRawViewMatrix()
 {
 	static float4x4 m;
 
 	m = frustum.ViewMatrix();
-
 	m.Transpose();
 
 	return (float*)m.v;
+}
+
+mat4x4 ComponentCamera::GetViewMatrix()
+{
+	static float4x4 m;
+	//static mat4x4 m;
+
+	m = frustum.ViewMatrix();
+	m.Transpose();
+
+
+	float3 position = float3::zero;
+	float3 scale = float3::one;
+	Quat   rotation = Quat::identity;
+
+	m.Decompose(position, rotation, scale);
+
+	float3 rot_axis;
+	float rot_angle;
+
+	rotation.ToAxisAngle(rot_axis, rot_angle);
+
+	vec3 rot_axis_asvec;
+	rot_axis_asvec.x = rot_axis.x;
+	rot_axis_asvec.y = rot_axis.y;
+	rot_axis_asvec.z = rot_axis.z;
+
+	mat4x4 a;
+	a.translate(position.x, position.y, position.z);
+	a.rotate(rot_angle, rot_axis_asvec);
+	a.scale(scale.x, scale.y, scale.z);
+
+	return a;
 }
 
 float* ComponentCamera::GetProjectionMatrix()
@@ -169,11 +213,9 @@ void ComponentCamera::Orbit(float motion_x, float motion_y)
 		LineSegment picking = frustum.UnProjectLineSegment(0.f, 0.f);
 		float distance;
 		
-		//RayCast
-		//GameObject* hit = App->level->CastRay(picking, distance);
 
 		//If no object is hit
-		point = frustum.Pos() + frustum.Front() * 20.0f;
+		point = frustum.Pos() + frustum.Front();
 
 		looking = true;
 		looking_at = point;
@@ -249,11 +291,9 @@ void ComponentCamera::DrawInspector()
 
 	if (ImGui::CollapsingHeader("Component Camera"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		if (ImGui::Checkbox("Viewport Camera", &active_camera)) {}
+		//if (ImGui::Checkbox("Viewport Camera", &active_camera)) {}
 		
 		if (ImGui::Checkbox("Frustum Culling", &frustum_culling)) {}
-
-		if (ImGui::Checkbox("Draw Bounding Boxes", &draw_boundingboxes)) {}
 
 		//Set FOV
 		float Inspector_FOV = GetFOV();

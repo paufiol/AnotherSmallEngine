@@ -59,4 +59,6 @@ public:
 
 	ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
+
+	bool drawboundingboxes = true;
 };

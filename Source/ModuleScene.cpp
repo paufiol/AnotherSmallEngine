@@ -16,6 +16,7 @@
 #include "ResourceMesh.h"
 #include "ModuleWindow.h"
 #include "ModuleEditor.h"
+
 #include <map>
 
 #include "Dependencies/MathGeoLib/include/Geometry/Triangle.h"
@@ -39,9 +40,6 @@ bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
 	bool ret = true;
-	
-	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
-	App->camera->LookAt(vec3(0, 0, 0));
 
 	CreateGameCamera();
 
@@ -80,14 +78,9 @@ update_status ModuleScene::Update(float dt)
 	if(!App->editor->isUserTyping)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_W)) gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-		if (App->input->GetKey(SDL_SCANCODE_E)) gizmoOperation = ImGuizmo::OPERATION::ROTATE;
-		if (App->input->GetKey(SDL_SCANCODE_R)) gizmoOperation = ImGuizmo::OPERATION::SCALE;
-
+		else if (App->input->GetKey(SDL_SCANCODE_E)) gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+		else if (App->input->GetKey(SDL_SCANCODE_R)) gizmoOperation = ImGuizmo::OPERATION::SCALE;
 	}
-
-
-	//Donde lo meto?
-	ImGuizmoHandling();
 
 	return UPDATE_CONTINUE;
 }
@@ -183,7 +176,8 @@ GameObject* ModuleScene::CreateGameCamera() {
 
 void ModuleScene::TestGameObjectSelection(const LineSegment& ray)
 {
-	std::vector<GameObject*> game_object_candidates;
+	std::map<float, GameObject*> game_object_candidates;
+	selected_object = nullptr;
 
 	for (uint i = 0; i < game_objects.size(); i++)
 	{
@@ -195,22 +189,33 @@ void ModuleScene::TestGameObjectSelection(const LineSegment& ray)
 		
 		if (ray.Intersects(game_objects[i]->aabb)) 
 		{
-			if(ray.Intersects(game_objects[i]->obb))
+			float closest, furthest;
+			if(ray.Intersects(game_objects[i]->obb, closest, furthest)) //Intersect has issues with near-0 sizes, so sometimes misses the Plane :/
 			{
-				game_object_candidates.push_back(game_objects[i]);
+				game_object_candidates[closest] = game_objects[i];
 			}
 		}
 	}
-	
-	for (uint i = 0; i < game_object_candidates.size(); i++)
+
+	//I Initially wanted to do a <algorythm>Sort, but a custom operator couldn't take in external stuff like ray.
+
+	std::vector<GameObject*> game_objects_sorted; 
+
+	//Turn map to vector cause iterating vectors is easy :)
+	for(std::map<float, GameObject*>::iterator i = game_object_candidates.begin(); i != game_object_candidates.end(); i++)
 	{
-		ComponentMesh* mesh_to_test = (ComponentMesh*)game_object_candidates[i]->GetComponent(ComponentType::Mesh);
+		game_objects_sorted.push_back(i->second);
+	}
+
+	for (uint i = 0; i < game_objects_sorted.size(); i++)
+	{
+		ComponentMesh* mesh_to_test = (ComponentMesh*)game_objects_sorted[i]->GetComponent(ComponentType::Mesh);
 		ResourceMesh* mesh = mesh_to_test->GetMesh();
 		if (mesh != nullptr)
 		{
 			LineSegment local_ray = ray;
 			
-			ComponentTransform* c_transform = (ComponentTransform*)game_object_candidates[i]->GetComponent(ComponentType::Transform);
+			ComponentTransform* c_transform = (ComponentTransform*)game_objects_sorted[i]->GetComponent(ComponentType::Transform);
 			
 			local_ray.Transform(c_transform->GetGlobalTransform().Inverted());
 			
@@ -230,8 +235,8 @@ void ModuleScene::TestGameObjectSelection(const LineSegment& ray)
 
 				if(local_ray.Intersects(triangle, nullptr, nullptr))//Great constructor GeoLib
 				{
-					selected_object = game_object_candidates[i];
-					break;
+					selected_object = game_objects_sorted[i];
+					return;
 				}
 			}
 		}
@@ -251,17 +256,21 @@ void ModuleScene::ImGuizmoHandling()
 	float4x4 modelProjection = selected_transform->GetGlobalTransform();
 	modelProjection.Transpose();
 
-	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(0.0f, 0.0f, App->window->Width(), App->window->Height());
 
 	//gizmoOperation
 	float modelPtr[16];
 	memcpy(modelPtr, modelProjection.ptr(), 16 * sizeof(float));
+
 	ImGuizmo::MODE finalMode = (gizmoOperation == ImGuizmo::OPERATION::SCALE ? ImGuizmo::MODE::LOCAL : gizmoMode);
+	
+	//Nothing Else Matters
 	ImGuizmo::Manipulate(viewMatrix.ptr(), projectionMatrix.ptr(), gizmoOperation, finalMode, modelPtr);
+
 
 	if (ImGuizmo::IsUsing())
 	{
+		//Reformat ImGuizmo Transform output to our matrix
 		float4x4 newMatrix;
 		newMatrix.Set(modelPtr);
 		modelProjection = newMatrix.Transposed();

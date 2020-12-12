@@ -40,7 +40,7 @@ enum update_status
 #define WIN_BORDERLESS false
 #define WIN_FULLSCREEN_DESKTOP false
 #define WIN_MAXIMIZED true
-#define VSYNC true
+#define VSYNC false
 #define TITLE "AnotherSmallEngine"
 
 //File System

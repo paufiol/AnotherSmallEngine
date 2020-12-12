@@ -81,7 +81,7 @@ bool ModuleRenderer3D::Init()
 		glClearDepth(1.0f);
 		
 		//Initialize clear color
-		glClearColor(.1f, .1f, .1125f, 1.f);
+		glClearColor(.05f, .07f, .07f, 1.f);
 
 		//Check for error
 		error = glGetError();
@@ -140,6 +140,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLoadMatrixf(App->camera->GetRawViewMatrix());
 
 	// light 0 on cam pos
+
 	lights[0].SetPos(App->camera->currentCamera->frustum.Pos().x, App->camera->currentCamera->frustum.Pos().y, App->camera->currentCamera->frustum.Pos().z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
@@ -178,9 +179,10 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	
 	IterateMeshDraw();
 
-
-
+	ImGui::GetBackgroundDrawList();
+	App->scene->ImGuizmoHandling();
 	App->editor->DrawGUI();
+
 
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
@@ -250,7 +252,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh());
 				}
 
-				if (App->camera->gameCamera->draw_boundingboxes) {
+				if (drawboundingboxes) {
 					glLineWidth(2.0f);
 					glBegin(GL_LINES);
 
@@ -436,13 +438,13 @@ bool ModuleRenderer3D::DoesIntersect(const AABB& aabb) {
 	for(int p = 0; p < 6; p++)
 	{
 		int iInCount = 8;
-		int iPtIn = 1;
+		//int iPtIn = 1;
 
 		for(int i = 0; i < 8; i++)
 		{
 			if(frustum_planes[p].IsOnPositiveSide(aabb_corners[i]))
 			{
-				iPtIn = 0;
+				//iPtIn = 0;
 				--iInCount;
 			}
 		}

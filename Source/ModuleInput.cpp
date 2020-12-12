@@ -2,6 +2,10 @@
 #include "ModuleInput.h"
 #include "ModuleRenderer3D.h"
 #include "ModuleFileSystem.h"
+#include "ModuleEditor.h"
+
+#include "Dependencies/ImGui/imgui.h"
+#include "Dependencies/ImGui/imgui_impl_sdl.h"
 
 #define MAX_KEYS 300
 
@@ -45,7 +49,11 @@ update_status ModuleInput::PreUpdate(float dt)
 		if(keys[i] == 1)
 		{
 			if(keyboard[i] == KEY_IDLE)
+			{
 				keyboard[i] = KEY_DOWN;
+				//const char* keyname = SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)i));
+				//App->editor->AddInput(keyname);
+			}
 			else
 				keyboard[i] = KEY_REPEAT;
 		}
@@ -88,6 +96,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	SDL_Event e;
 	while(SDL_PollEvent(&e))
 	{
+		ImGui_ImplSDL2_ProcessEvent(&e);
 		switch(e.type)
 		{
 			case SDL_MOUSEWHEEL:
