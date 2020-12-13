@@ -15,18 +15,31 @@ This project is been created as part of CITM's Game Engine course under supervis
 * Render configuration options
 * Hierarchy & Inspector
 * GUI Docking
-* 3D Model Loading and Serialisation
-* Texture Loading (without Serialisation)
+* 3D Model Loading
+* Texture Loading (without Serialization)
 * GameObject and Components
-* Resource Management
-    * Assets window
-    * Custom File Formats generated within Library on file's first load
 * Camera(s) with frustum culling, able to preview the InGame Camera (In Game Cameras can be modified from Inspector, the editor camer is in Configuration>Camera)
 * Unity Like camera movement
 * Objects have Bounding Boxes for Optimisation (Bounding Boxes can be Toggled in Configuration>Draw)
 * Object transformation via Gizmos
 * Custom Style creator for DearImGui
-* Scene Saving (File: Save Scene)
+* Serialization:
+   * Meshes
+   * Textures
+   * Models
+   * Scene
+* Scene Saving (File > Save Scene)
+* Resource Management
+   * Creation of Meta files
+   * All resources handled by their UIDs
+   * Importing, serializing and Loading through Resources
+   * Premature assets window (only display)
+   * Custom File Formats generated within Library
+
+Please Note: The first time executing AnotherSmallEngine everything will Load without errors. Althought from that time on the engine will load from the information saved in our Custom File Format and the texture loading in that case is not ready yet.
+
+Warning: The models won't load if Library folder is erased and the meta files not, We load with the data stored inside the meta which points to the Custom Files stored in Library. --> To fix that erase all ".meta" files inside Assets folder.
+ 
 
 ****
 ## How to Use
