@@ -41,7 +41,7 @@ void ComponentTexture::Update() {
 
 void ComponentTexture::CleanUp()
 {
-	delete rMaterial;
+	//delete rMaterial;
 }
 
 void ComponentTexture::DrawInspector() {

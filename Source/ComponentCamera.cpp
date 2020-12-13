@@ -208,17 +208,9 @@ void ComponentCamera::Orbit(float motion_x, float motion_y)
 {
 	float3 point = looking_at;
 
-	if(!looking)
+	if(App->scene->selected_object != nullptr)
 	{
-		LineSegment picking = frustum.UnProjectLineSegment(0.f, 0.f);
-		float distance;
-		
-
-		//If no object is hit
-		point = frustum.Pos() + frustum.Front();
-
-		looking = true;
-		looking_at = point;
+		looking_at = App->scene->selected_object->transform->GetPosition();
 	}
 
 	float3 focus = frustum.Pos() - point;
