@@ -10,11 +10,12 @@ ResourceMesh::ResourceMesh() : Resource(ResourceType::Mesh)
     }
     aabb.SetNegativeInfinity();
 }
-ResourceMesh::ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name) : Resource(ResourceType::Mesh)
+ResourceMesh::ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name, uint32 UID) : Resource(ResourceType::Mesh)
 {
     this->name = name;
     this->libraryFile = libraryFile;
     this->assetsFile = assetsFile;
+    if (UID != 0) this->UID = UID;
 
     for (uint i = 0; i < NONE; i++)
     {

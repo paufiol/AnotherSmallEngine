@@ -31,7 +31,7 @@ public:
 public:
 
 	ResourceMesh(); 
-    ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name = "");
+    ResourceMesh(const char* assetsFile, const char* libraryFile, const char* name, uint32 UID);
     ~ResourceMesh();
 
     void DrawNormals();

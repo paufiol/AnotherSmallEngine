@@ -83,13 +83,13 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	char* cursor;
 	uint bytes;
 
-	size = sizeof(rMaterial->GetTexture()) + sizeof(rMaterial->GetColor().r) * 4;
+	size = sizeof(unsigned long long) + sizeof(float) * 4;
 
 	*buffer = new char[size];
 	cursor = *buffer;
 
 	uint64 textureID = rMaterial->GetId();
-	bytes = sizeof(rMaterial->GetTexture());
+	bytes = sizeof(unsigned long long);
 	memcpy(cursor, &textureID, bytes);
 	cursor += bytes;
 
@@ -104,15 +104,14 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	return size;
 }
 
-void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, char* buffer)
+void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* buffer)
 {
-	char* cursor;
-	uint64 textureID;
+	uint64 textureID = 0;
 	uint bytes;
 
-	cursor = buffer;
+	const char* cursor = buffer;
 	 
-	bytes = sizeof(rMaterial->GetTexture());
+	bytes = sizeof(unsigned long long);
 	memcpy(&textureID, cursor, bytes);
 	cursor += bytes;
 	rMaterial->SetId(textureID);

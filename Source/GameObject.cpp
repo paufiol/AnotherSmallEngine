@@ -135,9 +135,12 @@ void GameObject::UpdateAABB()
 		{
 			//Weird shenanigans because GetComponents should be a template return 
 			ComponentMesh* temp_mesh = (ComponentMesh*)meshes[i];
+			if (temp_mesh->GetMesh() != nullptr)
+			{
+				AABB temp_aabb = temp_mesh->GetAABB();
+				obb = temp_mesh->GetAABB();
+			}
 
-			AABB temp_aabb = temp_mesh->GetAABB();
-			obb = temp_mesh->GetAABB();
 
 			ComponentTransform* transform = (ComponentTransform*)GetComponent(ComponentType::Transform);
 			obb.Transform(transform->GetGlobalTransform());
@@ -149,7 +152,7 @@ void GameObject::UpdateAABB()
 	else
 	{
 		aabb.SetNegativeInfinity();
-		aabb.SetFromCenterAndSize(transform->GetPosition(), float3(1, 1, 1));
+		aabb.SetFromCenterAndSize(transform->GetPosition(), float3::one);
 		obb = aabb;
 	}
 }

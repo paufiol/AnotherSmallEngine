@@ -14,7 +14,7 @@ namespace Importer
 		
 		void ImportMaterial(aiMaterial* material, ResourceMaterial* resourceMaterial);
 		uint64 Save(ResourceMaterial* rMaterial, char** buffer);
-		void Load(ResourceMaterial* rMaterial, char* buffer);
+		void Load(ResourceMaterial* rMaterial, const char* buffer);
 
 	}
 

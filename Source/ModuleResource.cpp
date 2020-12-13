@@ -12,6 +12,7 @@
 #include "ImporterScene.h"
 #include "ImporterTexture.h"
 
+#include "JsonConfig.h"
 #include "PathNode.h"
 
 #include "Dependencies/Assimp/include/scene.h"
@@ -39,7 +40,7 @@ bool ModuleResources::CleanUp()
 void ModuleResources::LoadAssets()
 {
 	std::vector<std::string> extension;
-	//extension.push_back("fbx");
+	//extension.push_back("meta");
 	uint32 modelFolder = 0;
 	PathNode models = App->fileSystem->GetAllFiles(ASSETS_FOLDER, nullptr, &extension);
 	IterateAssets(models, modelFolder);
@@ -49,6 +50,88 @@ void ModuleResources::LoadAssets()
 bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 {
 	bool isNew = true;
+	std::string metaPath = node.path + ".meta";
+	//if (App->fileSystem->Exists(metaPath.c_str()))
+	//{
+	//	char* buffer = nullptr;
+	//	uint size = App->fileSystem->Load(metaPath.c_str(), &buffer);
+	//	if (size > 0)
+	//	{
+	//		JsonConfig jsonMeta(buffer);
+
+	//		std::map<uint32, Resource*>::iterator iterator = importedResources.find(jsonMeta.GetNumber("UID"));
+	//		if (iterator != importedResources.end())
+	//		{
+	//			ID = iterator->first;
+	//			ImportFile(node.path.c_str()); //Not sure if this is the right approach
+	//		}
+	//		else
+	//		{
+	//			string name = jsonMeta.GetString("Name");
+	//			uint32 UID = jsonMeta.GetNumber("UID");
+	//			ResourceType type = GetTypefromString(jsonMeta.GetString("Type"));
+	//			Resource* resource = new Resource(type,node.path.c_str(), name.c_str(), UID);
+	//			resource->libraryFile = jsonMeta.GetString("Library file");
+	//			importedResources[resource->UID] = resource;
+	//			ID = resource->UID;
+	//			
+	//			//-------------------------
+	//			if (resource->type == ResourceType::Model)
+	//			{
+	//				char* buffer = nullptr;
+	//				uint size = App->fileSystem->Load(resource->GetLibraryFile().c_str(), &buffer);
+	//				JsonConfig jsonModels(buffer); //needs buffer??
+	//				ArrayConfig jsonArrray = jsonModels.GetArray("Models");
+	//				for (uint i = 0; i < jsonArrray.GetSize(); i++)
+	//				{
+	//					JsonConfig model = jsonArrray.GetNode(i);
+	//					name = model.GetString("Name");
+
+	//					uint meshUID = model.GetNumber("Mesh UID");
+	//					uint materialUID = model.GetNumber("Material UID");
+	//					if (meshUID != 0)
+	//					{
+	//						Resource* newResource = CreateNewResource(node.path.c_str(), ResourceType::Mesh, name.c_str(), meshUID);
+	//						LoadResource(meshUID, newResource);
+	//						/*Resource* newResource = new Resource(ResourceType::Mesh, node.path.c_str(), name.c_str(), meshUID);
+	//						newResource->libraryFile = MESHES_PATH;
+	//						newResource->libraryFile.append(std::to_string(resource->GetUID()));
+	//						newResource->libraryFile.append(ASE_EXTENSION);*/
+	//						//importedResources[newResource->UID] = newResource;
+	//					}
+
+	//					if (materialUID != 0)
+	//					{
+	//						Resource* newResource = CreateNewResource(node.path.c_str(), ResourceType::Material, name.c_str(), materialUID);
+	//						LoadResource(materialUID, newResource);
+	//						//Resource* newResource = new Resource(ResourceType::Material, node.path.c_str(), name.c_str(), materialUID);
+	//						//newResource->libraryFile = MATERIALS_PATH;
+	//						//newResource->libraryFile.append(std::to_string(resource->GetUID()));
+	//						//newResource->libraryFile.append(ASE_EXTENSION);
+	//						//importedResources[newResource->UID] = newResource;
+	//					}
+	//				}	
+	//			}
+
+	//			LoadResource(ID, resource); //To delete once we have the imgui window
+
+	//			
+	//		}
+	//	}
+	//	RELEASE_ARRAY(buffer);
+	//}
+	//else
+	//{
+	//	ID = ImportFile(node.path.c_str());
+	//	if (ID != 0)
+	//	{
+	//		LOG("Succesfully imported from: %s", node.path.c_str());
+	//	}
+	//	else if (ID == 0)
+	//	{
+	//		LOG("ERROR: Couldn't import the file: %s", node.path.c_str());
+	//	}
+	//}
 	ID = ImportFile(node.path.c_str());
 	if (ID != 0)
 	{
@@ -197,7 +280,11 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 }
 
 
-Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceType type, const char* name )
+void ModuleResources::ReleaseResource(uint32 UID)
+{
+}
+
+Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceType type, const char* name, uint32 UID)
 {
 	Resource* resource = nullptr;
 	
@@ -208,26 +295,26 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 	switch (type)
 	{
 	case ResourceType::Texture: 
-		resource = new ResourceMaterial(assetsFile, TEXTURES_PATH, name);
+		resource = new ResourceMaterial(assetsFile, TEXTURES_PATH, name, UID);
 		break;
 	case ResourceType::Mesh:
 
-		resource = new ResourceMesh(assetsFile, MESHES_PATH, name);
+		resource = new ResourceMesh(assetsFile, MESHES_PATH, name, UID);
 		break;
 	case ResourceType::Scene:
 
-		resource = new ResourceScene(assetsFile, SCENES_PATH, name);
+		resource = new ResourceScene(assetsFile, SCENES_PATH, name, UID);
 		break;
 	case ResourceType::Material:
 
-		resource = new ResourceMaterial(assetsFile, MATERIALS_PATH, name);
+		resource = new ResourceMaterial(assetsFile, MATERIALS_PATH, name, UID);
 		break;
 	case ResourceType::Folder:
-		resource = new ResourceFolder(assetsFile, FOLDERS_PATH, name);
+		resource = new ResourceFolder(assetsFile, FOLDERS_PATH, name, UID);
 		
 		break;
 	case ResourceType::Model:
-		resource = new ResourceScene(assetsFile, MODELS_PATH, name);
+		resource = new ResourceScene(assetsFile, MODELS_PATH, name, UID);
 		break;
 	default:
 		resource = new Resource();
@@ -245,6 +332,22 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 
 }
 
+void ModuleResources::SaveMeta(Resource* resource)
+{
+	JsonConfig jsonConfig;
+	jsonConfig.SetNumber("UID", resource->GetUID());
+	jsonConfig.SetString("Name", resource->name.c_str());
+	jsonConfig.SetString("Library file", resource->GetLibraryFile());
+	jsonConfig.SetString("Type", GetStringFromResource(resource).c_str());
+	std::string path = resource->GetAssetsFile().append(".meta");
+	char* buffer;
+	uint size = jsonConfig.SerializeConfig(&buffer);
+	if (size > 0)
+	{
+		App->fileSystem->Save(path.c_str(), buffer, size);
+	}
+}
+
 void ModuleResources::SaveResource(Resource* resource)
 {
 	char* buffer = nullptr;
@@ -254,8 +357,7 @@ void ModuleResources::SaveResource(Resource* resource)
 	{
 	//case(ResourceType::FOLDER): { size = Importer::Folders::Save((R_Folder*)resource, &buffer); break; }
 	case(ResourceType::Mesh): { size = Importer::MeshImporter::Save((ResourceMesh*)resource, &buffer); break; }
-	case(ResourceType::Texture): 
-	{ size = Importer::TextureImporter::Save((ResourceTexture*)resource, &buffer); break; }
+	case(ResourceType::Texture): { size = Importer::TextureImporter::Save((ResourceTexture*)resource, &buffer); break; }
 	case(ResourceType::Material): { size = Importer::MaterialsImporter::Save((ResourceMaterial*)resource, &buffer); break; }
 	case(ResourceType::Scene): { size = Importer::ModelImporter::Save((ResourceScene*)resource, &buffer);break; }
 	case(ResourceType::Model):{ size = Importer::ModelImporter::Save((ResourceScene*)resource, & buffer); break; }
@@ -263,13 +365,14 @@ void ModuleResources::SaveResource(Resource* resource)
 
 	if (size > 0)
 	{
+		SaveMeta(resource);
 		App->fileSystem->Save(resource->GetLibraryFile().c_str(), buffer, size);
 
 		RELEASE_ARRAY(buffer);
 	}
 }
 
-Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
+void ModuleResources::LoadResource(uint32 UID, Resource* resource)
 {
 	//Resource* tempResource = CreateNewResource(resource->assetsFile.c_str(),resource->GetType(),resource->name.c_str());
 	char* buffer = nullptr;
@@ -278,7 +381,7 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 	{
 		LOG("ERROR The resource doen't have a library file");
 		RELEASE(resource);
-		return nullptr;
+		return ;
 	}
 	switch (resource->GetType())
 	{
@@ -312,7 +415,7 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 
 	//Add to the resources list!!!!!!!!!!
 
-	return resource;
+	/*return resource;*/
 }
 
 Resource* ModuleResources::AccesResource(uint32 UID)
@@ -353,4 +456,51 @@ ResourceType ModuleResources::GetTypeFromFile(const char* path) const
 
 
 	return App->fileSystem->IsDirectory(path) ? ResourceType::Folder : ResourceType::None;
+}
+
+ResourceType ModuleResources::GetTypefromString(std::string typeString) const
+{
+	if (typeString == "Folder") return ResourceType::Folder;
+	else if (typeString == "Material") return ResourceType::Material;
+	else if (typeString == "Mesh") return ResourceType::Mesh;
+	else if (typeString == "Model") return ResourceType::Model;
+	else if (typeString == "Scene") return ResourceType::Scene;
+	else if (typeString == "Texture") return ResourceType::Texture;
+	return ResourceType::None;
+}
+
+std::string ModuleResources::GetStringFromResource(Resource* resource)
+{
+	string path;
+	switch (resource->type)
+	{
+	case ResourceType::Folder:
+		return "Folder";
+		break;
+	case ResourceType::Material:
+		//App->fileSystem->GetRealDir(resource->libraryFile.c_str(), path);
+		App->fileSystem->SplitFilePath(resource->libraryFile.c_str(), &path, nullptr, nullptr);
+		if (path == TEXTURES_PATH)
+		{
+			return "Texture";
+		}
+
+		else return "Material";
+		break;
+	case ResourceType::Mesh:
+		return "Mesh";
+		break;
+	case ResourceType::Model:
+		return "Model";
+		break;
+	case ResourceType::Scene:
+		//return "Scene";
+		return "Model";			//THIS IS BAD, shoudn't be done 
+		break;
+	case ResourceType::Texture:
+		return "Texture";
+		break;
+	}
+	
+	return "None";
 }

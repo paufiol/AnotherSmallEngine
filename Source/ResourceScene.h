@@ -36,7 +36,7 @@ class ResourceScene : public Resource
 {
 public:
 	ResourceScene();
-	ResourceScene(const char* assetsFile,const char* libraryFile, const char* name = "");
+	ResourceScene(const char* assetsFile,const char* libraryFile, const char* name , uint32 UID);
 
 	~ResourceScene();
 

@@ -151,8 +151,8 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 	glLineWidth(1.0f);
 	glBegin(GL_LINES);
 	glColor4f(0.7f, 0.7f, 0.7f, 0.7f);
-	float z = 60.0f;
-	for (float x = -60; x <= z; x += 2.0f)
+	float z = 70.0f;
+	for (float x = -70; x <= z; x += 2.0f)
 	{
 		glVertex3f(x, -1.0f, -z);
 		glVertex3f(x, -1.0f, z);

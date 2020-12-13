@@ -6,7 +6,7 @@
 class ResourceFolder : public Resource
 {
 public:
-	ResourceFolder(const char* assetsFile, const char* libraryFile, const char* name = "");
+	ResourceFolder(const char* assetsFile, const char* libraryFile, const char* name, uint32 UID);
 	ResourceFolder(); 
 	~ResourceFolder();
 

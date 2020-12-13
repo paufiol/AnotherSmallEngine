@@ -18,7 +18,7 @@ namespace Importer
 
 		uint64 Save(const ResourceMesh* mesh, char** buffer);
 
-		void Load(ResourceMesh* mesh, char* buffer);
+		void Load(ResourceMesh* mesh, const char* buffer);
 	}
 }
 

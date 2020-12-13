@@ -33,8 +33,8 @@ protected:
 public:
 
 	Resource();
-	Resource(ResourceType type );
-	Resource(ResourceType type , const char* assetsFile , const char* name = "");
+	Resource(ResourceType type);
+	Resource(ResourceType type, const char* assetsFile, const char* name = "", uint32 UID = 0);
 	~Resource();
 
 	inline const uint32 GetUID() const { return UID; }

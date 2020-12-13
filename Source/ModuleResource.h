@@ -24,22 +24,22 @@ public:
 
 	void LoadAssets();
 	bool IterateAssets(PathNode node, uint32 ID);
-
 	void LoadScene(const char* buffer, uint size, ResourceScene* scene);
-
 	uint32 Find(const char* file);
 	uint32 ImportFile(const char* file_assets);
 	ResourceType GetTypeFromFile(const char* path) const;
-	inline uint32 GenerateNewUID() { return randomNum.GenerateRandomInt(); }
+	ResourceType GetTypefromString(std::string) const;
+	std::string GetStringFromResource(Resource* resource);
 
-	void ReleaseResource(uint32 UID);
-
-	Resource* CreateNewResource(const char* assetsFile, ResourceType type, const char* name = "");
-
+	Resource* CreateNewResource(const char* assetsFile, ResourceType type, const char* name = "", uint32 UID = 0);
+	void SaveMeta(Resource* resource);
 	void SaveResource(Resource* resource);
-	Resource* LoadResource(uint32 UID, Resource* resource = nullptr);
+	void LoadResource(uint32 UID, Resource* resource = nullptr);
 	Resource* AccesResource(uint32 UID);
+	void ReleaseResource(uint32 UID);
 	//uint32 UnloadResource(uint32 ID);
+
+	inline uint32 GenerateNewUID() { return randomNum.GenerateRandomInt(); }
 
 public:
 

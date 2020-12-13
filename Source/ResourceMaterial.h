@@ -18,7 +18,7 @@ class ResourceMaterial : public Resource
 {
 public:
 
-	ResourceMaterial(const char* assetsFile, const char* libraryFile, const char* name);
+	ResourceMaterial(const char* assetsFile, const char* libraryFile, const char* name, uint32 UID);
 	ResourceMaterial(uint _id, const char* _path);
 	ResourceMaterial(ResourceTexture texture);
 	ResourceMaterial();
