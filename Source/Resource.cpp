@@ -3,6 +3,7 @@
 
 Resource::Resource()
 {
+	UID = randomNum.GenerateRandomInt();
 }
 
 Resource::Resource(ResourceType type) : type(type)

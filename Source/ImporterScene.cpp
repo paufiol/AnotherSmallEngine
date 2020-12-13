@@ -156,7 +156,7 @@ uint32 Importer::ModelImporter::Save(const ResourceScene* resourceScene, char** 
 
 	for (uint i = 0; i < resourceScene->models.size(); i++)
 	{
-		JsonConfig& node = jsonArrray.AddNode(); //Really necessary the & to acces the data???
+		JsonConfig& node = jsonArrray.AddNode();
 
 		node.SetString("Name", resourceScene->models[i].name.c_str());
 		node.SetNumber("UID", resourceScene->models[i].ID);
@@ -236,8 +236,8 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		if (materialUID != 0)
 		{
 			ComponentTexture* tempCompMaterial = new ComponentTexture(tempGameObject);
+
 			ResourceMaterial* tempResourceMaterial = (ResourceMaterial*)App->resources->AccesResource(materialUID);
-			
 
 			tempCompMaterial->SetMaterial(tempResourceMaterial);
 			tempGameObject->AddComponent(tempCompMaterial);

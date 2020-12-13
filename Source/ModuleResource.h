@@ -34,7 +34,7 @@ public:
 	Resource* CreateNewResource(const char* assetsFile, ResourceType type, const char* name = "", uint32 UID = 0);
 	void SaveMeta(Resource* resource);
 	void SaveResource(Resource* resource);
-	void LoadResource(uint32 UID, Resource* resource = nullptr);
+	Resource* LoadResource(uint32 UID, Resource* resource = nullptr);
 	Resource* AccesResource(uint32 UID);
 	void ReleaseResource(uint32 UID);
 	//uint32 UnloadResource(uint32 ID);
@@ -48,6 +48,8 @@ public:
 private:
 
 	std::map<uint32, Resource*> importedResources;
+
+
 	Random randomNum;
 };
 
