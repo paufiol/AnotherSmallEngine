@@ -122,6 +122,11 @@ const uint32 GameObject::GetUID() const
 	return UID;
 }
 
+void GameObject::SetUID(uint32 UID)
+{
+	this->UID = UID;
+}
+
 const AABB& GameObject::GetAABB() const
 {
 	return aabb;
@@ -300,14 +305,7 @@ void GameObject::FillGameObjectArray(GameObject* gameObject, std::vector<GameObj
 {
 	if (gameObject != nullptr)
 	{
-		if (gameObject == App->scene->root_object)
-		{
-			array.push_back(gameObject);
-		}
-		else
-		{
-			array.push_back(gameObject);   //The same as the one above (FOR NOW)
-		}
+		array.push_back(gameObject);
 
 		if (gameObject->children.size() > 0)
 		{

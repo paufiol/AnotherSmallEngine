@@ -24,7 +24,7 @@ public:
 
 
 	void LoadModel(const char* path);
-	void SaveScene();
+	//void SaveScene();
 
 	void AddGameObject(GameObject* object);
 	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);
@@ -53,5 +53,7 @@ public:
 	GameObject* root_object = nullptr;
 	GameObject* selected_object = nullptr;
 
-	Timer GameTime; 
+	Timer GameTime;
+	std::string sceneLibraryPath;
+	uint32 sceneUID;
 };

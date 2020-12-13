@@ -10,16 +10,18 @@
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+#include "ResourceScene.h"
 #include "Resource.h"
 #include "ModuleResource.h"
-
+#include "ModuleFileSystem.h"
+#include "ImporterScene.h"
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
 #include "Dependencies/ImGUI/imgui_impl_sdl.h"
 #include "Dependencies/ImGUI/imgui_impl_opengl3.h"
 
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
-
+#include "PathNode.h"
 #include <map>
 
 #include "Dependencies/Glew/include/GL/glew.h"
@@ -316,6 +318,22 @@ bool ModuleEditor::MainMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))	
 		{ 
+			if (ImGui::MenuItem("Save Scene"))
+			{
+				ResourceScene* scene = new ResourceScene();
+				std::map<uint32, Resource*>::iterator it = App->resources->resources.find(App->scene->sceneUID);
+				if (it != App->resources->resources.end())
+				{
+					scene = (ResourceScene*)it->second;
+				}
+				char* buffer;
+				string path = SCENES_PATH;
+				path.append(std::to_string(scene->UID));
+				path.append(ASE_EXTENSION); 
+				uint size = Importer::SceneImporter::Save(scene, &buffer);
+				App->fileSystem->Save(path.c_str(), buffer, size);
+
+			}
 			if(ImGui::MenuItem("Exit")) ret = false;
 			
 			ImGui::EndMenu(); 

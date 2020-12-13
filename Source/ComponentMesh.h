@@ -28,6 +28,7 @@ public:
 	void SetMesh(ResourceMesh* mesh);
 	void SetPath(std::string path);
 	void SetResourceID(uint32 ID);
+	//uint32 GetResourceUID() const { return mesh->UID; }
 
 	ComponentMesh(GameObject* parent); 
 	ComponentMesh(GameObject* parent, const char* meshPath, ResourceMesh* _mesh = nullptr);

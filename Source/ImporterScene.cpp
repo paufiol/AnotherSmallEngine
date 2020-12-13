@@ -269,44 +269,44 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 	JsonConfig jsonFile;
 	ArrayConfig jsonGOArray = jsonFile.SetArray("GameObjects");
 
-	std::vector<GameObject*> GOarray;
+	//std::vector<GameObject*> GOarray;
 	
-	App->scene->root_object->FillGameObjectArray(App->scene->root_object, GOarray);
+	//App->scene->root_object->FillGameObjectArray(App->scene->root_object, GOarray);
 
 
 
-	for (uint i = 0; i < GOarray.size(); i++)
+	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{
 		JsonConfig& sceneConfig = jsonGOArray.AddNode();
 
-		sceneConfig.SetString("Name", GOarray[i]->name.c_str());
-		sceneConfig.SetNumber("UID", GOarray[i]->GetUID());
-		sceneConfig.SetNumber("Parent UID", GOarray[i]->IsRootObject() ? GOarray[i]->parent->GetUID() : 0);
-		sceneConfig.SetBool("IsSelected", GOarray[i]->IsSelected());
+		sceneConfig.SetString("Name", App->scene->game_objects[i]->name.c_str());
+		sceneConfig.SetNumber("UID", App->scene->game_objects[i]->GetUID());
+		sceneConfig.SetNumber("Parent UID", App->scene->game_objects[i]->IsRootObject() ? 0 : App->scene->game_objects[i]->parent->GetUID());
+		sceneConfig.SetBool("IsSelected", App->scene->game_objects[i]->IsSelected());
 		//config.SetBool("IsOpenHeriarchy")
 
 		ArrayConfig jsonCompArray = sceneConfig.SetArray("Components");
 
-		for (int j = 0; j < GOarray[i]->components.size(); ++j)
+		for (int j = 0; j < App->scene->game_objects[i]->components.size(); ++j)
 		{
-			Component* component = GOarray[i]->components[j];
+			Component* component = App->scene->game_objects[i]->components[j];
 			JsonConfig& compConfig = jsonCompArray.AddNode();
 			
-			ComponentMesh* componentMesh = (ComponentMesh*)GOarray[i]->GetComponent(ComponentType::Mesh);
-			ComponentTexture* componentTex = (ComponentTexture*)GOarray[i]->GetComponent(ComponentType::Material);
-			ComponentTransform* componentTransform = (ComponentTransform*)GOarray[i]->GetComponent(ComponentType::Transform);
-			ComponentCamera* componentCamera = (ComponentCamera*)GOarray[i]->GetComponent(ComponentType::Camera);
+			ComponentMesh* componentMesh = (ComponentMesh*)App->scene->game_objects[i]->GetComponent(ComponentType::Mesh);
+			ComponentTexture* componentTex = (ComponentTexture*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
+			ComponentTransform* componentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
+			ComponentCamera* componentCamera = (ComponentCamera*)App->scene->game_objects[i]->GetComponent(ComponentType::Camera);
 
 			switch (component->type)
 			{
 			case (ComponentType::Mesh):
 				compConfig.SetString("Type", "Mesh");
-				compConfig.SetNumber("Resource UID", componentMesh->GetResourceUID());
+				compConfig.SetNumber("Resource UID", componentMesh->GetMesh()->GetUID());
 				break;
 			case (ComponentType::Material):
 				
 				compConfig.SetString("Type", "Material");
-				compConfig.SetNumber("Resource UID", componentTex->GetResourceUID());
+				compConfig.SetNumber("Resource UID", componentTex->GetMaterial()->GetUID());
 
 				//compConfig.SetColor("Color", componentTex->GetMaterial()->GetColor());
 
@@ -330,14 +330,6 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 	//char* buffer = nullptr;
 	uint size = jsonFile.SerializeConfig(buffer);
 	return size;
-	//string sceneName;
-
-	//App->fileSystem->SplitFilePath(scene.c_str(), nullptr, &sceneName, nullptr);
-
-	//string pathToSave = SCENES_PATH + sceneName + SCENE_EXTENSION;
-	//LOG("Scene path:", pathToSave.c_str());
-	//App->fileSystem->Save(pathToSave.c_str(), buffer, size);
-
 }
 
 void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)

@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 
+#include "ModuleScene.h"
 #include "ModuleResource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
@@ -72,7 +73,8 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 				ResourceType type = GetTypefromString(jsonMeta.GetString("Type"));
 				Resource* resource = new Resource(type,node.path.c_str(), name.c_str(), UID);
 				resource->libraryFile = jsonMeta.GetString("Library file");
-
+					
+				if(resource->type == ResourceType::Model || resource->type == ResourceType::Scene) App->scene->sceneUID = resource->UID;
 
 				/*importedResources[resource->UID] = resource;
 				ID = resource->UID;*/
@@ -135,7 +137,11 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 				
 				importedResources[resource->UID] = resource;
 				ID = resource->UID;
-				if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene) LoadResource(ID, resource); //To delete once we have the imgui window
+				if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
+				{
+					
+					LoadResource(ID, resource); //To delete once we have the imgui window
+				}
 			}
 			
 		}
@@ -207,7 +213,8 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 		LoadResource(resource->GetUID(), resource);
 		break;
 	case ResourceType::Scene: 
-		 
+		App->scene->sceneLibraryPath = resource->libraryFile;
+
 		LoadScene(buffer, fileSize, (ResourceScene*)resource);
 		SaveResource((ResourceScene*)resource);
 
@@ -372,6 +379,7 @@ void ModuleResources::SaveMeta(Resource* resource)
 	std::string path = resource->GetAssetsFile().append(".meta");
 	if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
 	{
+		
 		ArrayConfig resourceInModel = jsonConfig.SetArray("Resources in Models");
 		for (uint i = 0; i < resource->resourcesInModels.size(); ++i)
 		{

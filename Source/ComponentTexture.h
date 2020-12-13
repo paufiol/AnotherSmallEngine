@@ -23,7 +23,7 @@ public:
 
 	inline ResourceMaterial* GetMaterial() const { return rMaterial; }
 	inline void SetMaterial(ResourceMaterial* resourceMaterial) { rMaterial = resourceMaterial; }
-
+	//inline uint32 GetResourceUID()const { return rMaterial->UID; }
 	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0
 	ComponentTexture(GameObject* parent, const char* texturePath, uint id);
 	ComponentTexture(GameObject* parent, ResourceMaterial* rMaterial);
