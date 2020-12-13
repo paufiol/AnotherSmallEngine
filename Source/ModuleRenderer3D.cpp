@@ -184,6 +184,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	App->scene->ImGuizmoHandling();
 	App->editor->DrawGUI();
 
+	UpdateProjectionMatrix();
+
 	SDL_GL_SwapWindow(App->window->window);
 	return UPDATE_CONTINUE;
 }
@@ -211,21 +213,22 @@ void ModuleRenderer3D::OnResize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	UpdateProjectionMatrix();
+	
 }
 
-void ModuleRenderer3D::UpdateProjectionMatrix() //GetProjectionMatrix peta semat
+void ModuleRenderer3D::UpdateProjectionMatrix()
 {
-	/*
+	
+	if (App->camera->currentCamera == nullptr) return;
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glLoadMatrixf((GLfloat*)App->camera->GetProjectionMatrix());
+	glLoadMatrixf((GLfloat*)App->camera->currentCamera->GetProjectionMatrix());
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	*/
 }
 
 void ModuleRenderer3D::IterateMeshDraw()
