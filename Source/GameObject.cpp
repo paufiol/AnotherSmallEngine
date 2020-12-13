@@ -333,7 +333,7 @@ Component* GameObject::GetComponent(ComponentType type)
 			if(components[i]->type == ComponentType::Mesh)
 			{
 				ComponentMesh* comp_mesh = (ComponentMesh*)components[i];
-				//if (comp_mesh->GetMesh()->size[comp_mesh->GetMesh()->index] < 20) continue; //Just to ignore the useless mesh that exists in certain buildings
+				if (comp_mesh->GetMesh()->size[comp_mesh->GetMesh()->index] < 20) continue; //Just to ignore the useless mesh that exists in certain buildings
 			}
 			return(components[i]);
 		}
