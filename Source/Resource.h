@@ -28,6 +28,7 @@ public:
 	uint referenceCount = 0;
 
 	std::string name = "";
+	std::vector<uint32> resourcesInModels;
 protected:
 	Random randomNum;
 public:
@@ -46,14 +47,6 @@ public:
 	inline uint GetReferenceCount() const { return referenceCount; }
 
 	bool IsLoadedToMemory() const;
-	bool LoadToMemory();
-
-	//virtual void Save(Config& config) const;
-	//virtual void Load(const Config& config);
-	
-	//virtual bool LoadInMemory() = 0;
-
-	void Serialize(JsonConfig& config) const;
 
 
 };

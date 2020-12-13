@@ -66,14 +66,18 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, Resourc
 
 
 		//This shouldn't be here (Works for now)
-		ResourceTexture tempTex;
+		ResourceTexture* tempTex = new ResourceTexture();
 
-		Importer::TextureImporter::Load(&tempTex, buffer, size);
+		Importer::TextureImporter::Load(tempTex, buffer, size);
 
 		resourceMaterial->SetTexture(tempTex);
-
-
 	}
+	else
+	{
+		ResourceTexture* tempTex = new ResourceTexture();
+		resourceMaterial->SetTexture(tempTex);
+	}
+
 
 }
 
@@ -93,7 +97,7 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	memcpy(cursor, &textureID, bytes);
 	cursor += bytes;
 
-	float color[4]{ rMaterial->GetColor().a, rMaterial->GetColor().g, rMaterial->GetColor().b, rMaterial->GetColor().a };
+	float color[4]{ rMaterial->GetColor().r, rMaterial->GetColor().g, rMaterial->GetColor().b, rMaterial->GetColor().a };
 	bytes = sizeof(float) * 4;
 	memcpy(cursor, color, bytes);
 	cursor += bytes;
@@ -114,7 +118,7 @@ void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* 
 	bytes = sizeof(unsigned long long);
 	memcpy(&textureID, cursor, bytes);
 	cursor += bytes;
-	rMaterial->SetId(textureID);
+	//rMaterial->SetId(textureID);
 
 	float color[4];
 	bytes = sizeof(float) * 4;
@@ -123,6 +127,10 @@ void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* 
 
 	Color _color = Color(color[0], color[1], color[2], color[3]);
 	rMaterial->SetColor(_color);
+	//rMaterial->SetPath(rMaterial->GetAssetsFile());
+
+	ResourceTexture* texture = new ResourceTexture(textureID, rMaterial->GetAssetsFile());
+	rMaterial->SetTexture(texture);
 }
 
 void Importer::TextureImporter::ImportTexture(ResourceTexture* rMaterial, const char* buffer, uint size)
@@ -153,8 +161,6 @@ uint64 Importer::TextureImporter::Save(const ResourceTexture* rMaterial, char** 
 		{
 			*buffer = (char*)ILbuffer;
 		}
-
-		RELEASE_ARRAY(ILbuffer);
 	}
 
 
@@ -162,7 +168,7 @@ uint64 Importer::TextureImporter::Save(const ResourceTexture* rMaterial, char** 
 	return size;
 }
 
-void Importer::TextureImporter::Load(ResourceTexture* rMaterial, char* buffer, uint size)
+void Importer::TextureImporter::Load(ResourceTexture* rTexture, char* buffer, uint size)
 {
 	ILuint Il_Tex;
 
@@ -170,7 +176,7 @@ void Importer::TextureImporter::Load(ResourceTexture* rMaterial, char* buffer, u
 	ilBindImage(Il_Tex);
 
 	ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size);
-	rMaterial->id = (ilutGLBindTexImage());
+	rTexture->id = (ilutGLBindTexImage());
 	ilDeleteImages(1, &Il_Tex);
 
 }

@@ -73,29 +73,30 @@ void Importer::MeshImporter::LoadMeshes(ResourceMesh* mesh, const aiMesh* aiMesh
 
 uint64 Importer::MeshImporter::Save(const ResourceMesh* mesh, char** buffer)
 {
-    char* cursor; // Used to point where to write the next chunk of information
-    uint bytes;   // The amount of bytes each parameter use
-    uint fullSize;// The amount of bytes it takes to save the mesh
+    //char* cursor; // Used to point where to write the next chunk of information
+    //uint bytes;   // The amount of bytes each parameter use
+    //uint fullSize;// The amount of bytes it takes to save the mesh
 
-    //uint ranges[5] = { 
-    //    mesh->size[ResourceMesh::index], 
-    //    mesh->size[ResourceMesh::vertex], 
-    //    mesh->size[ResourceMesh::normal],
-    //    mesh->size[ResourceMesh::texture] 
-    //};
+    uint ranges[4] = { 
+        mesh->size[ResourceMesh::index], 
+        mesh->size[ResourceMesh::vertex], 
+        mesh->size[ResourceMesh::normal],
+        mesh->size[ResourceMesh::texture] 
+    };
 
-    fullSize = sizeof(mesh->size) + sizeof(uint)
+    uint fullSize = sizeof(ranges)
         + mesh->size[ResourceMesh::index] * sizeof(uint)
         + mesh->size[ResourceMesh::vertex] * sizeof(float) * 3
         + mesh->size[ResourceMesh::normal] * sizeof(float) * 3
         + mesh->size[ResourceMesh::texture] * sizeof(float) * 2;
 
+
     *buffer = new char[fullSize];
-    cursor = *buffer;
+    char* cursor = *buffer;
 
 
-    bytes = sizeof(mesh->size);
-    memcpy(cursor, mesh->size, bytes);
+    uint bytes = sizeof(ranges);
+    memcpy(cursor, ranges, bytes);
     cursor += bytes;
 
     bytes = sizeof(uint) * mesh->size[ResourceMesh::index];
@@ -133,9 +134,15 @@ void Importer::MeshImporter::Load(ResourceMesh* mesh, const char* buffer)
     const char*  cursor = buffer;
     uint bytes;
 
-    bytes = sizeof(mesh->size);
-    memcpy(mesh->size, cursor, bytes);
+    uint ranges[4];
+    bytes = sizeof(ranges);
+    memcpy(ranges, cursor, bytes);
     cursor += bytes;
+
+    mesh->size[ResourceMesh::index] = ranges[0];
+    mesh->size[ResourceMesh::vertex] = ranges[1];
+    mesh->size[ResourceMesh::normal] = ranges[2];
+    mesh->size[ResourceMesh::texture] = ranges[3];
 
     // Load indices
     bytes = sizeof(uint) * mesh->size[ResourceMesh::index];

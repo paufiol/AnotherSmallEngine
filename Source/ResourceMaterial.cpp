@@ -12,18 +12,19 @@ ResourceMaterial::ResourceMaterial(const char* assetsFile, const char* libraryFi
 
 ResourceMaterial::ResourceMaterial(uint _id, const char* _path) : Resource(ResourceType::Material)
 {
-	texture.id = _id;
-	texture.path = _path;
+	texture->id = _id;
+	texture->path = _path;
 }
 
-ResourceMaterial::ResourceMaterial(ResourceTexture _texture) : Resource(ResourceType::Material)
+ResourceMaterial::ResourceMaterial(ResourceTexture* _texture) : Resource(ResourceType::Material)
 {
 	texture = _texture;
 }
 
 ResourceMaterial::ResourceMaterial() : Resource(ResourceType::Material)
 {
-
+	/*texture->id = 0;
+	texture->path = "";*/
 }
 
 ResourceMaterial::~ResourceMaterial()

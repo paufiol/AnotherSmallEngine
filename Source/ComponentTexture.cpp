@@ -8,8 +8,8 @@
 ComponentTexture::ComponentTexture(GameObject* owner) : Component(owner)
 {
 	rMaterial = new ResourceMaterial();
-	rMaterial->SetId(-1);
-	rMaterial->SetPath( "Default Path");
+	//rMaterial->SetId(-1);
+	//rMaterial->SetPath( "Default Path");
 	type = ComponentType::Material;
 };
 
