@@ -5,6 +5,8 @@
 
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
 
+#include "Timer.h"
+
 class GameObject;
 class Primitive;
 class ResourceMesh;
@@ -49,4 +51,6 @@ public:
 
 	GameObject* root_object = nullptr;
 	GameObject* selected_object = nullptr;
+
+	Timer GameTime; 
 };

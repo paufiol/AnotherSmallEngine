@@ -30,6 +30,9 @@ ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 	root_object->parent = nullptr;
 	selected_object = root_object;
 
+	GameTime.Stop();
+	GameTime.Restart();
+
 	ImGuizmo::Enable(true);
 }
 

@@ -13,10 +13,12 @@ public:
 
 	void Start();
 	void Stop();
+	void Restart();
+
+
 
 	Uint32 Read();
 	float ReadSec() const;
-
 
 	bool	running;
 	Uint32	started_at;

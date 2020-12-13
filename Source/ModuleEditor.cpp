@@ -88,6 +88,7 @@ update_status ModuleEditor::Update(float dt)
 	HierarchyWindow();
 	InspectorWindow();
 	AssetExplorerWindow();
+	PlayPauseWindow();
 
 	SetupStyleFromHue(); //This is innovation, Marc
 	
@@ -237,10 +238,36 @@ void  ModuleEditor::SetupStyleFromHue()
 void ModuleEditor::PlayPauseWindow()
 {
 	ImGui::Begin("Play Pause");
-	//std::string name = Timer::running ? "Stop" : "Play";
+	std::string name = App->scene->GameTime.running ? "Pause" : "Play";
 	
 	//std::string name = GameTimer::gameTimer ? "Stop" : "Play";
+
+	if(ImGui::Button(name.c_str()))
+	{
+		//App->scene->GameTime.running = !App->scene->GameTime.running;
+		
+		if (App->scene->GameTime.running == false)	App->scene->GameTime.Start();
+		else if (App->scene->GameTime.running == true)	App->scene->GameTime.Stop();
+	}
 	
+	ImGui::SameLine();
+
+	if (App->scene->GameTime.Read() > 0) {
+
+		if (ImGui::Button("Stop"))
+		{
+			App->scene->GameTime.Restart();
+		}
+	}
+	
+	ImGui::SameLine();
+
+	ImGui::Text("GameTime:");
+	
+	ImGui::SameLine();
+	
+	ImGui::TextColored(ImVec4(0.5f,0.5f,0.5f,1.0f), "%.2f", (App->scene->GameTime.Read()/1000.0f));
+
 	ImGui::End();
 }
 
@@ -253,66 +280,23 @@ void ModuleEditor::AssetExplorerWindow()
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
 	ImGui::Text("Lorem Ipsum");
 
-	/*
-		if (rootObject->children.empty()) treeFlags |= ImGuiTreeNodeFlags_Leaf;
-	if (rootObject == App->scene->selected_object) treeFlags |= ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Framed;
-	ImGui::AlignTextToFramePadding();
-
-	if (ImGui::TreeNodeEx(rootObject->name.c_str(), treeFlags))
-	{
-		if (ImGui::IsItemClicked())						// To select Scene or the House needs to be opened
-		{
-			App->scene->SelectObject(rootObject);
-			rootObject->selected = true;
-		}
-		if (rootObject != App->scene->root_object)
-		{
-			if (ImGui::BeginDragDropSource())
-			{
-				ImGui::SetDragDropPayload("Dragged_Object", rootObject, sizeof(GameObject));
-				childObject = rootObject;
-				ImGui::EndDragDropSource();
-			}
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Dragged_Object"))
-				{
-					rootObject->AddChildren(childObject);
-
-					childObject = nullptr;
-				}
-
-				ImGui::EndDragDropTarget();
-			}
-		}
-		if (!rootObject->children.empty())
-		{
-			for (uint i = 0; i < rootObject->children.size(); ++i)
-			{
-				DrawHierarchyLevel(rootObject->children[i]);
-			}
-		}
-
-		ImGui::TreePop();
-	}
-	*/
 
 	ImGui::EndChild();
 	
 	ImGui::SameLine();
 	ImGui::BeginChild("Explorer Folder");
-	ImGui::Text("This is the right child");
 	
 	std::map<uint32, Resource*>::iterator resourece_i = App->resources->resources.begin();
 	
+	/*
+	*/
 	for (; resourece_i != App->resources->resources.end(); resourece_i++)
 	{
 
-		if (ImGui::Button(resourece_i->second->assetsFile.c_str()))
-		{
-			LOG("Load resource %s", resourece_i->second->assetsFile.c_str());
-		}
+		ImGui::Text(resourece_i->second->assetsFile.c_str());
+	
 	}
+
 
 	ImGui::EndChild();
 	ImGui::End();
@@ -637,7 +621,6 @@ void ModuleEditor::HierarchyWindow()
 		ImGui::Begin("Hierarchy", &show_hierarchy_window);
 		
 		DrawHierarchyLevel(App->scene->root_object);
-
 
 		ImGui::End();
 	}

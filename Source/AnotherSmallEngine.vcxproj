@@ -307,7 +307,6 @@
     <ClInclude Include="Dependencies\SDL\include\SDL_version.h" />
     <ClInclude Include="Dependencies\SDL\include\SDL_video.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="glmath.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="ImporterMaterials.h" />
@@ -399,7 +398,6 @@
     <ClCompile Include="Dependencies\MathGeoLib\include\Time\Clock.cpp" />
     <ClCompile Include="Dependencies\Parson\parson.c" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="glmath.cpp" />
     <ClCompile Include="ImporterMaterials.cpp" />
     <ClCompile Include="ImporterMesh.cpp" />
