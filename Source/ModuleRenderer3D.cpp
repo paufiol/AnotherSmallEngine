@@ -164,7 +164,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glLineWidth(2.0f);
 		vec* frustum_corners;
 		frustum_corners = App->camera->gameCamera->GetFrustumPoints();
-		DrawCuboid(frustum_corners, Color(1.0f, 0.0f, 0.4f, 1.0f));
+		DrawCuboid(frustum_corners, App->editor->frustumColor);
 	}
 
 	glEnd();
@@ -274,9 +274,9 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 					vec* corners = new vec[8];
 					App->scene->game_objects[i]->aabb.GetCornerPoints(corners);
-					DrawCuboid(corners, Color(1.0f,0.7f,0.7f,0.75f));
+					DrawCuboid(corners, App->editor->AABBColor);
 					App->scene->game_objects[i]->obb.GetCornerPoints(corners);
-					DrawCuboid(corners, Color(0.7f, 0.7f, 1.0f, 0.75f));
+					DrawCuboid(corners, App->editor->OBBColor);
 
 					delete[] corners;
 
@@ -385,9 +385,7 @@ void ModuleRenderer3D::UseCheckerTexture() {
 void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh, float4x4 transform)
 {
 	glBegin(GL_LINES);
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-
-	
+	glColor4f(App->editor->NormalColor.r, App->editor->NormalColor.g, App->editor->NormalColor.b, App->editor->NormalColor.a);
 	
 	for (uint i = 0; i < mesh->size[ResourceMesh::vertex] * 3; i +=3)
 	{

@@ -15,6 +15,7 @@
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
 #include "ImporterScene.h"
+
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
 #include "Dependencies/ImGUI/imgui_impl_sdl.h"
@@ -177,6 +178,52 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImGui::ColorEdit3("back", &rgb.x);
 	ImGui::ColorConvertRGBtoHSV(rgb.x, rgb.y, rgb.z, dummy, col_back_sat, col_back_val);
 
+	ImGui::Separator();
+	
+	//TODO: This should be serialised; Maybe in a Loop 
+	ImVec4 temp_frustum;
+	
+	temp_frustum.w = frustumColor.a;
+	temp_frustum.x = frustumColor.r; 
+	temp_frustum.y = frustumColor.g;
+	temp_frustum.z = frustumColor.b; 
+	ImGui::ColorEdit3("Frustum", &temp_frustum.x);
+	frustumColor = Color(float(temp_frustum.x), float(temp_frustum.y), float(temp_frustum.z), float(temp_frustum.w));
+
+	ImGui::Separator();
+	
+	ImVec4 temp_normal;
+
+	temp_normal.w = NormalColor.a;
+	temp_normal.x = NormalColor.r;
+	temp_normal.y = NormalColor.g;
+	temp_normal.z = NormalColor.b;
+	ImGui::ColorEdit3("Normal", &temp_normal.x);
+	NormalColor = Color(float(temp_normal.x), float(temp_normal.y), float(temp_normal.z), float(temp_normal.w));
+	
+	ImGui::Separator();
+	
+
+	ImVec4 temp_AABB;
+
+	temp_AABB.w = AABBColor.a;
+	temp_AABB.x = AABBColor.r;
+	temp_AABB.y = AABBColor.g;
+	temp_AABB.z = AABBColor.b;
+	ImGui::ColorEdit3("AABB", &temp_AABB.x);
+	AABBColor = Color(float(temp_AABB.x), float(temp_AABB.y), float(temp_AABB.z), float(temp_AABB.w));
+
+
+	ImVec4 temp_OBB;
+
+	temp_OBB.w = OBBColor.a;
+	temp_OBB.x = OBBColor.r;
+	temp_OBB.y = OBBColor.g;
+	temp_OBB.z = OBBColor.b;
+	ImGui::ColorEdit3("OBB", &temp_OBB.x);
+	OBBColor = Color(float(temp_OBB.x), float(temp_OBB.y), float(temp_OBB.z), float(temp_OBB.w));
+
+	
 	ImGui::Separator();
 
 	ImGui::ShowStyleEditor();

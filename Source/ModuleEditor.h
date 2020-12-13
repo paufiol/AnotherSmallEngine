@@ -4,6 +4,7 @@
 #include "Dependencies/ImGui/imgui.h"
 #include "Globals.h"
 #include "Timer.h"
+#include "Color.h"
 
 using namespace std;
 
@@ -97,6 +98,11 @@ public:
 	bool isUserTyping = false; 
 
 	bool enableObject = true;
+
+	Color frustumColor = Color(1.0f, 1.0f, 0.2f, 0.75f);
+	Color NormalColor = Color(.8f, .8f, 0.0f, 0.75f);
+	Color AABBColor = Color(1.0f, 0.2f, 0.2f, 0.75f);
+	Color OBBColor = Color(0.2f, 0.2f, 1.0f, 0.75f);
 };
 
 #endif //__ModuleEditor_H__
