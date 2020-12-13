@@ -7,6 +7,9 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentCamera.h"
+#include "ComponentTexture.h"
+#include "ComponentMesh.h"
+#include "ComponentTransform.h"
 #include "Resource.h"
 #include "ModuleResource.h"
 
@@ -83,6 +86,8 @@ update_status ModuleEditor::Update(float dt)
 	Docking();
 
 	if (!MainMenuBar()) return UPDATE_STOP;
+	
+	SetupStyleFromHue(); //This is innovation, Marc
 	AboutWindow();
 	ConfigurationWindow();
 	ConsoleWindow();
@@ -92,7 +97,7 @@ update_status ModuleEditor::Update(float dt)
 	AssetExplorerWindow();
 	PlayPauseWindow();
 
-	SetupStyleFromHue(); //This is innovation, Marc
+	
 	
 
 	GUIisHovered();
@@ -345,6 +350,14 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Tools"))
+		{
+			if (ImGui::MenuItem("Set Guizmo: Translate (W)"))	App->scene->gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+			if (ImGui::MenuItem("Set Guizmo: Rotate (E)"))		App->scene->gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+			if (ImGui::MenuItem("Set Guizmo: Scale (R)"))		App->scene->gizmoOperation = ImGuizmo::OPERATION::SCALE;
+
+			ImGui::EndMenu();
+		}
 		ImGui::EndMenuBar();
 		ImGui::End();
 
@@ -588,12 +601,82 @@ void ModuleEditor::InspectorWindow()
 
 			for (uint m = 0; m < App->scene->selected_object->components.size(); m++)
 			{
-				if (App->scene->selected_object->selected)
-				{
 					App->scene->selected_object->components[m]->DrawInspector();
-				}
+			}
 
-			}	
+			ImGui::Separator();
+
+			const char* items[] = { "Transform", "Mesh", "Texture", "Camera" };
+			static const char* current_item = NULL;
+			if (ImGui::BeginCombo("-", current_item))
+			{
+				for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+				{
+					bool is_selected = (current_item == items[n]); // You can store your selection however you want, outside or inside your objects
+					if (ImGui::Selectable(items[n], is_selected))
+					{
+						current_item = items[n];
+					}
+					if (is_selected)
+					{
+						ImGui::SetItemDefaultFocus();   // You may set the initial focus when opening the combo (scrolling + for keyboard navigation support)	
+					}
+				}
+				ImGui::EndCombo();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Add Component"))
+			{
+				if (strcmp(current_item, "Transform") == 0)
+				{
+					if (App->scene->selected_object->GetComponent(ComponentType::Transform) == nullptr)
+					{
+						ComponentTransform* newComponent = new ComponentTransform(App->scene->selected_object);
+						App->scene->selected_object->AddComponent(newComponent);
+					}
+					else
+					{
+						LOG("ERROR: Game Objects can not have repeated components");
+					}
+				}
+				else if (strcmp(current_item, "Mesh") == 0)
+				{
+					if (App->scene->selected_object->GetComponent(ComponentType::Mesh) == nullptr)
+					{
+						ComponentMesh* newComponent = new ComponentMesh(App->scene->selected_object);
+						App->scene->selected_object->AddComponent(newComponent);
+					}
+					else
+					{
+						LOG("ERROR: Game Objects can not have repeated components");
+					}
+				}
+				else if (strcmp(current_item, "Texture") == 0)
+				{
+					if (App->scene->selected_object->GetComponent(ComponentType::Material) == nullptr)
+					{
+						ComponentTexture* newComponent = new ComponentTexture(App->scene->selected_object);
+						App->scene->selected_object->AddComponent(newComponent);
+					}
+					else
+					{
+						LOG("ERROR: Game Objects can not have repeated components");
+					}
+				}
+				else if (strcmp(current_item, "Camera") == 0)
+				{
+					if (App->scene->selected_object->GetComponent(ComponentType::Camera) == nullptr)
+					{
+						ComponentCamera* newComponent = new ComponentCamera(App->scene->selected_object);
+						App->scene->selected_object->AddComponent(newComponent);
+					}
+					else
+					{
+						LOG("ERROR: Game Objects can not have repeated components");
+					}
+				}
+			}
+
 		}
 		ImGui::End();
 	}

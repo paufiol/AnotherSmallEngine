@@ -43,10 +43,11 @@ private:
 private:
 	std::vector<Primitive*> primitives;
 
-	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 	ImGuizmo::MODE gizmoMode = ImGuizmo::MODE::WORLD;
 
 public:
+	ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+
 	std::vector<GameObject*> game_objects;
 
 	GameObject* root_object = nullptr;
