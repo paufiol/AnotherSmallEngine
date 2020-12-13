@@ -65,4 +65,9 @@ Warning: The models won't load if Library folder is erased and the meta files no
 * DevIL
 ****
 ## Innovations
-* **Style Window:** *(top right)* The bottom part of it is just summoned by ImGui, but the top section is custom. It allows for picking of a hue via slider plus three main colors in which you can change the Value/Saturation. This is a significantly quicker, and more visually cohesive way to change the theme for ImGui. The ultimate goal would be to serialise it. 
+**Style Window:** *(top right)* The bottom part of it is just summoned by ImGui, but the top section is custom. It allows for picking of a hue via slider plus three main colors in which you can change the Value/Saturation. This is a significantly quicker, and more visually cohesive way to change the theme for ImGui. 
+
+Another feature is the possibility of changing the debug colours for anything drawn in direct mode. This one is not made with aesthetics in mind, accesibility is the main goal (One of our 3rd year colleagues is colorblind, and I would like him to not have issues when working together.) Allowing the user to change colors can help them better understand the info displayed. 
+
+The ultimate goal would be to serialise it and store it, which hasn't been done because that would be a large time sink, and other core features were not achieved.
+If the idea is well received I would like to invest some further time into it.
