@@ -34,6 +34,11 @@ public:
 	void InspectorWindow();
 	void HierarchyWindow();
 	void DrawHierarchyLevel(GameObject* rootObject);
+
+	void SetupStyleFromHue();
+	void PlayPauseWindow();
+	void AssetExplorerWindow();
+
 	void GUIisHovered();
 
 	const char* GetSystemCaps();

@@ -155,11 +155,13 @@ private:
 
 	// Frustums are typically used in batch culling operations. Therefore the matrices associated with a Frustum are cached
 	// for immediate access.
+public:
+
 	float3x4 worldMatrix;
 	float4x4 projectionMatrix;
 	float4x4 viewProjMatrix;
 
-public:
+
 	/// The default constructor creates an uninitialized Frustum object.
 	/** This means that the values of the members type, projectiveSpace, handedness, pos, front, up, nearPlaneDistance, farPlaneDistance, horizontalFov/orthographicWidth and
 		verticalFov/orthographicHeight are all NaN after creating a new Frustum using this

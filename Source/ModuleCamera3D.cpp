@@ -88,11 +88,7 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 
-	if (App->input->GetMouseZMotion() != 0)
-	{
-		float dz = (float)App->input->GetMouseZMotion() * dt;
-		currentCamera->Zoom(dz*30.0f);
-	}	
+	
 	
 	if(!App->editor->GUIhovered)
 	{
@@ -100,6 +96,11 @@ update_status ModuleCamera3D::Update(float dt)
 		{
 			
 			currentCamera->OnClick(App->input->GetMouseX(), App->window->Height() - App->input->GetMouseY());
+		}
+		if (App->input->GetMouseZMotion() != 0)
+		{
+			float dz = (float)App->input->GetMouseZMotion() * dt;
+			currentCamera->Zoom(dz * 50.0f);
 		}
 	}
 
@@ -141,6 +142,11 @@ mat4x4 ModuleCamera3D::GetViewMatrix()
 {
 
 	return currentCamera->GetViewMatrix();
+}
+
+float* ModuleCamera3D::GetProjectionMatrix()
+{
+	return currentCamera->GetProjectionMatrix();
 }
 
 // -----------------------------------------------------------------

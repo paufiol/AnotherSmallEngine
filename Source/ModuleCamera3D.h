@@ -25,6 +25,7 @@ public:
 	void Move(const vec3 &Movement);
 	float* GetRawViewMatrix();
 	mat4x4 GetViewMatrix();
+	float* GetProjectionMatrix();
 
 	void FocusObject();
 

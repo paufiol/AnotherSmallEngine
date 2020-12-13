@@ -43,6 +43,8 @@ public:
 	void SetCubemap(bool active);
 	void SetPolygonssmooth(bool active);
 
+	void UpdateProjectionMatrix();
+
 private:
 	bool DoesIntersect(const AABB& aabb);
 
@@ -60,5 +62,5 @@ public:
 	ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
 
-	bool drawboundingboxes = true;
+	bool drawboundingboxes = false;
 };
