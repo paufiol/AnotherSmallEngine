@@ -164,7 +164,7 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		glLineWidth(2.0f);
 		vec* frustum_corners;
 		frustum_corners = App->camera->gameCamera->GetFrustumPoints();
-		DrawCuboid(frustum_corners, Color(1.0f, 0.0f, 0.0f, 1.0f));
+		DrawCuboid(frustum_corners, Color(1.0f, 0.0f, 0.4f, 1.0f));
 	}
 
 	glEnd();
