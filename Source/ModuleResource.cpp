@@ -74,50 +74,10 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 				Resource* resource = new Resource(type,node.path.c_str(), name.c_str(), UID);
 				resource->libraryFile = jsonMeta.GetString("Library file");
 					
-				if(resource->type == ResourceType::Model || resource->type == ResourceType::Scene) App->scene->sceneUID = resource->UID;
-
-				/*importedResources[resource->UID] = resource;
-				ID = resource->UID;*/
-				
-				//-------------------------
-				//if (resource->type == ResourceType::Model)
-				//{
-				//	char* buffer = nullptr;
-				//	uint size = App->fileSystem->Load(resource->GetLibraryFile().c_str(), &buffer);
-				//	JsonConfig jsonModels(buffer); //needs buffer??
-				//	ArrayConfig jsonArrray = jsonModels.GetArray("Models");
-				//	for (uint i = 0; i < jsonArrray.GetSize(); i++)
-				//	{
-				//		JsonConfig model = jsonArrray.GetNode(i);
-				//		name = model.GetString("Name");
-
-				//		uint meshUID = model.GetNumber("Mesh UID");
-				//		uint materialUID = model.GetNumber("Material UID");
-				//		if (meshUID != 0)
-				//		{
-				//			Resource* newResource = CreateNewResource(node.path.c_str(), ResourceType::Mesh, name.c_str(), meshUID);
-				//			LoadResource(meshUID, newResource);
-				//			/*Resource* newResource = new Resource(ResourceType::Mesh, node.path.c_str(), name.c_str(), meshUID);
-				//			newResource->libraryFile = MESHES_PATH;
-				//			newResource->libraryFile.append(std::to_string(resource->GetUID()));
-				//			newResource->libraryFile.append(ASE_EXTENSION);*/
-				//			//importedResources[newResource->UID] = newResource;
-				//		}
-
-				//		if (materialUID != 0)
-				//		{
-				//			Resource* newResource = CreateNewResource(node.path.c_str(), ResourceType::Material, name.c_str(), materialUID);
-				//			LoadResource(materialUID, newResource);
-				//			//Resource* newResource = new Resource(ResourceType::Material, node.path.c_str(), name.c_str(), materialUID);
-				//			//newResource->libraryFile = MATERIALS_PATH;
-				//			//newResource->libraryFile.append(std::to_string(resource->GetUID()));
-				//			//newResource->libraryFile.append(ASE_EXTENSION);
-				//			//importedResources[newResource->UID] = newResource;
-				//		}
-				//	}	
-				//}
 				if(resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
 				{
+
+					App->scene->sceneUID = resource->UID;
 					ArrayConfig resourceInModel = jsonMeta.GetArray("Resources in Models");
 					for (uint i = 0; i < resourceInModel.GetSize(); i++)
 					{
@@ -133,7 +93,6 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 						importedResources[dataInModel->UID] = dataInModel;
 					}
 				}
-				
 				
 				importedResources[resource->UID] = resource;
 				ID = resource->UID;
@@ -159,15 +118,6 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 			LOG("ERROR: Couldn't import the file: %s", node.path.c_str());
 		}
 	}
-	/*ID = ImportFile(node.path.c_str());
-	if (ID != 0)
-	{
-		LOG("Succesfully imported from: %s", node.path.c_str());
-	}
-	else if (ID == 0)
-	{
-		LOG("ERROR: Couldn't import the file: %s", node.path.c_str());
-	}*/
 
 	if (!node.isFile && !node.isLeaf)
 	{
@@ -224,7 +174,7 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 		LoadScene(buffer, fileSize, (ResourceScene*)resource);
 		SaveResource((ResourceScene*)resource);
 
-		//LOAD THE MODEL/SCENE This is here for now
+		//TODO: LOAD THE MODEL/SCENE This is here for now
 		LoadResource(resource->GetUID(), resource);
 		break;
 
@@ -261,14 +211,6 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 
 		meshes.push_back(resourceMesh->GetUID());
 		scene->resourcesInModels.push_back(resourceMesh->GetUID());
-		//char* newbuffer = nullptr;
-		//size = App->fileSystem->Load(resourceMesh->GetLibraryFile().c_str(), &newbuffer);
-		//Importer::MeshImporter::Load(resourceMesh, newbuffer);
-		//resourceMesh->SetUpBuffers(resourceMesh);
-
-		//SaveResource(resource);
-
-
 	}
 	std::vector<uint32> materials;
 	for (uint i = 0; i < aiScene->mNumMaterials; i++)
@@ -283,10 +225,6 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 		SaveResource(resourceMaterial);
 		materials.push_back(resourceMaterial->GetUID());
 		scene->resourcesInModels.push_back(resourceMaterial->GetUID());
-		//char* newbuffer = nullptr;
-		//size = App->fileSystem->Load(resourceMaterial->GetLibraryFile().c_str(), &newbuffer);
-		//Importer::MaterialsImporter::Load(resourceMaterial, newbuffer);
-		
 	}
 
 	for (uint i = 0; i < scene->models.size(); i++)
@@ -469,9 +407,6 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 	}
 	
 	return tempResource;
-	//Add to the resources list!!!!!!!!!!
-
-	/*return resource;*/
 }
 
 Resource* ModuleResources::AccesResource(uint32 UID)
@@ -501,8 +436,6 @@ ResourceType ModuleResources::GetTypeFromFile(const char* path) const
 
 	static_assert(static_cast<int>(ResourceType::None) == 6, "Code Needs Update");
 
-	/*if (extension == "FBX" || extension == "fbx")
-		return ResourceType::MODEL;*/
 	if (extension == "tga" || extension == "png" || extension == "jpg" || extension == "TGA" || extension == "PNG" || extension == "JPG")
 		return ResourceType::Texture;
 	if (extension == "scene")
@@ -510,13 +443,12 @@ ResourceType ModuleResources::GetTypeFromFile(const char* path) const
 	if (extension == "FBX" || extension == "fbx")
 		return ResourceType::Model;
 
-
 	return App->fileSystem->IsDirectory(path) ? ResourceType::Folder : ResourceType::None;
 }
 
 ResourceType ModuleResources::GetTypefromString(std::string typeString) const
 {
-	if (typeString == "Folder") return ResourceType::Folder;
+		 if (typeString == "Folder") return ResourceType::Folder;
 	else if (typeString == "Material") return ResourceType::Material;
 	else if (typeString == "Mesh") return ResourceType::Mesh;
 	else if (typeString == "Model") return ResourceType::Model;
@@ -534,7 +466,6 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 		return "Folder";
 		break;
 	case ResourceType::Material:
-		//App->fileSystem->GetRealDir(resource->libraryFile.c_str(), path);
 		App->fileSystem->SplitFilePath(resource->libraryFile.c_str(), &path, nullptr, nullptr);
 		if (path == TEXTURES_PATH)
 		{
@@ -550,8 +481,7 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 		return "Model";
 		break;
 	case ResourceType::Scene:
-		//return "Scene";
-		return "Model";			//THIS IS BAD, shoudn't be done 
+		return "Model";			//TODO: Improve system
 		break;
 	case ResourceType::Texture:
 		return "Texture";

@@ -334,7 +334,7 @@ void ModuleEditor::AssetExplorerWindow()
 	ImGui::BeginChild("Explorer Tree", ImVec2(200, 0));
 
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
-	ImGui::Text("Lorem Ipsum");
+	ImGui::Text("WIP Asset Explorer");
 
 
 	ImGui::EndChild();

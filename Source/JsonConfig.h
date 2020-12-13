@@ -2,7 +2,8 @@
 #define __JSONCONFIG_H__
 
 #include "Dependencies/Parson/parson.h"
-#include "Dependencies/MathGeoLib/include/MathGeoLib.h" //To delete
+//#include "Dependencies/MathGeoLib/include/MathGeoLib.h" //To delete
+#include "Dependencies/MathGeoLib/include/Math/float3.h"
 
 #include "Globals.h"
 

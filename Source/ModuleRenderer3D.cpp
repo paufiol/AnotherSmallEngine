@@ -120,13 +120,6 @@ bool ModuleRenderer3D::Init()
 
 	UseCheckerTexture();
 
-	//Importer::MeshImporter::Import("Assets/Models/BakerHouse.FBX");
-	//ComponentTexture* tempCompTex = new ComponentTexture(App->scene->selected_object);
-	//tempCompTex->SetTexture(Importer::TextureImporter::Import("Assets/Textures/BakerHouse.png"), "Assets/Textures/BakerHouse.png");
-
-	//App->scene->selected_object->AddComponent(tempCompTex);
-
-	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
 }
 
@@ -394,9 +387,6 @@ void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh, float4x4 transform)
 
 		NormalDirection.Transform(transform);
 
-	   // glVertex3f(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]);
-	   // glVertex3f(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]);
-
 		glVertex3f(NormalDirection.a.x, NormalDirection.a.y, NormalDirection.a.z);
 		glVertex3f(NormalDirection.b.x, NormalDirection.b.y, NormalDirection.b.z);
 	}
@@ -457,28 +447,19 @@ bool ModuleRenderer3D::DoesIntersect(const AABB& aabb) {
 	static Plane frustum_planes[6];
 	App->camera->gameCamera->frustum.GetPlanes(frustum_planes);
 
-	//int iTotalIn = 0;
-
 	for(int p = 0; p < 6; p++)
 	{
 		int iInCount = 8;
-		//int iPtIn = 1;
 
 		for(int i = 0; i < 8; i++)
 		{
 			if(frustum_planes[p].IsOnPositiveSide(aabb_corners[i]))
 			{
-				//iPtIn = 0;
 				--iInCount;
 			}
 		}
-
 		if (iInCount == 0) return false;
-
-		//iTotalIn += iPtIn;
 	}
-
-	//if (iTotalIn == 6) return true;
 
 	return true;
 }
