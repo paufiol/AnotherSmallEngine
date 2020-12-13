@@ -50,6 +50,7 @@ public:
 	void SetName(const char* _name);
 
 	const uint32 GetUID() const;
+	void SetUID(uint32 UID);
 
 	//BoundingBox Handling
 	const AABB& GetAABB() const;

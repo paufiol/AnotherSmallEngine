@@ -359,9 +359,14 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 
 void ModuleResources::SaveMeta(Resource* resource)
 {
+	string name;
+	string extension;
+	App->fileSystem->SplitFilePath(resource->GetAssetsFile().c_str(), nullptr, &name, &extension);
+	resource->name = name;
 	JsonConfig jsonConfig;
 	jsonConfig.SetNumber("UID", resource->GetUID());
 	jsonConfig.SetString("Name", resource->name.c_str());
+	jsonConfig.SetString("Extension", extension);
 	jsonConfig.SetString("Library file", resource->GetLibraryFile());
 	jsonConfig.SetString("Type", GetStringFromResource(resource).c_str());
 	std::string path = resource->GetAssetsFile().append(".meta");
