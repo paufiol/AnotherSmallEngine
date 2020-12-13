@@ -71,6 +71,7 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, Resourc
 		Importer::TextureImporter::Load(tempTex, buffer, size);
 
 		resourceMaterial->SetTexture(tempTex);
+		resourceMaterial->SetPath(texName);
 	}
 	else
 	{

@@ -291,7 +291,8 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 		{
 			Component* component = GOarray[i]->components[j];
 			JsonConfig& compConfig = jsonCompArray.AddNode();
-						
+			
+			ComponentMesh* componentMesh = (ComponentMesh*)GOarray[i]->GetComponent(ComponentType::Mesh);
 			ComponentTexture* componentTex = (ComponentTexture*)GOarray[i]->GetComponent(ComponentType::Material);
 			ComponentTransform* componentTransform = (ComponentTransform*)GOarray[i]->GetComponent(ComponentType::Transform);
 			ComponentCamera* componentCamera = (ComponentCamera*)GOarray[i]->GetComponent(ComponentType::Camera);
@@ -300,16 +301,15 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 			{
 			case (ComponentType::Mesh):
 				compConfig.SetString("Type", "Mesh");
+				compConfig.SetNumber("Resource UID", componentMesh->GetResourceUID());
 				break;
 			case (ComponentType::Material):
 				
 				compConfig.SetString("Type", "Material");
-				if(componentTex->GetMaterial()->GetId() != 0)
-					compConfig.SetNumber("Texture ID", componentTex->GetMaterial()->GetId());
-				else
-				{
-					compConfig.SetColor("Color", componentTex->GetMaterial()->GetColor());
-				}
+				compConfig.SetNumber("Resource UID", componentTex->GetResourceUID());
+
+				//compConfig.SetColor("Color", componentTex->GetMaterial()->GetColor());
+
 				break;
 			case (ComponentType::Transform):
 				
@@ -342,5 +342,52 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 
 void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 {
+	JsonConfig jsonFile(buffer);
+	std::map<uint32, GameObject*> importedGameObjects;
+	ArrayConfig arrayGameObjects = jsonFile.GetArray("GameObjects");
+
+	for (uint i = 0; i < arrayGameObjects.GetSize(); i++)
+	{
+		JsonConfig node = arrayGameObjects.GetNode(i);
+
+		string name = node.GetString("Name");
+		GameObject* gameObject = new GameObject(name);
+
+		GameObject* parent = nullptr;
+		std::map<uint32, GameObject*>::iterator it = importedGameObjects.find(node.GetNumber("Parent UID"));
+		if (it != importedGameObjects.end())
+		{
+			parent = it->second;
+		}
+		if (parent != nullptr)
+		{
+			gameObject->SetParent(parent);
+			parent->AddChildren(gameObject);
+		}
+		else
+		{
+			gameObject->SetParent(App->scene->root_object);
+			App->scene->root_object->AddChildren(gameObject);
+		}
+
+		gameObject->SetUID(node.GetNumber("UID"));
+		if(node.GetBool("IsSelected")) App->scene->selected_object = gameObject;
+		
+		ArrayConfig componentsArray = node.GetArray("Components");
+		for (uint i = 0; i < componentsArray.GetSize(); i++)
+		{
+			JsonConfig componentNode = componentsArray.GetNode(i);
+			string type = componentNode.GetString("Type");
+			if(type == "Mesh") {}
+			if (type == "Material") {}
+			if (type == "Transform") 
+			{
+				ComponentTransform* transform = new ComponentTransform(parent, componentNode.GetFloat3("Position"), componentNode.GetFloat3("Scale"), componentNode.GetQuat("Rotation"));
+				gameObject->AddComponent(transform);
+			}
+		}
+		App->scene->game_objects.push_back(gameObject);
+	}
+
 }
 
