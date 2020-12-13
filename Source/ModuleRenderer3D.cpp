@@ -181,7 +181,9 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	IterateMeshDraw();
 
 	ImGui::GetBackgroundDrawList();
-	App->scene->ImGuizmoHandling();
+	
+
+	
 	App->editor->DrawGUI();
 
 	UpdateProjectionMatrix();

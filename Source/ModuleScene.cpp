@@ -263,6 +263,8 @@ void ModuleScene::TestGameObjectSelection(const LineSegment& ray)
 
 void ModuleScene::ImGuizmoHandling()
 {
+	
+	ImGuizmo::BeginFrame();
 	if (selected_object == nullptr) return; 
 
 	ComponentTransform* selected_transform = (ComponentTransform*)selected_object->GetComponent(ComponentType::Transform);
@@ -274,6 +276,9 @@ void ModuleScene::ImGuizmoHandling()
 	float4x4 modelProjection = selected_transform->GetGlobalTransform();
 	modelProjection.Transpose();
 
+	//ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
+	//ImGuizmo::
+	
 	ImGuizmo::SetRect(0.0f, 0.0f, App->window->Width(), App->window->Height());
 
 	//gizmoOperation

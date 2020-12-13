@@ -55,6 +55,7 @@ bool ModuleEditor::Start()
 	SDL_GetVersion(&version);
 	fpsCap = App->GetFpsCap();
 
+	//ImGui::SaveIniSettingsToDisk()
 
 	return true;
 }
@@ -68,7 +69,8 @@ update_status ModuleEditor::PreUpdate(float dt)
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	
 	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
+	
+
 
 
 	return ret;
@@ -79,6 +81,7 @@ update_status ModuleEditor::Update(float dt)
 {
 
 	Docking();
+
 	if (!MainMenuBar()) return UPDATE_STOP;
 	AboutWindow();
 	ConfigurationWindow();
@@ -102,6 +105,7 @@ update_status ModuleEditor::PostUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
 
+	App->scene->ImGuizmoHandling();
 	return ret;
 }
 
@@ -124,7 +128,7 @@ void ModuleEditor::DrawGUI()
 
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
-	ImGui::Render();
+	//ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
