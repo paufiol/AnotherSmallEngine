@@ -33,6 +33,10 @@ This project is been created as part of CITM's Game Engine course under supervis
 * **Alt + Right click**: Rotate camera over mouse position or else selected game object.
 * **Alt + Center click(wheel)** Pan camera.
 * **Left click** Select object / Use Gizmo.
+* **W** Set Guizmo to Translate mode
+* **E** Set Guizmo to Rotate mode
+* **R** Set Guizmo to Scale mode
+
 ****
 ## Libraries used
 * STL (Standard Template Library)
@@ -46,4 +50,4 @@ This project is been created as part of CITM's Game Engine course under supervis
 * DevIL
 ****
 ## Innovations
-No current innvoations
+* **Style Window:** *(top right)* The bottom part of it is just summoned by ImGui, but the top section is custom. It allows for picking of a hue via slider + 3 main colors in which you can change the Value/Saturation. This is significantly quicker, and more visually cohesive than doing so with the default color changer.  
