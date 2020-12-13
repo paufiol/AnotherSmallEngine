@@ -18,7 +18,6 @@
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
 
 #include <map>
-#include "GameTimer.h"
 
 #include "Dependencies/Glew/include/GL/glew.h"
 #include "Dependencies/SDL/include/SDL_opengl.h"

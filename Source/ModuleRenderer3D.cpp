@@ -216,13 +216,16 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 void ModuleRenderer3D::UpdateProjectionMatrix() //GetProjectionMatrix peta semat
 {
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
+	/*
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
-	//glLoadMatrixf((GLfloat*)App->camera->GetProjectionMatrix());
+	glLoadMatrixf((GLfloat*)App->camera->GetProjectionMatrix());
 
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	*/
 }
 
 void ModuleRenderer3D::IterateMeshDraw()
