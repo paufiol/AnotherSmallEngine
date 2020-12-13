@@ -16,16 +16,30 @@ This project is been created as part of CITM's Game Engine course under supervis
 * Hierarchy & Inspector
 * GUI Docking
 * 3D Model Loading
-* Texture Loading
-* Drag & Drop of Models and Textures
+* Texture Loading (without Serialization)
 * GameObject and Components
-* Resource Management
-    * Assets window
-    * Custom File Formats generated within Library on file import
-* Camera(s) with frustum culling
+* Camera(s) with frustum culling, able to preview the InGame Camera (In Game Cameras can be modified from Inspector, the editor camer is in Configuration>Camera)
 * Unity Like camera movement
-* Objects have Bounding Boxes for Optimisation
+* Objects have Bounding Boxes for Optimisation (Bounding Boxes can be Toggled in Configuration>Draw)
 * Object transformation via Gizmos
+* Custom Style creator for DearImGui
+* Serialization:
+   * Meshes
+   * Textures
+   * Models
+   * Scene
+* Scene Saving (File > Save Scene)
+* Resource Management
+   * Creation of Meta files
+   * All resources handled by their UIDs
+   * Importing, serializing and Loading through Resources
+   * Premature assets window (only display)
+   * Custom File Formats generated within Library
+
+Please Note: The first time executing AnotherSmallEngine everything will Load without errors. Althought from that time on the engine will load from the information saved in our Custom File Format and the texture loading in that case is not ready yet.
+
+Warning: The models won't load if Library folder is erased and the meta files not, We load with the data stored inside the meta which points to the Custom Files stored in Library. --> To fix that erase all ".meta" files inside Assets folder.
+ 
 
 ****
 ## How to Use
@@ -36,11 +50,12 @@ This project is been created as part of CITM's Game Engine course under supervis
 * **W:** Set Guizmo to Translate mode
 * **E:** Set Guizmo to Rotate mode
 * **R:** Set Guizmo to Scale mode
+* Guizmo modes can also be set via the Tool submenu in the main bar
 
 ****
 ## Libraries used
 * STL (Standard Template Library)
-* ImGui
+* Dear ImGui
     * ImGuizmo
 * OpenGL 
 * Glew 
@@ -50,4 +65,4 @@ This project is been created as part of CITM's Game Engine course under supervis
 * DevIL
 ****
 ## Innovations
-* **Style Window:** *(top right)* The bottom part of it is just summoned by ImGui, but the top section is custom. It allows for picking of a hue via slider plus three main colors in which you can change the Value/Saturation. This is a significantly quicker, and more visually cohesive way to change the theme for ImGui.  
+* **Style Window:** *(top right)* The bottom part of it is just summoned by ImGui, but the top section is custom. It allows for picking of a hue via slider plus three main colors in which you can change the Value/Saturation. This is a significantly quicker, and more visually cohesive way to change the theme for ImGui. The ultimate goal would be to serialise it. 
