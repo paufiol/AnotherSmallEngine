@@ -126,7 +126,7 @@ bool ModuleRenderer3D::Init()
 
 	//App->scene->selected_object->AddComponent(tempCompTex);
 
-	OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	//OnResize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	return ret;
 }
 
@@ -203,22 +203,19 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
+	//Only do if cameras are up and running
 	glViewport(0, 0, width, height);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);
-	glLoadMatrixf(&ProjectionMatrix);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
 	
+	if (App->camera->currentCamera != nullptr) {
+
+		App->camera->currentCamera->SetAspectRatio((float)width / (float)height);
+	}
+
 }
 
 void ModuleRenderer3D::UpdateProjectionMatrix()
 {
-	
+	//Only do if cameras are up and running
 	if (App->camera->currentCamera == nullptr) return;
 
 	glMatrixMode(GL_PROJECTION);

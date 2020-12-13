@@ -80,7 +80,7 @@ void ComponentTransform::UpdateGlobalTransform()
 	GameObject* tempParent = owner->parent;
 	
 	if (tempParent != nullptr  )
-	{
+	{ 
 		global_transform = tempParent->transform->global_transform * local_transform;
 	}
 
@@ -111,11 +111,21 @@ void ComponentTransform::SetEulerRotation(float3 eulerAngles)
 	rotation =  quaternion;
 	eulerRotation = temp;
 	UpdateLocalTransform(); 
+	UpdateEulerAngles();
 }
 
 void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
 {
 	global_transform = new_matrix;
+
+	if (owner->children.empty()) return;
+
+	for (uint i = 0; i < owner->children.size(); i++)
+	{
+		owner->children.at(i)->transform->UpdateGlobalTransform();
+	}
+	//UpdateGlobalTransform();
+	//UpdateEulerAngles();
 }
 
 

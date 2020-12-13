@@ -72,6 +72,14 @@ void GameObject::Update()
 					(*item)->OnUpdateTransform(transform->GetGlobalTransform());
 				
 				UpdateAABB();
+
+				if (!children.empty())
+				{	
+					std::vector<GameObject*>::iterator children_i = children.begin();
+					for (; children_i != children.end(); children_i++) {
+						(*children_i)->transform->updatedtransform = true;
+					}
+				}
 			}
 		}
 	}
@@ -238,6 +246,9 @@ GameObject* GameObject::AddChildren(GameObject* children)
 	{
 		children->SetParent(this);
 	}
+
+	this->transform->updatedtransform = true;
+
 	this->children.push_back(children);
 	return children;
 }

@@ -133,7 +133,6 @@ void ModuleEditor::GUIisHovered()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.WantCaptureMouse ? GUIhovered = true : GUIhovered = false;
 	io.WantCaptureKeyboard ? isUserTyping = true : isUserTyping = false;
-	io.WantCaptureKeyboard;// = true;
 }
 
 
@@ -321,13 +320,15 @@ bool ModuleEditor::MainMenuBar()
 
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Add Primitive"))
-		{
-			//if (ImGui::MenuItem("Cube")) Importer::MeshImporter::Import("Assets/Primitives/Cube.FBX");
-			//if (ImGui::MenuItem("Sphere"))Importer::MeshImporter::Import("Assets/Primitives/Sphere.FBX");	
-			//if (ImGui::MenuItem("Cylinder")) Importer::MeshImporter::Import("Assets/Primitives/Cylinder.FBX");
-			//if (ImGui::MenuItem("Cone")) Importer::MeshImporter::Import("Assets/Primitives/Cone.FBX");
-			//if (ImGui::MenuItem("Pyramid")) Importer::MeshImporter::Import("Assets/Primitives/Pyramid.FBX");
+		if (ImGui::BeginMenu("Add"))
+		{	
+			if (ImGui::MenuItem("Create Game Object")) App->scene->CreateGameObject("New_Empty_", App->scene->root_object);
+			
+			if (App->scene->selected_object != nullptr)
+			{
+				if (ImGui::MenuItem("Create Children Object")) App->scene->CreateGameObject("New_EmptyChildren_", App->scene->selected_object);
+			}
+
 			ImGui::EndMenu();
 
 		}
@@ -490,11 +491,38 @@ void ModuleEditor::ConfigurationWindow()
 			if (ImGui::Checkbox("Enable Checker Tex", &drawCheckerTex)) { drawTexture = false; }
 			if (ImGui::Checkbox("Enable Texture", &drawTexture)) { drawCheckerTex = false; }
 			if (ImGui::Checkbox("Draw Bounding Boxes", &App->renderer3D->drawboundingboxes)) { App->renderer3D->drawboundingboxes; }
+			if (ImGui::Checkbox("Current Camera Culling", &App->camera->currentCamera->frustum_culling)) {}
 		}
 		if (ImGui::CollapsingHeader("Camera Settings"))
 		{
 			float Inspector_FOV = App->camera->currentCamera->GetFOV();
-			if (ImGui::SliderFloat("FOV", &Inspector_FOV, 30, 120, "%0.2f", ImGuiSliderFlags_None)) { App->camera->currentCamera->SetFOV(Inspector_FOV); }
+			if (ImGui::SliderFloat("FOV", &Inspector_FOV, 30, 120, "%0.2f", ImGuiSliderFlags_None)) 
+			{
+				App->camera->currentCamera->SetFOV(Inspector_FOV);
+			}
+			
+			float Inspector_NearPlane = App->camera->currentCamera->GetNearPlane();
+			if (ImGui::DragFloat("Near Plane", &Inspector_NearPlane))
+			{ 
+				App->camera->currentCamera->SetNearPlane(Inspector_NearPlane); 
+			}
+			
+			float Inspector_FarPlane = App->camera->currentCamera->GetFarPlane();
+			if (ImGui::DragFloat("Far Plane", &Inspector_FarPlane))
+			{ 
+				App->camera->currentCamera->SetFarPlane(Inspector_FarPlane); 
+			}
+
+			if(ImGui::Button("Change Current Camera"))
+			{
+				if (App->camera->currentCamera == App->camera->editorCamera) {
+					App->camera->currentCamera = App->camera->gameCamera;
+				}
+				else if (App->camera->currentCamera == App->camera->gameCamera) {
+					App->camera->currentCamera = App->camera->editorCamera;
+				}
+				else LOG("Something went wrong when swapping cameras");
+			}
 		}
 
 		ImGui::End();
@@ -631,12 +659,14 @@ void ModuleEditor::ConsoleWindow()
 	if (show_console_window) {
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6));
 
-		ImVec4 textColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 
 		ImGui::Begin("Console", &show_console_window);
 
 		for (int i = 0; i < log_record.size(); i++)
 		{
+			ImVec4 textColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 			if (strstr(log_record[i].c_str(), "ERROR") != nullptr)
 			{
 				textColor = { 1.0f, 0.0f, 0.3f, 0.7f };
