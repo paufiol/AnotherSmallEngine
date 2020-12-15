@@ -61,6 +61,15 @@ bool ModuleEditor::Start()
 	SDL_GetVersion(&version);
 	fpsCap = App->GetFpsCap();
 
+
+	//Set Asset folder via FileSystem || This will go on a function
+	std::vector<std::string> ignore_ext;
+	ignore_ext.push_back("meta");
+	assetsFolder = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
+
+
+	currentFolder = assetsFolder;
+
 	//ImGui::SaveIniSettingsToDisk()
 
 	return true;
@@ -329,33 +338,59 @@ void ModuleEditor::PlayPauseWindow()
 
 void ModuleEditor::AssetExplorerWindow()
 {
-	ImGui::Begin("Explorer");
-
-	ImGui::BeginChild("Explorer Tree", ImVec2(200, 0));
-
-	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_SpanAvailWidth;
-	ImGui::Text("WIP Asset Explorer");
-
-
-	ImGui::EndChild();
 	
-	ImGui::SameLine();
-	ImGui::BeginChild("Explorer Folder");
-	
-	std::map<uint32, Resource*>::iterator resourece_i = App->resources->resources.begin();
-	
-	/*
-	*/
-	for (; resourece_i != App->resources->resources.end(); resourece_i++)
+	ImGui::Begin("Assets Tree");
+	RecursiveAssetTree(assetsFolder);
+	ImGui::End();
+	ImGui::Begin("Assets Explorer");
+	AssetsExplorer(currentFolder);
+	ImGui::End();
+
+
+}
+
+void ModuleEditor::RecursiveAssetTree(PathNode& assetFolder)
+{
+	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen 
+		| ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiTreeNodeFlags_SpanAvailWidth;
+	if (assetFolder.IsLastFolder()) treeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+	if (currentFolder == assetFolder) treeFlags |= ImGuiTreeNodeFlags_Selected;
+
+	if (!assetFolder.isFile) //This way we only show folders in the Tree
 	{
+		if (ImGui::TreeNodeEx(assetFolder.localPath.c_str(), treeFlags, assetFolder.localPath.c_str()))
+		{
+			if (ImGui::IsItemClicked()) currentFolder = assetFolder;
+			if (!assetFolder.IsLastFolder())
+			{
+				for (uint i = 0; i < assetFolder.children.size(); i++)
+				{
+					RecursiveAssetTree(assetFolder.children[i]);
+				}
+				ImGui::TreePop();
+			}
 
-		ImGui::Text(resourece_i->second->assetsFile.c_str());
-	
+		}
+	}
+}
+
+void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
+{
+	ImGui::Text(assetFolder.localPath.c_str());
+	ImGui::Separator();
+
+	ImGui::BeginChild(5);
+
+	for(uint i = 0; i < assetFolder.children.size(); i++)
+	{
+	ImGui::PushID(i);
+	ImGui::Text(assetFolder.children[i].localPath.c_str());
+	ImGui::PopID();
 	}
 
 
 	ImGui::EndChild();
-	ImGui::End();
+
 }
 
 bool ModuleEditor::MainMenuBar()

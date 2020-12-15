@@ -41,7 +41,9 @@ void ComponentTexture::Update() {
 
 void ComponentTexture::CleanUp()
 {
-	//delete rMaterial;
+	rMaterial->SetId(0);
+	rMaterial = nullptr;
+	delete rMaterial;
 }
 
 void ComponentTexture::DrawInspector() {

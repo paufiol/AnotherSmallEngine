@@ -11,7 +11,7 @@ ComponentTransform::ComponentTransform(GameObject* owner) :
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	global_transform = Quat::identity;
 	type = ComponentType::Transform;
-	//UpdateEulerAngles();
+
 };
 
 ComponentTransform::ComponentTransform(GameObject* owner, float3 position, float3 scale, Quat rotation) :
@@ -20,7 +20,7 @@ ComponentTransform::ComponentTransform(GameObject* owner, float3 position, float
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	global_transform = Quat::identity;
 	type = ComponentType::Transform;
-	//UpdateEulerAngles();
+
 };
 
 ComponentTransform::~ComponentTransform()
@@ -45,7 +45,7 @@ void ComponentTransform::Disable()
 
 void ComponentTransform::Update() 
 {
-	//if (updateGlobalTrans) UpdateGlobalTransform();
+
 }
 
 void ComponentTransform::CleanUp()
@@ -124,8 +124,6 @@ void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
 	{
 		owner->children.at(i)->transform->UpdateGlobalTransform();
 	}
-	//UpdateGlobalTransform();
-	//UpdateEulerAngles();
 }
 
 

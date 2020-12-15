@@ -73,11 +73,9 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 				ResourceType type = GetTypefromString(jsonMeta.GetString("Type"));
 				Resource* resource = new Resource(type,node.path.c_str(), name.c_str(), UID);
 				resource->libraryFile = jsonMeta.GetString("Library file");
-					
+				if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene) App->scene->sceneUID = resource->UID;
 				if(resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
 				{
-
-					App->scene->sceneUID = resource->UID;
 					ArrayConfig resourceInModel = jsonMeta.GetArray("Resources in Models");
 					for (uint i = 0; i < resourceInModel.GetSize(); i++)
 					{

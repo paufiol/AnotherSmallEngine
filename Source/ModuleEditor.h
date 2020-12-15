@@ -2,6 +2,7 @@
 #define __ModuleEditor_H__
 #include "Module.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "PathNode.h"
 #include "Globals.h"
 #include "Timer.h"
 #include "Color.h"
@@ -39,6 +40,8 @@ public:
 	void SetupStyleFromHue();
 	void PlayPauseWindow();
 	void AssetExplorerWindow();
+	void RecursiveAssetTree(PathNode& assetFolder);
+	void AssetsExplorer(PathNode& assetFolder);
 
 	void GUIisHovered();
 
@@ -59,6 +62,9 @@ public:
 
 	std::vector<std::string> log_record;
 	GameObject* childObject = nullptr;
+
+	PathNode assetsFolder;
+	PathNode currentFolder;
 
 	char title[25];
 	char label[32];

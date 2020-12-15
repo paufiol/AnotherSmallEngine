@@ -13,11 +13,10 @@
 #include "ModuleResource.h"
 #include "ResourceScene.h"
 
-GameObject::GameObject(std::string name): name(name), active(true), 
+GameObject::GameObject(std::string name): name(name), active(true), parent(nullptr),
 UID(randomNum.GenerateRandomInt())
 {
 	AddComponent(new ComponentTransform(this));
-	this->parent = nullptr;	// May crash HERE, at the moment it's necesary
 	
 	aabb.SetNegativeInfinity();
 	obb.SetNegativeInfinity();
@@ -60,7 +59,6 @@ void GameObject::Update()
 		{
 			(*item)->Update();
 
-			float4x4 global_parent = float4x4::identity;
 			if (transform && transform->updatedtransform)
 			{
 				if (parent) 
@@ -96,14 +94,10 @@ void GameObject::CleanUp()
 void GameObject::SetParent(GameObject* _parent)
 {
 
-	if (this != nullptr && _parent != nullptr)
+	if (_parent != nullptr)
 	{
 		this->parent = _parent;
 		LOG("Game Object %s new parent: %s", this->name.c_str(), _parent->name.c_str());
-	}
-	else if (this == nullptr)
-	{
-		LOG("ERROR: Game Object %s is nullptr", this->name.c_str());
 	}
 	else if (_parent == nullptr)
 	{
@@ -218,7 +212,9 @@ void GameObject::EraseComponents()
 		for (uint i = 0; i < components.size(); ++i)
 		{
 			components[i]->CleanUp();
+			delete components[i];
 		}
+		components.clear();
 	}
 }
 

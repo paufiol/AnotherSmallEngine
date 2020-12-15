@@ -16,12 +16,11 @@ public:
 	bool updatedtransform = false;
 
 private:
-	float3		position = float3(0.f, 0.f, 0.f);
-	float3		scale = float3(1.f, 1.f, 1.f);
-	Quat		rotation = Quat::identity;
+	float3		position;
+	float3		scale;
+	Quat		rotation ;
 
 	float3		eulerRotation = float3(0.f, 0.f, 0.f);
-	float3		_eulerRotation = float3(0.f, 0.f, 0.f);
 
 	float4x4	local_transform;
 	float4x4	global_transform;
