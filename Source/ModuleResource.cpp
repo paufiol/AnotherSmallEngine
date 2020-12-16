@@ -346,11 +346,7 @@ void ModuleResources::SaveResource(Resource* resource)
 	//case(ResourceType::FOLDER): { size = Importer::Folders::Save((R_Folder*)resource, &buffer); break; }
 	case(ResourceType::Mesh): { size = Importer::MeshImporter::Save((ResourceMesh*)resource, &buffer); break; }
 	case(ResourceType::Texture): { size = Importer::TextureImporter::Save((ResourceTexture*)resource, &buffer); break; }
-	case(ResourceType::Material): 
-	{ 
-		size = Importer::MaterialsImporter::Save((ResourceMaterial*)resource, &buffer); 
-		break; 
-	}
+	case(ResourceType::Material): { size = Importer::MaterialsImporter::Save((ResourceMaterial*)resource, &buffer); break; }
 	case(ResourceType::Scene): { size = Importer::ModelImporter::Save((ResourceScene*)resource, &buffer);break; }
 	case(ResourceType::Model):{ size = Importer::ModelImporter::Save((ResourceScene*)resource, & buffer); break; }
 	}
@@ -379,9 +375,7 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 	{
 	case (ResourceType::Mesh):
 	{
-		
 		Importer::MeshImporter::Load((ResourceMesh*)tempResource, buffer);
-		
 		break;
 	}
 	case (ResourceType::Material):
@@ -487,4 +481,13 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 	}
 	
 	return "None";
+}
+
+Resource* ModuleResources::GetResourceFromUID(uint32 UID)
+{
+	Resource* resource;
+	std::map<uint32, Resource*>::iterator item = importedResources.find(UID);
+	if (item != importedResources.end()) resource = item->second;
+	
+	return resource;
 }

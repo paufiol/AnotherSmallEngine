@@ -134,20 +134,32 @@ void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* 
 	rMaterial->SetTexture(texture);
 }
 
-void Importer::TextureImporter::ImportTexture(ResourceTexture* rMaterial, const char* buffer, uint size)
+void Importer::TextureImporter::ImportTexture(ResourceTexture* rTexture, const char* buffer, uint size)
 {
 
 	if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 	{
-		LOG("Succesfully imported texture");
+		rTexture->id = ilutGLBindTexImage();
 	}
-	else
-	{
-		LOG("ERROR: Texture could not be loaded");
-	}
+	RELEASE_ARRAY(buffer);
+	
+	
+	
+	
+	
+	//if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+	//{
+	//	LOG("Succesfully imported texture");
+	//}
+	//else
+	//{
+	//	LOG("ERROR: Texture could not be loaded");
+	//}
+
+	//rTexture->id = ilutGLBindTexImage(); // This may have to be removed from here
 }
 
-uint64 Importer::TextureImporter::Save(const ResourceTexture* rMaterial, char** buffer)
+uint64 Importer::TextureImporter::Save(const ResourceTexture* rTexture, char** buffer)
 {
 	ilEnable(IL_FILE_OVERWRITE);
 
@@ -163,7 +175,6 @@ uint64 Importer::TextureImporter::Save(const ResourceTexture* rMaterial, char** 
 			*buffer = (char*)ILbuffer;
 		}
 	}
-
 
 
 	return size;

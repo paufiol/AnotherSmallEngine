@@ -30,6 +30,7 @@ public:
 	ResourceType GetTypeFromFile(const char* path) const;
 	ResourceType GetTypefromString(std::string) const;
 	std::string GetStringFromResource(Resource* resource);
+	Resource* GetResourceFromUID(uint32 UID);
 
 	Resource* CreateNewResource(const char* assetsFile, ResourceType type, const char* name = "", uint32 UID = 0);
 	void SaveMeta(Resource* resource);

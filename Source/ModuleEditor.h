@@ -2,6 +2,7 @@
 #define __ModuleEditor_H__
 #include "Module.h"
 #include "Dependencies/ImGui/imgui.h"
+#include "ResourceTexture.h"
 #include "PathNode.h"
 #include "Globals.h"
 #include "Timer.h"
@@ -39,6 +40,7 @@ public:
 
 	void SetupStyleFromHue();
 	void PlayPauseWindow();
+	void LoadIcons();
 	void AssetExplorerWindow();
 	void RecursiveAssetTree(PathNode& assetFolder);
 	void AssetsExplorer(PathNode& assetFolder);
@@ -65,6 +67,11 @@ public:
 
 	PathNode assetsFolder;
 	PathNode currentFolder;
+
+	ResourceTexture* modelIcon = nullptr;
+	//ResourceTexture defaultIcon;
+
+	//uint modelIcon;
 
 	char title[25];
 	char label[32];

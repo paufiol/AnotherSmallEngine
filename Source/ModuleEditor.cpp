@@ -10,17 +10,20 @@
 #include "ComponentTexture.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
+
 #include "ResourceScene.h"
 #include "Resource.h"
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
+#include "JsonConfig.h"
 #include "ImporterScene.h"
+#include "ImporterMaterials.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
 #include "Dependencies/ImGUI/imgui_impl_sdl.h"
 #include "Dependencies/ImGUI/imgui_impl_opengl3.h"
-
+#include "Dependencies/Devil/Include/ilut.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
 #include "PathNode.h"
 #include <map>
@@ -61,6 +64,8 @@ bool ModuleEditor::Start()
 	SDL_GetVersion(&version);
 	fpsCap = App->GetFpsCap();
 
+	//Load the icons into TextureResource
+	LoadIcons();
 
 	//Set Asset folder via FileSystem || This will go on a function
 	std::vector<std::string> ignore_ext;
@@ -336,6 +341,27 @@ void ModuleEditor::PlayPauseWindow()
 	ImGui::End();
 }
 
+void ModuleEditor::LoadIcons()
+{
+	modelIcon = new ResourceTexture();
+	char* buffer = nullptr;
+	uint size = App->fileSystem->Load("Assets/Icons/ModelIcon.png", &buffer);
+	if (size > 0)
+	{
+		//Importer::TextureImporter::ImportTexture(&modelIcon,buffer,size);
+		/*uint id = Importer::TextureImporter::Save(nullptr,&buffer);
+		Importer::TextureImporter::Load(&modelIcon, buffer);*/
+
+		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
+		{
+			modelIcon->id = ilutGLBindTexImage();
+		}
+		RELEASE_ARRAY(buffer);
+
+	}
+
+}
+
 void ModuleEditor::AssetExplorerWindow()
 {
 	
@@ -379,15 +405,51 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 	ImGui::Text(assetFolder.localPath.c_str());
 	ImGui::Separator();
 
-	ImGui::BeginChild(5);
-
+	ImGui::BeginChild(1);
 	for(uint i = 0; i < assetFolder.children.size(); i++)
 	{
-	ImGui::PushID(i);
-	ImGui::Text(assetFolder.children[i].localPath.c_str());
-	ImGui::PopID();
-	}
+		ImGui::PushID(i);
 
+		//Get Id from meta file and the Resource from that ID
+		std::string meta = assetFolder.children[i].path + ".meta";
+		char* buffer = nullptr;
+		uint size = App->fileSystem->Load(meta.c_str(), &buffer);
+		uint UID = 0;
+		if (size > 0)
+		{
+			UID = JsonConfig(buffer).GetNumber("UID");
+			Resource* resource = App->resources->GetResourceFromUID(UID);
+
+			ResourceTexture* textureIcon = (ResourceTexture*)resource;
+			char* buffer = nullptr;
+			uint size = App->fileSystem->Load(textureIcon->libraryFile.c_str(), &buffer);
+			Importer::TextureImporter::Load(textureIcon, buffer, size);
+
+			RELEASE_ARRAY(buffer);
+
+			switch (resource->type)
+			{
+			case ResourceType::Model:
+				//ImGui::Image((ImTextureID)&(modelIcon).id, ImVec2(90, 90));
+				break;
+			case ResourceType::Scene:
+				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(90, 90));
+				break;
+			case ResourceType::Texture:
+				
+				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(90, 90));
+				break;
+			case ResourceType::None:
+
+				break;
+
+			}
+		}
+
+		ImGui::Text(assetFolder.children[i].localPath.c_str());
+		ImGui::PopID();
+	
+	}
 
 	ImGui::EndChild();
 

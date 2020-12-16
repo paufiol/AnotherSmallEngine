@@ -21,9 +21,9 @@ namespace Importer
 	namespace TextureImporter
 	{
 		void InitDevil();
-		void ImportTexture(ResourceTexture* rMaterial, const char* buffer, uint size);
-		uint64 Save(const ResourceTexture* rMaterial, char** buffer);
-		void Load(ResourceTexture* rMaterial, char* buffer, uint size);
+		void ImportTexture(ResourceTexture* rMaterial = nullptr, const char* buffer = nullptr, uint size = 0);
+		uint64 Save(const ResourceTexture* rMaterial = nullptr, char** buffer = nullptr);
+		void Load(ResourceTexture* rMaterial = nullptr, char* buffer = nullptr, uint size = 0);
 	}
 }
 #endif //__ImporterMaterials__
