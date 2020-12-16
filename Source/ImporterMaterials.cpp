@@ -141,7 +141,7 @@ void Importer::TextureImporter::ImportTexture(ResourceTexture* rTexture, const c
 	{
 		rTexture->id = ilutGLBindTexImage();
 	}
-	RELEASE_ARRAY(buffer);
+	//RELEASE_ARRAY(buffer);
 	
 	
 	

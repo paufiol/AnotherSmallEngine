@@ -42,7 +42,7 @@ public:
 	void PlayPauseWindow();
 	void LoadIcons();
 	void AssetExplorerWindow();
-	void RecursiveAssetTree(PathNode& assetFolder);
+	void AssetsTree(PathNode& assetFolder);
 	void AssetsExplorer(PathNode& assetFolder);
 
 	void GUIisHovered();
@@ -69,9 +69,11 @@ public:
 	PathNode currentFolder;
 
 	ResourceTexture* modelIcon = nullptr;
-	//ResourceTexture defaultIcon;
+	ResourceTexture* defaultIcon = nullptr;
+	ResourceTexture* folderIcon = nullptr;
 
-	//uint modelIcon;
+
+	uint iconSize = 80;
 
 	char title[25];
 	char label[32];

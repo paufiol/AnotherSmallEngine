@@ -344,38 +344,38 @@ void ModuleEditor::PlayPauseWindow()
 void ModuleEditor::LoadIcons()
 {
 	modelIcon = new ResourceTexture();
+	defaultIcon = new ResourceTexture();
+	folderIcon = new ResourceTexture();
+
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load("Assets/Icons/ModelIcon.png", &buffer);
-	if (size > 0)
-	{
-		//Importer::TextureImporter::ImportTexture(&modelIcon,buffer,size);
-		/*uint id = Importer::TextureImporter::Save(nullptr,&buffer);
-		Importer::TextureImporter::Load(&modelIcon, buffer);*/
+	if (size > 0) Importer::TextureImporter::ImportTexture(modelIcon, buffer, size);
+	RELEASE_ARRAY(buffer);
 
-		if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-		{
-			modelIcon->id = ilutGLBindTexImage();
-		}
-		RELEASE_ARRAY(buffer);
+	size = 0;
+	size = App->fileSystem->Load("Assets/Icons/ModelIcon.png", &buffer);
+	if (size > 0) Importer::TextureImporter::ImportTexture(defaultIcon, buffer, size);
+	RELEASE_ARRAY(buffer);
 
-	}
+	size = 0;
+	size = App->fileSystem->Load("Assets/Icons/FolderIcon.png", &buffer);
+	if (size > 0) Importer::TextureImporter::ImportTexture(folderIcon, buffer, size);
+	RELEASE_ARRAY(buffer);
+
 
 }
 
 void ModuleEditor::AssetExplorerWindow()
 {
-	
 	ImGui::Begin("Assets Tree");
-	RecursiveAssetTree(assetsFolder);
+	AssetsTree(assetsFolder);
 	ImGui::End();
 	ImGui::Begin("Assets Explorer");
 	AssetsExplorer(currentFolder);
 	ImGui::End();
-
-
 }
 
-void ModuleEditor::RecursiveAssetTree(PathNode& assetFolder)
+void ModuleEditor::AssetsTree(PathNode& assetFolder)
 {
 	ImGuiTreeNodeFlags treeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen 
 		| ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -391,7 +391,7 @@ void ModuleEditor::RecursiveAssetTree(PathNode& assetFolder)
 			{
 				for (uint i = 0; i < assetFolder.children.size(); i++)
 				{
-					RecursiveAssetTree(assetFolder.children[i]);
+					AssetsTree(assetFolder.children[i]);
 				}
 				ImGui::TreePop();
 			}
@@ -406,25 +406,32 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 	ImGui::Separator();
 
 	ImGui::BeginChild(1);
+	uint row = 0;
+	uint column = 7;
+	uint offset = 50;
+	ImVec2 cursor = ImGui::GetCursorPos();
+
 	for(uint i = 0; i < assetFolder.children.size(); i++)
 	{
 		ImGui::PushID(i);
+
+
+		ImGui::SetCursorPosX((i - (row * column)) * (iconSize + offset) + offset);
+		ImGui::SetCursorPosY(row * (iconSize + offset));
 
 		//Get Id from meta file and the Resource from that ID
 		std::string meta = assetFolder.children[i].path + ".meta";
 		char* buffer = nullptr;
 		uint size = App->fileSystem->Load(meta.c_str(), &buffer);
 		uint UID = 0;
+
+		ImVec2 flipV = ImVec2(0.0f, 1.0f);
+		ImVec2 flipH = ImVec2(1.0f, 0.0f);
 		if (size > 0)
 		{
 			UID = JsonConfig(buffer).GetNumber("UID");
-			Resource* resource = App->resources->GetResourceFromUID(UID);
-
+			Resource* resource = App->resources->AccesResource(UID);
 			ResourceTexture* textureIcon = (ResourceTexture*)resource;
-			char* buffer = nullptr;
-			uint size = App->fileSystem->Load(textureIcon->libraryFile.c_str(), &buffer);
-			Importer::TextureImporter::Load(textureIcon, buffer, size);
-
 			RELEASE_ARRAY(buffer);
 
 			switch (resource->type)
@@ -433,24 +440,39 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 				//ImGui::Image((ImTextureID)&(modelIcon).id, ImVec2(90, 90));
 				break;
 			case ResourceType::Scene:
-				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(90, 90));
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+
 				break;
 			case ResourceType::Texture:
-				
-				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(90, 90));
+				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+
 				break;
-			case ResourceType::None:
+			case ResourceType::Folder:
+				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 
 				break;
 
 			}
 		}
+		else
+		{
+			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+
+			//ImGui::Image((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+			//if(ImGui::IsItemHovered()) 
+			//	ImGui::Image((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, ImVec4(0.3, 0.3, 0.3, 1)); //On hover the position goes wild -> ????????
+		}
+
+		ImGui::SetCursorPosX((i - (row * column)) * (iconSize + offset) + offset);
+		ImGui::SetCursorPosY(row * (iconSize + offset) + iconSize + offset/5);
 
 		ImGui::Text(assetFolder.children[i].localPath.c_str());
+
+		if ((i + 1) % column == 0) row++;
+
 		ImGui::PopID();
 	
 	}
-
 	ImGui::EndChild();
 
 }
