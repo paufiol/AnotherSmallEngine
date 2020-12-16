@@ -232,7 +232,6 @@
     <ClCompile Include="Random.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp" />
     <ClCompile Include="ModuleResource.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -256,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="Dependencies\ImGuizmo\ImSequencer.cpp">
       <Filter>Dependencies\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>GameObjects\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

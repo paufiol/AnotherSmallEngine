@@ -8,10 +8,12 @@
 #include "Component.h"
 #include "ComponentCamera.h"
 #include "ComponentTexture.h"
+#include "ComponentTexture.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 
 #include "ResourceScene.h"
+#include "ResourceMaterial.h"
 #include "Resource.h"
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
@@ -112,6 +114,7 @@ update_status ModuleEditor::Update(float dt)
 	HierarchyWindow();
 	InspectorWindow();
 	AssetExplorerWindow();
+	DropTargetWindow();
 	PlayPauseWindow();
 
 	
@@ -346,20 +349,26 @@ void ModuleEditor::LoadIcons()
 	modelIcon = new ResourceTexture();
 	defaultIcon = new ResourceTexture();
 	folderIcon = new ResourceTexture();
+	returnIcon = new ResourceTexture();
 
 	char* buffer = nullptr;
-	uint size = App->fileSystem->Load("Assets/Icons/ModelIcon.png", &buffer);
+	uint size = App->fileSystem->Load("Assets/Icons/FBX_Icon_x4.png", &buffer);
 	if (size > 0) Importer::TextureImporter::ImportTexture(modelIcon, buffer, size);
 	RELEASE_ARRAY(buffer);
 
 	size = 0;
-	size = App->fileSystem->Load("Assets/Icons/ModelIcon.png", &buffer);
+	size = App->fileSystem->Load("Assets/Icons/ASE_Icon_x4.png", &buffer);
 	if (size > 0) Importer::TextureImporter::ImportTexture(defaultIcon, buffer, size);
 	RELEASE_ARRAY(buffer);
 
 	size = 0;
-	size = App->fileSystem->Load("Assets/Icons/FolderIcon.png", &buffer);
+	size = App->fileSystem->Load("Assets/Icons/Folder_Icon_x4.png", &buffer);
 	if (size > 0) Importer::TextureImporter::ImportTexture(folderIcon, buffer, size);
+	RELEASE_ARRAY(buffer);
+
+	size = 0;
+	size = App->fileSystem->Load("Assets/Icons/ReturnIcon.png", &buffer);
+	if (size > 0) Importer::TextureImporter::ImportTexture(returnIcon, buffer, size);
 	RELEASE_ARRAY(buffer);
 
 
@@ -402,36 +411,48 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 
 void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 {
-	ImGui::Text(assetFolder.localPath.c_str());
-	ImGui::Separator();
+	if(assetFolder.path == "Assets") previousFolder = assetFolder;
 
-	ImGui::BeginChild(1);
 	uint row = 0;
 	uint column = 7;
 	uint offset = 50;
 	ImVec2 cursor = ImGui::GetCursorPos();
+	ImVec2 flipV = ImVec2(0.0f, 1.0f);
+	ImVec2 flipH = ImVec2(1.0f, 0.0f);
+
+	ImGui::Text(assetFolder.localPath.c_str());
+
+	ImGui::SameLine();
+
+	ImGui::SetCursorPosX(iconSize + offset * 17);
+
+	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH);
+
+	if (ImGui::IsItemClicked()) nextFolder = previousFolder;
+
+	ImGui::Separator();
+
+	ImGui::BeginChild(1);
+
 
 	for(uint i = 0; i < assetFolder.children.size(); i++)
 	{
 		ImGui::PushID(i);
 
-
-		ImGui::SetCursorPosX((i - (row * column)) * (iconSize + offset) + offset);
-		ImGui::SetCursorPosY(row * (iconSize + offset));
-
 		//Get Id from meta file and the Resource from that ID
 		std::string meta = assetFolder.children[i].path + ".meta";
 		char* buffer = nullptr;
 		uint size = App->fileSystem->Load(meta.c_str(), &buffer);
-		uint UID = 0;
+		uint32 UID = 0;
 
-		ImVec2 flipV = ImVec2(0.0f, 1.0f);
-		ImVec2 flipH = ImVec2(1.0f, 0.0f);
+		ImGui::SetCursorPosX((i - (row * column)) * (iconSize + offset) + offset);
+		ImGui::SetCursorPosY(row * (iconSize + offset));
+
 		if (size > 0)
 		{
 			UID = JsonConfig(buffer).GetNumber("UID");
-			Resource* resource = App->resources->AccesResource(UID);
-			ResourceTexture* textureIcon = (ResourceTexture*)resource;
+			resource = App->resources->AccesResource(UID);
+			textureIcon = (ResourceTexture*)resource;
 			RELEASE_ARRAY(buffer);
 
 			switch (resource->type)
@@ -463,6 +484,38 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			//	ImGui::Image((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, ImVec4(0.3, 0.3, 0.3, 1)); //On hover the position goes wild -> ????????
 		}
 
+
+
+		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)
+		{
+			nextFolder = assetFolder.children[i];
+		}
+		
+
+		if (ImGui::BeginDragDropSource())
+		{
+			show_dropTarget_window = true;
+			ImGui::SetDragDropPayload("Asset", &UID, sizeof(uint32));
+
+			switch (resource->type)
+			{
+			case ResourceType::Model:
+				//ImGui::Image((ImTextureID)&(modelIcon).id, ImVec2(90, 90));
+				break;
+			case ResourceType::Scene:
+				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+
+				break;
+			case ResourceType::Texture:
+				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+
+				break;
+			}
+
+
+			ImGui::EndDragDropSource();
+		}
+
 		ImGui::SetCursorPosX((i - (row * column)) * (iconSize + offset) + offset);
 		ImGui::SetCursorPosY(row * (iconSize + offset) + iconSize + offset/5);
 
@@ -471,9 +524,69 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		if ((i + 1) % column == 0) row++;
 
 		ImGui::PopID();
-	
 	}
+
 	ImGui::EndChild();
+
+	if (nextFolder.path != "")
+		assetFolder = nextFolder;
+}
+
+void ModuleEditor::DropTargetWindow()
+{
+	ImGuiContext& dropTarget = *GImGui;
+	if (dropTarget.DragDropActive && show_dropTarget_window)
+	{
+		ImGui::SetNextWindowSize({ 300, 300 });
+		ImGui::SetNextWindowPos({ 195, 310 });
+
+		ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		if (!ImGui::Begin("DropTarget", &show_dropTarget_window, flags))
+		{
+			ImGui::End();
+			return;
+		}
+		else
+		{
+			if (ImGui::BeginDragDropTarget())
+			{
+				ResourceMaterial* material = new ResourceMaterial();
+				ComponentTexture* compTexture;
+				//uint32 UID = *(const uint32*)ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery);
+				if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
+				{
+					uint32 UID = *(const uint32*)payload->Data;
+					Resource* resource = App->resources->AccesResource(UID);
+
+					switch (resource->type)
+					{
+					case ResourceType::Model:
+						App->resources->LoadResource(UID, resource);
+						break;
+					case ResourceType::Scene:
+						App->resources->LoadResource(UID, resource);
+						break;
+					case ResourceType::Texture:
+						
+						material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID, resource));
+						compTexture  = (ComponentTexture*)App->scene->selected_object->GetComponent(ComponentType::Material);
+						if(compTexture) compTexture->SetMaterial(material);
+
+						// Else make a pop up Error
+						
+					default:
+						break;
+					}
+
+				}
+				ImGui::EndDragDropTarget();
+				show_dropTarget_window = false;
+			}
+		}
+
+		ImGui::End();
+	}
+	
 
 }
 

@@ -11,7 +11,8 @@
 using namespace std;
 
 class GameObject;
-
+class Resource;
+class ResourceTexture;
 
 class ModuleEditor : public Module 
 {
@@ -44,6 +45,7 @@ public:
 	void AssetExplorerWindow();
 	void AssetsTree(PathNode& assetFolder);
 	void AssetsExplorer(PathNode& assetFolder);
+	void DropTargetWindow();
 
 	void GUIisHovered();
 
@@ -71,7 +73,13 @@ public:
 	ResourceTexture* modelIcon = nullptr;
 	ResourceTexture* defaultIcon = nullptr;
 	ResourceTexture* folderIcon = nullptr;
+	ResourceTexture* returnIcon = nullptr;
 
+	PathNode nextFolder;
+	PathNode previousFolder;
+
+	Resource* resource;
+	ResourceTexture* textureIcon;
 
 	uint iconSize = 80;
 
@@ -89,6 +97,7 @@ public:
 	bool show_console_window = true;
 	bool show_hierarchy_window = true;
 	bool show_inspector_window = true;
+	bool show_dropTarget_window = false;
 
 	bool depthtest = false;
 	bool cullface = false;
@@ -113,6 +122,7 @@ public:
 	bool isUserTyping = false; 
 
 	bool enableObject = true;
+
 
 	Color frustumColor = Color(1.0f, 1.0f, 0.2f, 0.75f);
 	Color NormalColor = Color(.8f, .8f, 0.0f, 0.75f);
