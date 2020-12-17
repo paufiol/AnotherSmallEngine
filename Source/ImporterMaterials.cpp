@@ -2,11 +2,12 @@
 
 #include "Application.h"
 #include "ModuleFileSystem.h"
+#include "JsonConfig.h"
 
 #include "ImporterMaterials.h"
 
 #include "GameObject.h"
-
+#include "PathNode.h"
 #include "ComponentTexture.h"
 
 #include "ModuleResource.h"
@@ -57,27 +58,13 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, Resourc
 
 		texName = "Assets/Textures/" + texName + "." + texExtension;
 
+		if (uint64 UID = App->resources->ImportFile(texName.c_str()))
+		{
+			ResourceTexture* texture = (ResourceTexture*)App->resources->GetResourceInMemory(UID);
+			resourceMaterial->SetTexture(texture);
+			resourceMaterial->SetPath(texName);
+		}
 
-
-
-		// Need to fin the Texture UID -> Get the resource load it and attach it to the material
-		// Then compare the name and assign
-
-
-
-
-		char* buffer = nullptr;
-		uint64 size =  App->fileSystem->Load(texName.c_str(), &buffer);
-
-
-
-		//This shouldn't be here (Works for now)
-		ResourceTexture* tempTex = new ResourceTexture();
-
-		Importer::TextureImporter::Load(tempTex, buffer, size);
-
-		resourceMaterial->SetTexture(tempTex);
-		resourceMaterial->SetPath(texName);
 	}
 	else
 	{
@@ -113,8 +100,7 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	memcpy(cursor, &rMaterial->GetTexture()->UID, bytes);
 	cursor += bytes;
 
-	/*std::string path = MATERIALS_PATH + std::to_string(rMaterial->GetUID()) + MATERIAL_EXTENSION;
-	App->fileSystem->Save(path.c_str(), *buffer, size);*/
+
 
 	return size;
 }
@@ -145,15 +131,21 @@ void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* 
 	memcpy(&UID, cursor, bytes);
 	cursor += bytes;
 
+	
 	char* tempBuffer = nullptr;
 	Resource* resource = App->resources->GetResourceInMemory(UID);
-	
-	uint64 size = App->fileSystem->Load(resource->libraryFile.c_str(), &tempBuffer);
-
-
-	Importer::TextureImporter::Load(rMaterial->GetTexture(), tempBuffer, size);
-	//ResourceTexture* texture = new ResourceTexture(textureID, rMaterial->GetAssetsFile());
-	//rMaterial->SetTexture(texture);
+	ResourceTexture* texture = (ResourceTexture*)resource;
+	if (texture != nullptr)
+	{
+		rMaterial->SetTexture(texture);
+		uint64 size = App->fileSystem->Load(texture->libraryFile.c_str(), &tempBuffer);
+		Importer::TextureImporter::Load(rMaterial->GetTexture(), tempBuffer, size);
+	}
+	else
+	{
+		texture = new ResourceTexture();
+		rMaterial->SetTexture(texture);
+	}
 }
 
 void Importer::TextureImporter::ImportTexture(ResourceTexture* rTexture, const char* buffer, uint size)
@@ -163,22 +155,7 @@ void Importer::TextureImporter::ImportTexture(ResourceTexture* rTexture, const c
 	{
 		rTexture->id = ilutGLBindTexImage();
 	}
-	//RELEASE_ARRAY(buffer);
-	
-	
-	
-	
-	
-	//if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-	//{
-	//	LOG("Succesfully imported texture");
-	//}
-	//else
-	//{
-	//	LOG("ERROR: Texture could not be loaded");
-	//}
 
-	//rTexture->id = ilutGLBindTexImage(); // This may have to be removed from here
 }
 
 uint64 Importer::TextureImporter::Save(const ResourceTexture* rTexture, char** buffer)
