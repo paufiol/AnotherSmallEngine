@@ -61,7 +61,7 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, Resourc
 
 
 		// Need to fin the Texture UID -> Get the resource load it and attach it to the material
-
+		// Then compare the name and assign
 
 
 

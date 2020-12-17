@@ -208,6 +208,14 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 			
 		ResourceMaterial* resourceMaterial = (ResourceMaterial*)CreateNewResource(scene->GetAssetsFile().c_str(), ResourceType::Material, aiScene->mMeshes[i]->mName.C_Str());
 
+		//std::vector<std::string> ignore_ext;
+		//ignore_ext.push_back("meta");
+		//PathNode texFolder = App->fileSystem->GetAllFiles(TEXTURES_PATH, nullptr, &ignore_ext);
+
+		//for (uint i = 0; i < texFolder.children.size(); i++)
+		//{
+		//	uint32 UID = std::to_integer(texFolder.children[i].localPath.c_str());
+		//}
 
 		Importer::MaterialsImporter::ImportMaterial(aiScene->mMaterials[i], resourceMaterial);
 		SaveResource(resourceMaterial);
