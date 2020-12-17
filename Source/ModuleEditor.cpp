@@ -365,7 +365,7 @@ void ModuleEditor::LoadIcons()
 	RELEASE_ARRAY(buffer);
 
 	size = 0;
-	size = App->fileSystem->Load("Assets/Icons/ReturnIcon.png", &buffer);
+	size = App->fileSystem->Load("Assets/Icons/Return_Icon_x1.png", &buffer);
 	if (size > 0) Importer::TextureImporter::ImportTexture(returnIcon, buffer, size);
 	RELEASE_ARRAY(buffer);
 
@@ -424,7 +424,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::SetCursorPosX(iconSize + offset * 17);
 
-	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH);
+	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.9f));
 
 	if (ImGui::IsItemClicked()) 
 		nextFolder = previousFolder;
@@ -461,31 +461,32 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 				break;
 			case ResourceType::Scene:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 
 				break;
 			case ResourceType::Texture:
-				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 
 				break;
 			case ResourceType::Folder:
-				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(1.0f,0,0,1.0f), ImVec4(1.0f, 0, 0, 1.0f));
+				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+
+				break;
+			default:
+
 
 				break;
 			}
 		}
 		else
 		{
-			//Only this case is used now? Switch above never enters for Resource::Folder? 
-			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(.3f, 1.0f, 1.0f, 0.5f));
-
+			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 		}
 
 		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)
 		{
 			nextFolder = assetFolder.children[i];
 		}
-		
 
 		if (ImGui::BeginDragDropSource())
 		{
