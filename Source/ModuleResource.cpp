@@ -43,7 +43,7 @@ void ModuleResources::LoadAssets()
 	std::vector<std::string> extension;
 	extension.push_back("meta");
 	uint32 modelFolder = 0;
-	PathNode models = App->fileSystem->GetAllFiles(ASSETS_FOLDER, nullptr, &extension);
+	PathNode models = App->fileSystem->GetAllFiles("Assets", nullptr, &extension);
 	IterateAssets(models, modelFolder);
 	
 }
@@ -64,7 +64,7 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 			if (iterator != importedResources.end())
 			{
 				ID = iterator->first;
-				ImportFile(node.path.c_str()); //Not sure if this is the right approach
+				//ImportFile(node.path.c_str()); //Not sure if this is the right approach
 			}
 			else
 			{
@@ -208,14 +208,6 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 			
 		ResourceMaterial* resourceMaterial = (ResourceMaterial*)CreateNewResource(scene->GetAssetsFile().c_str(), ResourceType::Material, aiScene->mMeshes[i]->mName.C_Str());
 
-		//std::vector<std::string> ignore_ext;
-		//ignore_ext.push_back("meta");
-		//PathNode texFolder = App->fileSystem->GetAllFiles(TEXTURES_PATH, nullptr, &ignore_ext);
-
-		//for (uint i = 0; i < texFolder.children.size(); i++)
-		//{
-		//	uint32 UID = std::to_integer(texFolder.children[i].localPath.c_str());
-		//}
 
 		Importer::MaterialsImporter::ImportMaterial(aiScene->mMaterials[i], resourceMaterial);
 		SaveResource(resourceMaterial);
@@ -352,7 +344,8 @@ void ModuleResources::SaveResource(Resource* resource)
 
 	if (size > 0)
 	{
-		if(resource->type != ResourceType::Mesh && resource->type != ResourceType::Material) SaveMeta(resource);
+		if(resource->type != ResourceType::Mesh && resource->type != ResourceType::Material) 
+			SaveMeta(resource);
 		App->fileSystem->Save(resource->GetLibraryFile().c_str(), buffer, size);
 
 		//RELEASE_ARRAY(buffer);
@@ -487,7 +480,7 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 
 Resource* ModuleResources::GetResourceInMemory(uint32 UID)
 {
-	Resource* resource;
+	Resource* resource = nullptr;
 	std::map<uint32, Resource*>::iterator item = importedResources.find(UID);
 	if (item != importedResources.end()) resource = item->second;
 	
