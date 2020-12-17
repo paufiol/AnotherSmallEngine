@@ -94,11 +94,6 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 				
 				importedResources[resource->UID] = resource;
 				ID = resource->UID;
-				if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
-				{
-					
-					LoadResource(ID, resource); //To delete once we have the imgui window
-				}
 			}
 			
 		}
@@ -158,13 +153,11 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 		Importer::TextureImporter::ImportTexture((ResourceTexture*)resource, buffer, fileSize);
 		SaveResource((ResourceTexture*)resource);
 		importedResources[resource->UID] = resource;
-		LoadResource(resource->GetUID(), resource);
+		//LoadResource(resource->UID);
 		break;
 	case ResourceType::Scene: 
 		App->scene->sceneLibraryPath = resource->libraryFile;
-
 		LoadScene(buffer, fileSize, (ResourceScene*)resource);
-		SaveResource((ResourceScene*)resource);
 
 		break;
 	case ResourceType::Model:
@@ -172,8 +165,6 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 		LoadScene(buffer, fileSize, (ResourceScene*)resource);
 		SaveResource((ResourceScene*)resource);
 
-		//TODO: LOAD THE MODEL/SCENE This is here for now
-		LoadResource(resource->GetUID(), resource);
 		break;
 
 	}
@@ -203,7 +194,6 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 		}
 		aiScene->mMeshes[i]->mName = name;
 		ResourceMesh* resourceMesh = (ResourceMesh*)CreateNewResource(scene->GetAssetsFile().c_str(), ResourceType::Mesh, aiScene->mMeshes[i]->mName.C_Str());
-		
 		Importer::MeshImporter::LoadMeshes(resourceMesh, aiScene->mMeshes[i]);
 		SaveResource(resourceMesh);
 
@@ -221,6 +211,7 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 
 		Importer::MaterialsImporter::ImportMaterial(aiScene->mMaterials[i], resourceMaterial);
 		SaveResource(resourceMaterial);
+		//SaveResource(resourceMaterial->GetTexture());
 		materials.push_back(resourceMaterial->GetUID());
 		scene->resourcesInModels.push_back(resourceMaterial->GetUID());
 	}
@@ -360,8 +351,17 @@ void ModuleResources::SaveResource(Resource* resource)
 	}
 }
 
-Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
+Resource* ModuleResources::LoadResource(uint32 UID)
 {
+	
+	Resource* resource = nullptr;
+	resource = GetResource(UID);
+	if (resource) return resource;
+	else 
+	{
+		resource = GetResourceInMemory(UID);
+	}
+
 	Resource* tempResource = CreateNewResource(resource->assetsFile.c_str(),resource->GetType(),resource->name.c_str(),resource->UID);
 	char* buffer = nullptr;
 	uint size = App->fileSystem->Load(resource->GetLibraryFile().c_str(), &buffer);
@@ -397,23 +397,17 @@ Resource* ModuleResources::LoadResource(uint32 UID, Resource* resource)
 		Importer::TextureImporter::Load((ResourceTexture*)tempResource, buffer,size);
 		break;
 	}
-	
+
 	return tempResource;
 }
 
-Resource* ModuleResources::AccesResource(uint32 UID)
+Resource* ModuleResources::GetResource(uint32 UID)
 {
 	LOG("Loading: %d", UID);
-
 	std::map<uint32, Resource*>::iterator it = resources.find(UID);
 	if (it != resources.end())
 	{
 		return it->second;
-	}
-	std::map<uint32, Resource*>::iterator _it = importedResources.find(UID);
-	if (_it != importedResources.end())
-	{
-		return LoadResource(UID,_it->second);
 	}
 	return nullptr;
 }
@@ -483,7 +477,7 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 	return "None";
 }
 
-Resource* ModuleResources::GetResourceFromUID(uint32 UID)
+Resource* ModuleResources::GetResourceInMemory(uint32 UID)
 {
 	Resource* resource;
 	std::map<uint32, Resource*>::iterator item = importedResources.find(UID);

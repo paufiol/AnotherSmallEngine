@@ -225,11 +225,9 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		if (meshUID != 0)
 		{
 			ComponentMesh* tempCompMesh = new ComponentMesh(tempGameObject);
-			ResourceMesh* tempResourceMesh = (ResourceMesh*)App->resources->AccesResource(meshUID);	
+			ResourceMesh* tempResourceMesh = (ResourceMesh*)App->resources->GetResourceInMemory(meshUID);	
 			tempCompMesh->SetMesh(tempResourceMesh);
 			tempGameObject->AddComponent(tempCompMesh);
-			//tempCompMesh->SetResourceID(meshUID);
-			//Link resource with component
 
 
 		}
@@ -237,7 +235,13 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		{
 			ComponentTexture* tempCompMaterial = new ComponentTexture(tempGameObject);
 
-			ResourceMaterial* tempResourceMaterial = (ResourceMaterial*)App->resources->AccesResource(materialUID);
+			//std::string path = MATERIALS_PATH + std::to_string(materialUID);
+			//char* buffer = nullptr;
+			//uint size = App->fileSystem->Load(path.c_str(), &buffer);
+
+			Resource* resource = App->resources->GetResourceInMemory(materialUID);
+
+			ResourceMaterial* tempResourceMaterial = (ResourceMaterial*)App->resources->LoadResource(resource->UID);
 
 			tempCompMaterial->SetMaterial(tempResourceMaterial);
 			tempGameObject->AddComponent(tempCompMaterial);

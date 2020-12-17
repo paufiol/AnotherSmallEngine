@@ -78,8 +78,8 @@ public:
 	PathNode nextFolder;
 	PathNode previousFolder;
 
-	Resource* resource;
-	ResourceTexture* textureIcon;
+	Resource* resource = nullptr;
+	ResourceTexture* textureIcon = nullptr;
 
 	uint iconSize = 80;
 

@@ -39,9 +39,6 @@ void Importer::TextureImporter::InitDevil()
 
 void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, ResourceMaterial* resourceMaterial)
 {
-
-	
-
 	aiColor4D	color;
 	aiString	texPath;
 	aiString	matName;
@@ -59,6 +56,15 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, Resourc
 		App->fileSystem->SplitFilePath(texPath.C_Str(), nullptr, &texName, &texExtension);
 
 		texName = "Assets/Textures/" + texName + "." + texExtension;
+
+
+
+
+		// Need to fin the Texture UID -> Get the resource load it and attach it to the material
+
+
+
+
 
 		char* buffer = nullptr;
 		uint64 size =  App->fileSystem->Load(texName.c_str(), &buffer);
@@ -88,7 +94,7 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	char* cursor;
 	uint bytes;
 
-	size = sizeof(unsigned long long) + sizeof(float) * 4;
+	size = sizeof(unsigned long long) + sizeof(float) * 4 + sizeof(uint32);
 
 	*buffer = new char[size];
 	cursor = *buffer;
@@ -101,6 +107,10 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	float color[4]{ rMaterial->GetColor().r, rMaterial->GetColor().g, rMaterial->GetColor().b, rMaterial->GetColor().a };
 	bytes = sizeof(float) * 4;
 	memcpy(cursor, color, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(uint32);
+	memcpy(cursor, &rMaterial->GetTexture()->UID, bytes);
 	cursor += bytes;
 
 	/*std::string path = MATERIALS_PATH + std::to_string(rMaterial->GetUID()) + MATERIAL_EXTENSION;
@@ -130,8 +140,20 @@ void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* 
 	rMaterial->SetColor(_color);
 	//rMaterial->SetPath(rMaterial->GetAssetsFile());
 
-	ResourceTexture* texture = new ResourceTexture(textureID, rMaterial->GetAssetsFile());
-	rMaterial->SetTexture(texture);
+	uint32 UID;
+	bytes = sizeof(uint32);
+	memcpy(&UID, cursor, bytes);
+	cursor += bytes;
+
+	char* tempBuffer = nullptr;
+	Resource* resource = App->resources->GetResourceInMemory(UID);
+	
+	uint64 size = App->fileSystem->Load(resource->libraryFile.c_str(), &tempBuffer);
+
+
+	Importer::TextureImporter::Load(rMaterial->GetTexture(), tempBuffer, size);
+	//ResourceTexture* texture = new ResourceTexture(textureID, rMaterial->GetAssetsFile());
+	//rMaterial->SetTexture(texture);
 }
 
 void Importer::TextureImporter::ImportTexture(ResourceTexture* rTexture, const char* buffer, uint size)

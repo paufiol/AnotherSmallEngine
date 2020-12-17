@@ -428,7 +428,8 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH);
 
-	if (ImGui::IsItemClicked()) nextFolder = previousFolder;
+	if (ImGui::IsItemClicked()) 
+		nextFolder = previousFolder;
 
 	ImGui::Separator();
 
@@ -451,14 +452,15 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		if (size > 0)
 		{
 			UID = JsonConfig(buffer).GetNumber("UID");
-			resource = App->resources->AccesResource(UID);
+			resource = App->resources->GetResourceInMemory(UID);
+			if(resource->type == ResourceType::Texture) App->resources->LoadResource(UID);
 			textureIcon = (ResourceTexture*)resource;
 			RELEASE_ARRAY(buffer);
 
 			switch (resource->type)
 			{
 			case ResourceType::Model:
-				//ImGui::Image((ImTextureID)&(modelIcon).id, ImVec2(90, 90));
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
 			case ResourceType::Scene:
 				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
@@ -479,9 +481,6 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		{
 			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 
-			//ImGui::Image((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
-			//if(ImGui::IsItemHovered()) 
-			//	ImGui::Image((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, ImVec4(0.3, 0.3, 0.3, 1)); //On hover the position goes wild -> ????????
 		}
 
 
@@ -556,19 +555,19 @@ void ModuleEditor::DropTargetWindow()
 				if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
 				{
 					uint32 UID = *(const uint32*)payload->Data;
-					Resource* resource = App->resources->AccesResource(UID);
+					Resource* resource = App->resources->GetResourceInMemory(UID);
 
 					switch (resource->type)
 					{
 					case ResourceType::Model:
-						App->resources->LoadResource(UID, resource);
+						App->resources->LoadResource(UID);
 						break;
 					case ResourceType::Scene:
-						App->resources->LoadResource(UID, resource);
+						App->resources->LoadResource(UID);
 						break;
 					case ResourceType::Texture:
 						
-						material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID, resource));
+						material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
 						compTexture  = (ComponentTexture*)App->scene->selected_object->GetComponent(ComponentType::Material);
 						if(compTexture) compTexture->SetMaterial(material);
 
