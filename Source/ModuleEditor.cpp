@@ -253,6 +253,8 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImVec4 col_back = ImColor::HSV(hue / 255.f, col_back_sat, col_back_val);
 	ImVec4 col_area = ImColor::HSV(hue / 255.f, col_area_sat, col_area_val);
 
+	ExplorerIconsTint = ImVec4(col_main.x + 0.2f, col_main.y + 0.2f, col_main.z+ 0.2f, 1.0f);
+
 	style.Colors[ImGuiCol_Text] = ImVec4(col_text.x, col_text.y, col_text.z, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(col_text.x, col_text.y, col_text.z, 0.58f);
 	style.Colors[ImGuiCol_WindowBg] = ImVec4(col_back.x, col_back.y, col_back.z, 1.00f);
@@ -402,7 +404,6 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 				}
 				ImGui::TreePop();
 			}
-
 		}
 	}
 }
@@ -420,11 +421,11 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::Text(assetFolder.localPath.c_str());
 
-	ImGui::SameLine();
+	ImGui::SameLine(ImGui::GetWindowWidth()-30);
 
-	ImGui::SetCursorPosX(iconSize + offset * 17);
+	//ImGui::SetCursorPosX(iconSize + offset * 17);
 
-	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.9f));
+	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 	if (ImGui::IsItemClicked()) 
 		nextFolder = previousFolder;
@@ -458,18 +459,18 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			switch (resource->type)
 			{
 			case ResourceType::Model:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 				break;
 			case ResourceType::Scene:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 				break;
 			case ResourceType::Texture:
-				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 
 				break;
 			case ResourceType::Folder:
-				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 				break;
 			default:
@@ -480,7 +481,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		}
 		else
 		{
-			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 		}
 
 		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)

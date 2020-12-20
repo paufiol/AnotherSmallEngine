@@ -45,8 +45,8 @@ void ComponentMesh::CleanUp()
 	delete[] mesh->normals;
 	delete[] mesh->vertices;
 	delete[] mesh->texCoords;
-	//mesh->aabb. //Delete the AABB 
-	delete mesh;
+	//mesh->aabb; //Delete the AABB 
+	//delete mesh;
 }
 
 void ComponentMesh::DrawInspector() {

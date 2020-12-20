@@ -87,7 +87,9 @@ void GameObject::CleanUp()
 {
 	EraseAllChildren();
 	
-	EraseComponents();
+
+	//We don't want to delete the components, Mesh/Textures should not be deleted because they stay in memory (might have to delete something else somewhere) CHECK MEMORY LEAKS
+	//EraseComponents();
 
 }
 

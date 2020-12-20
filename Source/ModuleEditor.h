@@ -128,6 +128,7 @@ public:
 	Color NormalColor = Color(.8f, .8f, 0.0f, 0.75f);
 	Color AABBColor = Color(1.0f, 0.2f, 0.2f, 0.75f);
 	Color OBBColor = Color(0.2f, 0.2f, 1.0f, 0.75f);
+	ImVec4 ExplorerIconsTint;
 };
 
 #endif //__ModuleEditor_H__
