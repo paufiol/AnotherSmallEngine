@@ -64,7 +64,12 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 			if (iterator != importedResources.end())
 			{
 				ID = iterator->first;
-				//ImportFile(node.path.c_str()); //Not sure if this is the right approach
+				
+
+				uint32 LastMod = App->fileSystem->GetLastModTime(node.path.c_str());
+				uint32 configDate = jsonMeta.GetNumber("ModDate");
+				if (LastMod != configDate)
+					ImportFile(node.path.c_str());
 			}
 			else
 			{
@@ -239,9 +244,45 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 }
 
 
-void ModuleResources::ReleaseResource(uint32 UID)
+uint32 ModuleResources::CheckImportedResources(Resource* resource)
 {
+	std::map<uint32, Resource*>::iterator it = importedResources.begin();
+	for (; it != importedResources.end(); it++)
+	{
+		if (it->second->name == resource->name && it->second->type == resource->type && it->second->assetsFile == resource->assetsFile)
+		{
+			//if (resource->type != ResourceType::Folder) DeleteResource(it->second->UID);
+			return it->second->UID;
+		}
+	}
+	return 0;
 }
+
+
+void ModuleResources::UnloadResource(uint32 UID)
+{
+	std::map<uint32, Resource*>::iterator it = resources.find(UID);
+	if (it != resources.end())
+	{
+		RELEASE(it->second);
+		resources.erase(it);
+	}
+
+}
+
+void ModuleResources::DeleteResource(uint32 UID)
+{
+	UnloadResource(UID);
+
+	std::map<uint32, Resource*>::iterator it = importedResources.find(UID);
+	if (it != importedResources.end())
+	{
+		App->fileSystem->Remove(it->second->libraryFile.c_str());
+		importedResources.erase(it);
+	}
+
+}
+
 
 Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceType type, const char* name, uint32 UID)
 {
@@ -303,6 +344,10 @@ void ModuleResources::SaveMeta(Resource* resource)
 	jsonConfig.SetString("Extension", extension);
 	jsonConfig.SetString("Library file", resource->GetLibraryFile());
 	jsonConfig.SetString("Type", GetStringFromResource(resource).c_str());
+
+	uint64 modDate = App->fileSystem->GetLastModTime(resource->assetsFile.c_str());
+	jsonConfig.SetNumber("ModDate", modDate);
+
 	std::string path = resource->GetAssetsFile().append(".meta");
 	if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
 	{
