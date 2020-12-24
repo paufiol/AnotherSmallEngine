@@ -253,8 +253,6 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImVec4 col_back = ImColor::HSV(hue / 255.f, col_back_sat, col_back_val);
 	ImVec4 col_area = ImColor::HSV(hue / 255.f, col_area_sat, col_area_val);
 
-	ExplorerIconsTint = ImVec4(col_main.x + 0.2f, col_main.y + 0.2f, col_main.z+ 0.2f, 1.0f);
-
 	style.Colors[ImGuiCol_Text] = ImVec4(col_text.x, col_text.y, col_text.z, 1.00f);
 	style.Colors[ImGuiCol_TextDisabled] = ImVec4(col_text.x, col_text.y, col_text.z, 0.58f);
 	style.Colors[ImGuiCol_WindowBg] = ImVec4(col_back.x, col_back.y, col_back.z, 1.00f);
@@ -404,6 +402,7 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 				}
 				ImGui::TreePop();
 			}
+
 		}
 	}
 }
@@ -421,11 +420,11 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::Text(assetFolder.localPath.c_str());
 
-	ImGui::SameLine(ImGui::GetWindowWidth()-30);
+	ImGui::SameLine();
 
-	//ImGui::SetCursorPosX(iconSize + offset * 17);
+	ImGui::SetCursorPosX(iconSize + offset * 17);
 
-	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
+	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.9f));
 
 	if (ImGui::IsItemClicked()) 
 		nextFolder = previousFolder;
@@ -459,18 +458,18 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			switch (resource->type)
 			{
 			case ResourceType::Model:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 				break;
 			case ResourceType::Scene:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 
 				break;
 			case ResourceType::Texture:
-				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 
 				break;
 			case ResourceType::Folder:
-				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
+				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 
 				break;
 			default:
@@ -481,7 +480,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		}
 		else
 		{
-			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
+			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
 		}
 
 		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)
@@ -497,7 +496,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			switch (resource->type)
 			{
 			case ResourceType::Model:
-				//ImGui::Image((ImTextureID)&(modelIcon).id, ImVec2(90, 90));
+				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
 			case ResourceType::Scene:
 				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
@@ -531,54 +530,53 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 void ModuleEditor::DropTargetWindow()
 {
-	ImGuiContext& dropTarget = *GImGui;
-	if (dropTarget.DragDropActive && show_dropTarget_window)
+	if (show_dropTarget_window)
 	{
-		ImGui::SetNextWindowSize({ 300, 300 });
-		ImGui::SetNextWindowPos({ 195, 310 });
+		ImGui::SetNextWindowSize({ 200, 200 });
+		ImGui::SetNextWindowPos({ 300, 310 });
 
-		ImGuiWindowFlags flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-		if (!ImGui::Begin("DropTarget", &show_dropTarget_window, flags))
+		ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar |ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+
+		ImGui::Begin("DropTarget", &show_dropTarget_window, flags);
+		
+		ImGui::SetCursorPosX(50);
+		ImGui::SetCursorPosY(100);
+		ImGui::Text("Drop asset here:");
+
+		if (ImGui::BeginDragDropTarget())
 		{
-			ImGui::End();
-			return;
-		}
-		else
-		{
-			if (ImGui::BeginDragDropTarget())
+			ResourceMaterial* material = new ResourceMaterial();
+			ComponentTexture* compTexture;
+
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
 			{
-				ResourceMaterial* material = new ResourceMaterial();
-				ComponentTexture* compTexture;
-				//uint32 UID = *(const uint32*)ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery);
-				if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
+				uint32 UID = *(const uint32*)payload->Data;
+				Resource* resource = App->resources->GetResourceInMemory(UID);
+
+				switch (resource->type)
 				{
-					uint32 UID = *(const uint32*)payload->Data;
-					Resource* resource = App->resources->GetResourceInMemory(UID);
+				case ResourceType::Model:
+					App->resources->LoadResource(UID);
+					break;
+				case ResourceType::Scene:
+					App->resources->LoadResource(UID);
+					break;
+				case ResourceType::Texture:
 
-					switch (resource->type)
-					{
-					case ResourceType::Model:
-						App->resources->LoadResource(UID);
-						break;
-					case ResourceType::Scene:
-						App->resources->LoadResource(UID);
-						break;
-					case ResourceType::Texture:
-						
-						material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
-						compTexture  = (ComponentTexture*)App->scene->selected_object->GetComponent(ComponentType::Material);
-						if(compTexture) compTexture->SetMaterial(material);
+					material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
+					compTexture = (ComponentTexture*)App->scene->selected_object->GetComponent(ComponentType::Material);
+					if (compTexture) compTexture->SetMaterial(material);
 
-						// Else make a pop up Error
-						
-					default:
-						break;
-					}
+					
 
+				default:
+					break;
 				}
-				ImGui::EndDragDropTarget();
-				show_dropTarget_window = false;
+
+				// Else make a pop up Error
 			}
+			ImGui::EndDragDropTarget();
+			show_dropTarget_window = false;
 		}
 
 		ImGui::End();

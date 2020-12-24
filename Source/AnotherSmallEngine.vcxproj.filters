@@ -259,6 +259,12 @@
     <ClCompile Include="Component.cpp">
       <Filter>GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceShader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ImporterShader.cpp">
+      <Filter>Importers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
@@ -989,6 +995,12 @@
     </ClInclude>
     <ClInclude Include="Dependencies\ImGuizmo\ImZoomSlider.h">
       <Filter>Dependencies\ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceShader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ImporterShader.h">
+      <Filter>Importers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

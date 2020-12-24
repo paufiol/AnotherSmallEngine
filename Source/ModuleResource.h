@@ -23,7 +23,7 @@ public:
 	bool CleanUp() override;
 
 	void LoadAssets();
-	bool IterateAssets(PathNode node, uint32 ID);
+	bool IterateAssets(PathNode node, uint32 ID = 0);
 	void LoadScene(const char* buffer, uint size, ResourceScene* scene);
 	uint32 Find(const char* file);
 	uint32 ImportFile(const char* file_assets);
@@ -38,8 +38,10 @@ public:
 	Resource* LoadResource(uint32 UID);
 	Resource* GetResource(uint32 UID);
 	Resource* GetResourceInMemory(uint32 UID);
-	void ReleaseResource(uint32 UID);
-	//uint32 UnloadResource(uint32 ID);
+
+	uint32 CheckImportedResources(Resource* resource);
+	void UnloadResource(uint32 UID);
+	void DeleteResource(uint32 UID);
 
 	inline uint32 GenerateNewUID() { return randomNum.GenerateRandomInt(); }
 
