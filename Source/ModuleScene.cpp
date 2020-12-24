@@ -299,7 +299,8 @@ void ModuleScene::ImGuizmoHandling()
 		modelProjection = newMatrix.Transposed();
 		
 		
-		//Set Global Transform 
+		//Set Global Transform
+		//selected_transform->SetLocalTransform(modelProjection);
 		selected_transform->SetGlobalTransform(modelProjection);
 	}
 }

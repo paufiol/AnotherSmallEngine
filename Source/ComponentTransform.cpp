@@ -6,16 +6,16 @@
 #include "Dependencies/ImGUI/imgui.h"
 
 ComponentTransform::ComponentTransform(GameObject* owner) : 
-	Component(owner), position(float3(0.0f, 0.0f, 0.0f)), rotation(Quat::identity), scale(float3(1.0f, 1.0f, 1.0f))
+	Component(owner), local_position(float3(0.0f, 0.0f, 0.0f)), local_rotation(Quat::identity), local_scale(float3(1.0f, 1.0f, 1.0f))
 {
-	local_transform = float4x4::FromTRS(position, rotation, scale);
+	local_transform = float4x4::FromTRS(local_position, local_rotation, local_scale);
 	global_transform = Quat::identity;
 	type = ComponentType::Transform;
 
 };
 
 ComponentTransform::ComponentTransform(GameObject* owner, float3 position, float3 scale, Quat rotation) :
-	Component(owner), scale(scale), rotation(rotation), position(position)
+	Component(owner), local_scale(scale), local_rotation(rotation), local_position(position)
 {
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	global_transform = Quat::identity;
@@ -64,12 +64,11 @@ void ComponentTransform::UpdateTransform(float3 _position, float3 _scale, Quat _
 
 void ComponentTransform::UpdateLocalTransform()
 {
-	if (scale.x < 0.1f)  scale.x = 0.1f;
-	if (scale.y < 0.1f)  scale.y = 0.1f;
-	if (scale.z < 0.1f)  scale.z = 0.1f;
+	if (local_scale.x < 0.1f)  local_scale.x = 0.1f;
+	if (local_scale.y < 0.1f)  local_scale.y = 0.1f;
+	if (local_scale.z < 0.1f)  local_scale.z = 0.1f;
 	
-	
-	local_transform = float4x4::FromTRS(position, rotation, scale);
+	local_transform = float4x4::FromTRS(local_position, local_rotation, local_scale);
 	UpdateEulerAngles();
 	UpdateGlobalTransform();
 	updatedtransform = true;
@@ -78,11 +77,11 @@ void ComponentTransform::UpdateLocalTransform()
 void ComponentTransform::UpdateGlobalTransform()
 {
 	GameObject* tempParent = owner->parent;
-	
-	if (tempParent != nullptr  )
-	{ 
+	if (tempParent != nullptr)
+	{
 		global_transform = tempParent->transform->global_transform * local_transform;
 	}
+	else global_transform = local_transform;
 
 	UpdateTRS();
 
@@ -94,29 +93,56 @@ void ComponentTransform::UpdateGlobalTransform()
 
 void ComponentTransform::UpdateTRS()
 {
-	local_transform.Decompose(position, rotation, scale);
+	global_transform.Decompose(global_position, global_rotation, global_scale);
+	local_transform.Decompose(local_position, local_rotation, local_scale);
 	UpdateEulerAngles();
 }
 
 void ComponentTransform::UpdateEulerAngles()
 {
-	eulerRotation = rotation.ToEulerXYZ();
-	eulerRotation *= RADTODEG;
+	local_eulerRotation = local_rotation.ToEulerXYZ();
+	local_eulerRotation *= RADTODEG;
 }
 
-void ComponentTransform::SetEulerRotation(float3 eulerAngles)
+void ComponentTransform::SetLocalEulerRotation(float3 eulerAngles)
 {
 	float3 temp = eulerAngles  * DEGTORAD;
 	Quat quaternion = Quat::FromEulerXYZ(temp.x, temp.y, temp.z);
-	rotation =  quaternion;
-	eulerRotation = temp;
+	local_rotation =  quaternion;
+	local_eulerRotation = temp;
 	UpdateLocalTransform(); 
 	UpdateEulerAngles();
 }
 
+void ComponentTransform::SetGlobalEulerRotation(float3 eulerAngles)
+{
+	float3 temp = eulerAngles * DEGTORAD;
+	Quat quaternion = Quat::FromEulerXYZ(temp.x, temp.y, temp.z);
+	global_rotation = quaternion;
+	global_eulerRotation = temp;
+	UpdateLocalTransform();
+	UpdateEulerAngles();
+}
+
+
 void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
 {
 	global_transform = new_matrix;
+
+	//TEST
+	/*
+	
+	GameObject* tempParent = owner->parent;
+	if (tempParent != nullptr)
+	{
+		local_transform = global_transform * tempParent->transform->global_transform.Inverted();
+	}
+	else local_transform = global_transform;
+
+	*/
+	
+	UpdateTRS();
+
 
 	if (owner->children.empty()) return;
 
@@ -126,13 +152,40 @@ void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
 	}
 }
 
+void ComponentTransform::SetLocalTransform(float4x4 new_matrix)
+{
+	GameObject* tempParent = owner->parent;
+	if (tempParent != nullptr)
+	{
+		local_transform = new_matrix;// *tempParent->transform->GetGlobalTransform().Inverted();
+	}
+
+	UpdateTRS();
+
+	/*
+	if (owner->children.empty()) return;
+
+	for (uint i = 0; i < owner->children.size(); i++)
+	{
+		owner->children.at(i)->transform->UpdateGlobalTransform();
+	}
+	*/
+}
 
 void ComponentTransform::DrawInspector()
 {
 	if (ImGui::CollapsingHeader("Component Transform"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		if (ImGui::DragFloat3("Position", (float*)&position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
-		if (ImGui::DragFloat3("Scale", (float*)&scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
-		if (ImGui::DragFloat3("Rotation", (float*)&eulerRotation, 0.08f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetEulerRotation(eulerRotation); }
+		ImGui::Text("Local");
+		if (ImGui::DragFloat3("Local Position", (float*)&local_position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
+		if (ImGui::DragFloat3("Local Scale", (float*)&local_scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
+		if (ImGui::DragFloat3("Local Rotation", (float*)&local_eulerRotation, 0.08f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetLocalEulerRotation(local_eulerRotation); }
+
+		ImGui::Separator();
+
+		ImGui::Text("Global");
+		if (ImGui::DragFloat3("Global Position", (float*)&global_position, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
+		if (ImGui::DragFloat3("Global Scale", (float*)&global_scale, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { UpdateLocalTransform(); }
+		if (ImGui::DragFloat3("Global Rotation", (float*)&global_eulerRotation, 0.08f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) { SetGlobalEulerRotation(global_eulerRotation); }
 	}
 }
