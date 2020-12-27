@@ -12,8 +12,8 @@
 #define MAX_LIGHTS 8
 
 class ComponentCamera;
-class ResourceMesh;
-class ResourceMaterial;
+class ComponentMesh;
+class ComponentMaterial;
 class GameObject;
 
 class ModuleRenderer3D : public Module
@@ -31,9 +31,9 @@ public:
 
 	void UseCheckerTexture();
 	void IterateMeshDraw();
-	void DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial = nullptr, GameObject* meshOwner = nullptr);
+	void DrawMesh(ComponentMesh* mesh, float4x4 transform, ComponentMaterial* rMaterial = nullptr, GameObject* meshOwner = nullptr);
 
-	void DrawNormals(ResourceMesh* mesh, float4x4 transform);
+	void DrawNormals(ComponentMesh* mesh, float4x4 transform);
 
 	void SetDepthtest(bool active);
 	void SetCullface(bool active);
@@ -59,7 +59,7 @@ public:
 	GLbyte checkerImage[64][64][4];
 	GLuint checkerID;
 
-	ResourceMesh* mesh = nullptr;
+	//ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
 
 	bool drawboundingboxes = false;

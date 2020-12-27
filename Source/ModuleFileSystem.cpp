@@ -50,6 +50,7 @@ void ModuleFileSystem::CreateLibraryDirectories()
 	CreateDir(MATERIALS_PATH);
 	CreateDir(SCENES_PATH);
 	CreateDir(MODELS_PATH);
+	CreateDir(SHADERS_PATH);
 }
 
 // Add a new zip file or folder

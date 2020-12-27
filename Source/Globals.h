@@ -52,6 +52,7 @@ enum update_status
 #define TEXTURES_PATH "Library/Textures/"
 #define SCENES_PATH "Library/Scenes/"
 #define MODELS_PATH "Library/Models/"
+#define SHADERS_PATH "Library/Shaders/"
 
 //#define ASSETS_PATH "Output/Assets"
 #define ASSETS_FOLDER "Assets/"

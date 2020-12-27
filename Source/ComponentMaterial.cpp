@@ -1,6 +1,7 @@
 #pragma once
 #include "ComponentMaterial.h"
 #include "ResourceMaterial.h"
+#include "ResourceShader.h"
 #include "GameObject.h"
 #include <string>
 #include "Dependencies/ImGUI/imgui.h"

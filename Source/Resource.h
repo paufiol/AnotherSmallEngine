@@ -13,6 +13,7 @@ enum class ResourceType
 	Scene,
 	Model,
 	Folder,
+	Shader,
 	None
 };
 

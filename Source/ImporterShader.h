@@ -17,7 +17,7 @@ namespace Importer
 
 		uint64 Save(const ResourceShader* shader, char** buffer);
 
-		void Load(ResourceShader* shader, const char* buffer);
+		void Load(ResourceShader* shader, const char* buffer, uint size = 0);
 	}
 }
 

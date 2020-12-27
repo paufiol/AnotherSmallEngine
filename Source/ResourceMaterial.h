@@ -5,14 +5,7 @@
 #include "Color.h"
 #include "Resource.h"
 #include "ResourceTexture.h"
-
-//struct Texture
-//{
-//	uint id = 0;
-//	std::string path;
-//};
-
-
+#include "ResourceShader.h"
 
 class ResourceMaterial : public Resource
 {
@@ -25,25 +18,27 @@ public:
 	~ResourceMaterial();
 
 
-
-	inline ResourceTexture* GetTexture() { return texture; }
-	inline Color GetColor() const { return color; }
-	inline uint GetId()  { return texture->id; }
-	inline std::string GetPath() const { return texture->path; }
 	
+	inline Color GetColor() const { return color; }
 	inline void SetColor(Color color) { this->color = color; }
 
+	inline ResourceTexture* GetTexture() { return texture; }
 	inline void SetTexture(ResourceTexture* rTexture) { this->texture = rTexture; }
 	inline void SetTexture(uint id, const char* path) { this->texture->id = id; this->texture->path = path; }
 
+	inline uint GetId() { return texture->id; }
 	inline void SetId(uint id) { this->texture->id = id; }
-	inline void SetPath(std::string path) 
-	{ this->texture->path = path; }
 
+	inline std::string GetPath() const { return texture->path; }
+	inline void SetPath(std::string path) { this->texture->path = path; }
 
+	uint32 const GetShaderProgramID();
+	inline void SetShaderProgramID(uint32 ID) { rShader->shaderProgramID = ID; }
+	inline void SetShader(ResourceShader* rShader) { this->rShader = rShader; }
 private:
 
 	ResourceTexture* texture = nullptr;
+	ResourceShader* rShader = nullptr;
 	Color color = Color(1.0f,1.0f,1.0f,1.0f);
 
 };

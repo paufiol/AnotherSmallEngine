@@ -7,6 +7,7 @@
 
 class Random;
 class ResourceMesh;
+class ResourceShader;
 class ResourceTexture;
 class ResourceScene;
 
@@ -24,7 +25,10 @@ public:
 
 	void LoadAssets();
 	bool IterateAssets(PathNode node, uint32 ID = 0);
+
 	void LoadScene(const char* buffer, uint size, ResourceScene* scene);
+	void LoadShader(const char* buffer, uint size, ResourceShader* shader);
+
 	uint32 Find(const char* file);
 	uint32 ImportFile(const char* file_assets);
 	ResourceType GetTypeFromFile(const char* path) const;
@@ -35,11 +39,12 @@ public:
 	Resource* CreateNewResource(const char* assetsFile, ResourceType type, const char* name = "", uint32 UID = 0);
 	void SaveMeta(Resource* resource);
 	void SaveResource(Resource* resource);
+
 	Resource* LoadResource(uint32 UID);
 	Resource* GetResource(uint32 UID);
 	Resource* GetResourceInMemory(uint32 UID);
 
-	uint32 CheckImportedResources(Resource* resource);
+	ResourceShader* GetShader();
 	void UnloadResource(uint32 UID);
 	void DeleteResource(uint32 UID);
 

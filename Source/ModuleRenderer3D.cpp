@@ -247,18 +247,18 @@ void ModuleRenderer3D::IterateMeshDraw()
 				
 				if (!App->scene->game_objects.at(i)->active) break;
 
-				ComponentMaterial* componentTex = (ComponentMaterial*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
+				ComponentMaterial* componentMat = (ComponentMaterial*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
 				ComponentMesh* tempComponentMesh = (ComponentMesh*)(*item);
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
-				if (componentTex != nullptr) 
+				if (componentMat != nullptr)
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform(), componentTex->GetMaterial(), App->scene->game_objects[i]);
-					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh(), tempComponentTransform->GetGlobalTransform());
+					DrawMesh(tempComponentMesh, tempComponentTransform->GetGlobalTransform(), componentMat, App->scene->game_objects[i]);
+					if (App->editor->drawNormals) DrawNormals(tempComponentMesh, tempComponentTransform->GetGlobalTransform());
 				}
 				else 
 				{
-					DrawMesh(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform(), nullptr, App->scene->game_objects[i]);
-					if (App->editor->drawNormals) DrawNormals(tempComponentMesh->GetMesh(), tempComponentTransform->GetLocalTransform());
+					DrawMesh(tempComponentMesh, tempComponentTransform->GetLocalTransform(), nullptr, App->scene->game_objects[i]);
+					if (App->editor->drawNormals) DrawNormals(tempComponentMesh, tempComponentTransform->GetLocalTransform());
 				}
 
 				if (drawboundingboxes) {
@@ -280,9 +280,9 @@ void ModuleRenderer3D::IterateMeshDraw()
 	}
 }
 
-void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, ResourceMaterial* rMaterial, GameObject* meshOwner)
+void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform, ComponentMaterial* componentMaterial, GameObject* meshOwner)
 {
-	
+	uint32 shaderProgram = 0;
 	if (App->camera->gameCamera->frustum_culling) 
 	{
 		if(!DoesIntersect(meshOwner->aabb))
@@ -291,17 +291,22 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 		}
 	}
 	
-	if (rMaterial != nullptr)
+	if (componentMaterial->GetMaterial() != nullptr)
 	{
-		if (rMaterial->GetId() == 0)
+		if (shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID() != 0)
 		{
-			Color color = rMaterial->GetColor();
+			glUseProgram(shaderProgram);
+		}
+		
+		if (componentMaterial->GetMaterial()->GetId() == 0)
+		{
+			Color color = componentMaterial->GetMaterial()->GetColor();
 			glColor4f(color.r, color.g, color.b, color.a);
 		}
 		else if (App->editor->drawTexture && !App->editor->drawCheckerTex)
 		{
 			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, rMaterial->GetId());
+			glBindTexture(GL_TEXTURE_2D, componentMaterial->GetMaterial()->GetId());
 
 		}
 		else if (!App->editor->drawTexture && App->editor->drawCheckerTex)
@@ -309,29 +314,49 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, checkerID);
 		}
+
+		if (shaderProgram != 0)
+		{
+			uint colorLoc = glGetUniformLocation(shaderProgram, "inColor");
+			glUniform4fv(colorLoc, 1, (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
+
+			//Sending prefab matrix
+			uint modelLoc = glGetUniformLocation(shaderProgram, "model_matrix");
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transform.ptr());
+
+			//Sending view matrix
+			uint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
+
+			//Sending projection matrix
+			uint viewLoc = glGetUniformLocation(shaderProgram, "view");
+			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetRawViewMatrix());
+
+		}
+		
 	}
 	
-	if (!App->scene->root_object->children.empty() && mesh != nullptr)
+	if (!App->scene->root_object->children.empty() && componentMesh->GetMesh() != nullptr)
 	{
-		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
-		glMultMatrixf((float*)&transform.Transposed());
+		//glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
+		//glMultMatrixf((float*)&transform.Transposed());
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::vertex]);
+		glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::vertex]);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::normal]);
+		glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::normal]);
 		glNormalPointer(GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ID[ResourceMesh::index]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::index]);
 
-		glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::texture]);
+		glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::texture]);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		glDrawElements(GL_TRIANGLES, mesh->size[ResourceMesh::index], GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, componentMesh->GetMesh()->size[ResourceMesh::index], GL_UNSIGNED_INT, NULL);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -343,8 +368,9 @@ void ModuleRenderer3D::DrawMesh(ResourceMesh* mesh, float4x4 transform, Resource
 		glDisable(GL_TEXTURE_2D);
 
 
-		glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
+		//glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glUseProgram(0);
 	}
 	else
 	{
@@ -375,15 +401,16 @@ void ModuleRenderer3D::UseCheckerTexture() {
 		0, GL_RGBA, GL_UNSIGNED_BYTE, checkerImage);
 }
 
-void ModuleRenderer3D::DrawNormals(ResourceMesh* mesh, float4x4 transform)
+void ModuleRenderer3D::DrawNormals(ComponentMesh* componentMesh, float4x4 transform)
 {
 	glBegin(GL_LINES);
 	glColor4f(App->editor->NormalColor.r, App->editor->NormalColor.g, App->editor->NormalColor.b, App->editor->NormalColor.a);
 	
-	for (uint i = 0; i < mesh->size[ResourceMesh::vertex] * 3; i +=3)
+	for (uint i = 0; i < componentMesh->GetMesh()->size[ResourceMesh::vertex] * 3; i +=3)
 	{
-		LineSegment NormalDirection(vec(mesh->vertices[i], mesh->vertices[i + 1], mesh->vertices[i + 2]), 
-									vec(mesh->vertices[i] + mesh->normals[i], mesh->vertices[i + 1] + mesh->normals[i + 1], mesh->vertices[i + 2] + mesh->normals[i + 2]));
+		LineSegment NormalDirection(vec(componentMesh->GetMesh()->vertices[i], componentMesh->GetMesh()->vertices[i + 1], componentMesh->GetMesh()->vertices[i + 2]),
+									vec(componentMesh->GetMesh()->vertices[i] + componentMesh->GetMesh()->normals[i], componentMesh->GetMesh()->vertices[i + 1] + componentMesh->GetMesh()->normals[i + 1],
+										componentMesh->GetMesh()->vertices[i + 2] + componentMesh->GetMesh()->normals[i + 2]));
 
 		NormalDirection.Transform(transform);
 

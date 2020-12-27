@@ -3,6 +3,7 @@
 
 #include "ModuleScene.h"
 #include "ModuleResource.h"
+#include "ResourceShader.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ResourceScene.h"
@@ -12,6 +13,7 @@
 #include "ImporterMesh.h"
 #include "ImporterScene.h"
 #include "ImporterTexture.h"
+#include "ImporterShader.h"
 
 #include "JsonConfig.h"
 #include "PathNode.h"
@@ -150,7 +152,12 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 	uint64 fileSize = 0;
 	if (type != ResourceType::Folder)
 		fileSize = App->fileSystem->Load(assetsFile, &buffer);
-
+	if (GetShader() && resource->type == ResourceType::Shader)
+	{
+		resource = GetResourceInMemory(GetShader()->UID);
+		resource->assetsFile = assetsFile;
+		fileSize = App->fileSystem->Load(assetsFile, &buffer);
+	}
 	switch (type)
 	{
 	case ResourceType::Texture: 
@@ -158,7 +165,6 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 		Importer::TextureImporter::ImportTexture((ResourceTexture*)resource, buffer, fileSize);
 		SaveResource((ResourceTexture*)resource);
 		importedResources[resource->UID] = resource;
-		//LoadResource(resource->UID);
 		break;
 	case ResourceType::Scene: 
 		App->scene->sceneLibraryPath = resource->libraryFile;
@@ -172,6 +178,11 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 
 		break;
 
+	case ResourceType::Shader:
+		
+		LoadShader(buffer, fileSize, (ResourceShader*)resource);
+		
+		break;
 	}
 	
 
@@ -180,6 +191,13 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 
 	return resource->GetUID();
 }
+
+void ModuleResources::LoadShader(const char* buffer, uint size, ResourceShader* shader)
+{
+	Importer::ShaderImporter::Import(shader->assetsFile.c_str(), shader);	
+	SaveResource(shader);
+}
+
 
 void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* scene)
 {
@@ -244,20 +262,25 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 }
 
 
-uint32 ModuleResources::CheckImportedResources(Resource* resource)
-{
-	std::map<uint32, Resource*>::iterator it = importedResources.begin();
-	for (; it != importedResources.end(); it++)
-	{
-		if (it->second->name == resource->name && it->second->type == resource->type && it->second->assetsFile == resource->assetsFile)
-		{
-			//if (resource->type != ResourceType::Folder) DeleteResource(it->second->UID);
-			return it->second->UID;
-		}
-	}
-	return 0;
-}
 
+
+ResourceShader* ModuleResources::GetShader()
+{
+
+	ResourceShader* tempShader = nullptr;
+	Resource* resource = nullptr;
+	std::map<uint32, Resource*>::iterator item;
+	for (item = importedResources.begin(); item != importedResources.end(); item++)
+	{
+		if (item->second->type == ResourceType::Shader)
+		{
+			resource = item->second;
+			tempShader = (ResourceShader*)LoadResource(resource->UID);
+		}
+			
+	}		
+	return tempShader;
+}
 
 void ModuleResources::UnloadResource(uint32 UID)
 {
@@ -315,6 +338,9 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 		break;
 	case ResourceType::Model:
 		resource = new ResourceScene(assetsFile, MODELS_PATH, name, UID);
+		break;
+	case ResourceType::Shader:
+		resource = new ResourceShader(assetsFile, SHADERS_PATH, name, UID);
 		break;
 	default:
 		resource = new Resource();
@@ -385,6 +411,7 @@ void ModuleResources::SaveResource(Resource* resource)
 	case(ResourceType::Material): { size = Importer::MaterialsImporter::Save((ResourceMaterial*)resource, &buffer); break; }
 	case(ResourceType::Scene): { size = Importer::ModelImporter::Save((ResourceScene*)resource, &buffer);break; }
 	case(ResourceType::Model):{ size = Importer::ModelImporter::Save((ResourceScene*)resource, & buffer); break; }
+	case(ResourceType::Shader): {size = Importer::ShaderImporter::Save((ResourceShader*)resource, &buffer); break; }
 	}
 
 	if (size > 0)
@@ -420,27 +447,22 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 	switch (resource->GetType())
 	{
 	case (ResourceType::Mesh):
-	{
 		Importer::MeshImporter::Load((ResourceMesh*)tempResource, buffer);
 		break;
-	}
 	case (ResourceType::Material):
-	{
 		Importer::MaterialsImporter::Load((ResourceMaterial*)tempResource, buffer);
 		break;
-	}
 	case (ResourceType::Model):
-	{
 		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
 		break;
-	}
 	case(ResourceType::Scene):
-	{
 		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
 		break;
-	}
 	case(ResourceType::Texture):
 		Importer::TextureImporter::Load((ResourceTexture*)tempResource, buffer,size);
+		break;
+	case ResourceType::Shader:
+		Importer::ShaderImporter::Load((ResourceShader*)tempResource, buffer, size);
 		break;
 	}
 
@@ -449,7 +471,6 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 
 Resource* ModuleResources::GetResource(uint32 UID)
 {
-	LOG("Loading: %d", UID);
 	std::map<uint32, Resource*>::iterator it = resources.find(UID);
 	if (it != resources.end())
 	{
@@ -466,7 +487,7 @@ ResourceType ModuleResources::GetTypeFromFile(const char* path) const
 	std::string extension;
 	App->fileSystem->SplitFilePath(path, nullptr, nullptr, &extension);
 
-	static_assert(static_cast<int>(ResourceType::None) == 6, "Code Needs Update");
+	static_assert(static_cast<int>(ResourceType::None) == 7, "Code Needs Update");
 
 	if (extension == "tga" || extension == "png" || extension == "jpg" || extension == "TGA" || extension == "PNG" || extension == "JPG")
 		return ResourceType::Texture;
@@ -474,18 +495,21 @@ ResourceType ModuleResources::GetTypeFromFile(const char* path) const
 		return ResourceType::Scene;
 	if (extension == "FBX" || extension == "fbx")
 		return ResourceType::Model;
+	if (extension == "frag" || extension == "vert")
+		return ResourceType::Shader;
 
 	return App->fileSystem->IsDirectory(path) ? ResourceType::Folder : ResourceType::None;
 }
 
 ResourceType ModuleResources::GetTypefromString(std::string typeString) const
 {
-		 if (typeString == "Folder") return ResourceType::Folder;
+	if (typeString == "Folder") return ResourceType::Folder;
 	else if (typeString == "Material") return ResourceType::Material;
 	else if (typeString == "Mesh") return ResourceType::Mesh;
 	else if (typeString == "Model") return ResourceType::Model;
 	else if (typeString == "Scene") return ResourceType::Scene;
 	else if (typeString == "Texture") return ResourceType::Texture;
+	else if (typeString == "Shader") return ResourceType::Shader;
 	return ResourceType::None;
 }
 
@@ -517,6 +541,9 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 		break;
 	case ResourceType::Texture:
 		return "Texture";
+		break;
+	case ResourceType::Shader:
+		return "Shader";
 		break;
 	}
 	

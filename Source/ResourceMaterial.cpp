@@ -1,3 +1,5 @@
+#include "Application.h"
+#include "ModuleResource.h"
 #include "ResourceMaterial.h"
 
 
@@ -23,11 +25,16 @@ ResourceMaterial::ResourceMaterial(ResourceTexture* _texture) : Resource(Resourc
 
 ResourceMaterial::ResourceMaterial() : Resource(ResourceType::Material)
 {
-	/*texture->id = 0;
-	texture->path = "";*/
 }
 
 ResourceMaterial::~ResourceMaterial()
 {
 
+}
+
+uint32 const ResourceMaterial::GetShaderProgramID()
+{
+	SetShader(App->resources->GetShader());
+
+	return rShader->shaderProgramID;
 }

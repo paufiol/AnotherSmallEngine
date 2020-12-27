@@ -13,6 +13,7 @@ public:
 private:
 	ResourceMaterial* rMaterial = nullptr;
 
+
 	//Methods
 public:
 	void Enable() override;
