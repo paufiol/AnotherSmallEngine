@@ -148,6 +148,7 @@
     <ClInclude Include="Dependencies\ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImSequencer.h" />
     <ClInclude Include="Dependencies\ImGuizmo\ImZoomSlider.h" />
+    <ClInclude Include="Dependencies\ImGui\ColorTextEditor\TextEditor.h" />
     <ClInclude Include="Dependencies\ImGui\imconfig.h" />
     <ClInclude Include="Dependencies\ImGui\imgui.h" />
     <ClInclude Include="Dependencies\ImGui\imgui_impl_opengl3.h" />
@@ -350,6 +351,7 @@
     <ClCompile Include="Dependencies\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Dependencies\ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="Dependencies\ImGuizmo\ImSequencer.cpp" />
+    <ClCompile Include="Dependencies\ImGui\ColorTextEditor\TextEditor.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Dependencies\ImGui\imgui_draw.cpp" />

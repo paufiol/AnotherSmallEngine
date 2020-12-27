@@ -8,11 +8,14 @@
 #include "Timer.h"
 #include "Color.h"
 
+#include "Dependencies/ImGui/ColorTextEditor/TextEditor.h"
+
 using namespace std;
 
 class GameObject;
 class Resource;
 class ResourceTexture;
+//class TextEditor;
 
 class ModuleEditor : public Module 
 {
@@ -38,7 +41,6 @@ public:
 	void InspectorWindow();
 	void HierarchyWindow();
 	void DrawHierarchyLevel(GameObject* rootObject);
-
 	void SetupStyleFromHue();
 	void PlayPauseWindow();
 	void LoadIcons();
@@ -46,6 +48,7 @@ public:
 	void AssetsTree(PathNode& assetFolder);
 	void AssetsExplorer(PathNode& assetFolder);
 	void DropTargetWindow();
+	void TextEditorWindow();
 
 	void GUIisHovered();
 
@@ -80,6 +83,9 @@ public:
 
 	Resource* resource = nullptr;
 	ResourceTexture* textureIcon = nullptr;
+
+	TextEditor editor;
+	std::string fileToEdit;
 
 	uint iconSize = 80;
 

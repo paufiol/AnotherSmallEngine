@@ -27,11 +27,16 @@
 #include "Dependencies/ImGUI/imgui_impl_opengl3.h"
 #include "Dependencies/Devil/Include/ilut.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
+
 #include "PathNode.h"
 #include <map>
 
 #include "Dependencies/Glew/include/GL/glew.h"
 #include "Dependencies/SDL/include/SDL_opengl.h"
+
+#include <fstream>
+
+
 
 
 ModuleEditor::ModuleEditor(bool start_enabled) : Module(start_enabled)
@@ -79,8 +84,22 @@ bool ModuleEditor::Start()
 
 	//ImGui::SaveIniSettingsToDisk()
 
+	//Set Up
+	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::HLSL();
+
+	fileToEdit = "Assets/Shaders/DefaultShader.frag";
+
+	std::ifstream t(fileToEdit.c_str());
+	if (t.good())
+	{
+		std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+		editor.SetText(str);
+	}
+	editor.SetPalette(TextEditor::GetDarkPalette());
+
 	return true;
 }
+
 update_status ModuleEditor::PreUpdate(float dt)
 {
 	update_status ret = UPDATE_CONTINUE;
@@ -116,7 +135,7 @@ update_status ModuleEditor::Update(float dt)
 	AssetExplorerWindow();
 	DropTargetWindow();
 	PlayPauseWindow();
-
+	TextEditorWindow();
 	
 	
 
@@ -150,6 +169,8 @@ void ModuleEditor::DrawGUI()
 {
 	
 	ImGuiIO& io = ImGui::GetIO();
+
+
 
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -561,6 +582,86 @@ void ModuleEditor::DropTargetWindow()
 	}
 	
 
+}
+
+void ModuleEditor::TextEditorWindow()
+{
+	ImGui::Begin("Text Editor", nullptr, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
+	
+
+
+	//Update
+	auto cpos = editor.GetCursorPosition();
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Save"))
+			{
+				std::string textToSave = editor.GetText();
+				/// save text....
+
+				//Borrar archivo viejo
+				App->fileSystem->Remove("Assets/Shaders/DefaultShader.frag");
+
+				//Crear Archivo nuevo con get text
+				App->fileSystem->Save("Assets/Shaders/DefaultShader.frag", textToSave.c_str(), editor.GetText().size());
+				//Llamar program shader compilation
+			}
+			
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			bool ro = editor.IsReadOnly();
+			if (ImGui::MenuItem("Read-only mode", nullptr, &ro))
+				editor.SetReadOnly(ro);
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Undo", "ALT-Backspace", nullptr, !ro && editor.CanUndo()))
+				editor.Undo();
+			if (ImGui::MenuItem("Redo", "Ctrl-Y", nullptr, !ro && editor.CanRedo()))
+				editor.Redo();
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr, editor.HasSelection()))
+				editor.Copy();
+			if (ImGui::MenuItem("Cut", "Ctrl-X", nullptr, !ro && editor.HasSelection()))
+				editor.Cut();
+			if (ImGui::MenuItem("Delete", "Del", nullptr, !ro && editor.HasSelection()))
+				editor.Delete();
+			if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr, !ro && ImGui::GetClipboardText() != nullptr))
+				editor.Paste();
+
+			ImGui::Separator();
+
+			if (ImGui::MenuItem("Select all", nullptr, nullptr))
+				editor.SetSelection(TextEditor::Coordinates(), TextEditor::Coordinates(editor.GetTotalLines(), 0));
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("View"))
+		{
+			if (ImGui::MenuItem("Dark palette"))
+				editor.SetPalette(TextEditor::GetDarkPalette());
+			if (ImGui::MenuItem("Light palette"))
+				editor.SetPalette(TextEditor::GetLightPalette());
+			if (ImGui::MenuItem("Retro blue palette"))
+				editor.SetPalette(TextEditor::GetRetroBluePalette());
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	ImGui::Text("%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1, cpos.mColumn + 1, editor.GetTotalLines(),
+		editor.IsOverwrite() ? "Ovr" : "Ins",
+		editor.CanUndo() ? "*" : " ",
+		editor.GetLanguageDefinition().mName.c_str(), fileToEdit.c_str());
+
+	editor.Render("TextEditor");
+	ImGui::End();
 }
 
 bool ModuleEditor::MainMenuBar()

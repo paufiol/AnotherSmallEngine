@@ -265,6 +265,9 @@
     <ClCompile Include="ComponentMaterial.cpp">
       <Filter>GameObjects\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Dependencies\ImGui\ColorTextEditor\TextEditor.cpp">
+      <Filter>Dependencies\ImGui\ColorTextEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
@@ -1002,6 +1005,9 @@
     <ClInclude Include="ComponentMaterial.h">
       <Filter>GameObjects\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Dependencies\ImGui\ColorTextEditor\TextEditor.h">
+      <Filter>Dependencies\ImGui\ColorTextEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Dependencies">
@@ -1081,6 +1087,9 @@
     </Filter>
     <Filter Include="Dependencies\ImGuizmo">
       <UniqueIdentifier>{7729ef97-9e58-4a8e-8264-573984270e81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dependencies\ImGui\ColorTextEditor">
+      <UniqueIdentifier>{3697a8b6-e6df-4af7-8072-4537f7010e3f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

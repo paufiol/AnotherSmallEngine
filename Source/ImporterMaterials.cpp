@@ -71,8 +71,6 @@ void Importer::MaterialsImporter::ImportMaterial(aiMaterial* aiMaterial, Resourc
 		ResourceTexture* tempTex = new ResourceTexture();
 		resourceMaterial->SetTexture(tempTex);
 	}
-
-
 }
 
 uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buffer)
@@ -99,8 +97,6 @@ uint64 Importer::MaterialsImporter::Save(ResourceMaterial* rMaterial, char** buf
 	bytes = sizeof(uint32);
 	memcpy(cursor, &rMaterial->GetTexture()->UID, bytes);
 	cursor += bytes;
-
-
 
 	return size;
 }
