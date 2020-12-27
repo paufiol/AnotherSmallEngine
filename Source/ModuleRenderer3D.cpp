@@ -13,7 +13,7 @@
 
 #include "Component.h"
 #include "ComponentMesh.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 #include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
@@ -247,7 +247,7 @@ void ModuleRenderer3D::IterateMeshDraw()
 				
 				if (!App->scene->game_objects.at(i)->active) break;
 
-				ComponentTexture* componentTex = (ComponentTexture*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
+				ComponentMaterial* componentTex = (ComponentMaterial*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
 				ComponentMesh* tempComponentMesh = (ComponentMesh*)(*item);
 				ComponentTransform* tempComponentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
 				if (componentTex != nullptr) 

@@ -64,9 +64,6 @@
     <ClCompile Include="ComponentMesh.cpp">
       <Filter>GameObjects\Components</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentTexture.cpp">
-      <Filter>GameObjects\Components</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentTransform.cpp">
       <Filter>GameObjects\Components</Filter>
     </ClCompile>
@@ -265,6 +262,9 @@
     <ClCompile Include="ImporterShader.cpp">
       <Filter>Importers</Filter>
     </ClCompile>
+    <ClCompile Include="ComponentMaterial.cpp">
+      <Filter>GameObjects\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\ImGui\imconfig.h">
@@ -337,9 +337,6 @@
       <Filter>GameObjects</Filter>
     </ClInclude>
     <ClInclude Include="ComponentMesh.h">
-      <Filter>GameObjects\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentTexture.h">
       <Filter>GameObjects\Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentTransform.h">
@@ -1001,6 +998,9 @@
     </ClInclude>
     <ClInclude Include="ImporterShader.h">
       <Filter>Importers</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentMaterial.h">
+      <Filter>GameObjects\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

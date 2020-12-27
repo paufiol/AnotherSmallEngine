@@ -7,7 +7,7 @@
 class Component;
 class ComponentTransform;
 class ComponentMesh;
-class ComponentTexture;
+class ComponentMaterial;
 enum class ComponentType;
 
 class ResourceScene;
@@ -23,7 +23,7 @@ public:
 
 	std::vector<Component*> components;
 	ComponentTransform* transform = nullptr;
-	ComponentTexture* texture = nullptr;
+	ComponentMaterial* texture = nullptr;
 	bool active;
 
 

@@ -6,7 +6,7 @@
 class ResourceMaterial;
 
 
-class ComponentTexture : public Component {
+class ComponentMaterial : public Component {
 	//Properties
 public:
 
@@ -24,9 +24,9 @@ public:
 	inline ResourceMaterial* GetMaterial() const { return rMaterial; }
 	inline void SetMaterial(ResourceMaterial* resourceMaterial) { rMaterial = resourceMaterial; }
 	//inline uint32 GetResourceUID()const { return rMaterial->UID; }
-	ComponentTexture(GameObject* parent); //DEFAULTS TO 0,0
-	ComponentTexture(GameObject* parent, const char* texturePath, uint id);
-	ComponentTexture(GameObject* parent, ResourceMaterial* rMaterial);
+	ComponentMaterial(GameObject* parent); //DEFAULTS TO 0,0
+	ComponentMaterial(GameObject* parent, const char* texturePath, uint id);
+	ComponentMaterial(GameObject* parent, ResourceMaterial* rMaterial);
 	//ComponentTexture(GameObject* parent, vec3 position, vec3 rotation, vec3 scale);
 private:
 	

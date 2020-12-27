@@ -15,10 +15,10 @@
 
 #include "Component.h"
 #include "ComponentMesh.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 
 #include "ResourceScene.h"
 
@@ -233,7 +233,7 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		}
 		if (materialUID != 0)
 		{
-			ComponentTexture* tempCompMaterial = new ComponentTexture(tempGameObject);
+			ComponentMaterial* tempCompMaterial = new ComponentMaterial(tempGameObject);
 
 			//std::string path = MATERIALS_PATH + std::to_string(materialUID);
 			//char* buffer = nullptr;
@@ -297,7 +297,7 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 			JsonConfig& compConfig = jsonCompArray.AddNode();
 			
 			ComponentMesh* componentMesh = (ComponentMesh*)App->scene->game_objects[i]->GetComponent(ComponentType::Mesh);
-			ComponentTexture* componentTex = (ComponentTexture*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
+			ComponentMaterial* componentTex = (ComponentMaterial*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
 			ComponentTransform* componentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
 			ComponentCamera* componentCamera = (ComponentCamera*)App->scene->game_objects[i]->GetComponent(ComponentType::Camera);
 

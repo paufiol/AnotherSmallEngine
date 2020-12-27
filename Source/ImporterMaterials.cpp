@@ -8,7 +8,7 @@
 
 #include "GameObject.h"
 #include "PathNode.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 
 #include "ModuleResource.h"
 #include "ResourceMaterial.h"

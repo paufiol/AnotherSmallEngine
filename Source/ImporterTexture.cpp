@@ -6,7 +6,7 @@
 
 #include "GameObject.h"
 #include "ComponentMesh.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ModuleScene.h"
 
 

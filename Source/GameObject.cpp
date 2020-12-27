@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentTransform.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
 #include "ResourceMesh.h"
@@ -194,7 +194,7 @@ Component* GameObject::AddComponent(Component* component)
 		if (this->GetComponent(ComponentType::Material) != nullptr) {
 			return nullptr;
 		}
-		texture = (ComponentTexture*)component;
+		texture = (ComponentMaterial*)component;
 		break;
 	case(ComponentType::Mesh):
 		break;

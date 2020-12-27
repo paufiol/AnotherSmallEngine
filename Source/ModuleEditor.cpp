@@ -7,8 +7,8 @@
 #include "GameObject.h"
 #include "Component.h"
 #include "ComponentCamera.h"
-#include "ComponentTexture.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
+#include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 
@@ -526,7 +526,7 @@ void ModuleEditor::DropTargetWindow()
 		if (ImGui::BeginDragDropTarget())
 		{
 			ResourceMaterial* material = new ResourceMaterial();
-			ComponentTexture* compTexture;
+			ComponentMaterial* compTexture;
 
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
 			{
@@ -544,7 +544,7 @@ void ModuleEditor::DropTargetWindow()
 				case ResourceType::Texture:
 
 					material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
-					compTexture = (ComponentTexture*)App->scene->selected_object->GetComponent(ComponentType::Material);
+					compTexture = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
 					if (compTexture) compTexture->SetMaterial(material);
 					break;
 				default:
@@ -925,7 +925,7 @@ void ModuleEditor::InspectorWindow()
 				{
 					if (App->scene->selected_object->GetComponent(ComponentType::Material) == nullptr)
 					{
-						ComponentTexture* newComponent = new ComponentTexture(App->scene->selected_object);
+						ComponentMaterial* newComponent = new ComponentMaterial(App->scene->selected_object);
 						App->scene->selected_object->AddComponent(newComponent);
 					}
 					else

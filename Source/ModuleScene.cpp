@@ -5,7 +5,7 @@
 #include "ModuleFileSystem.h"
 #include "Primitive.h"
 #include "GameObject.h"
-#include "ComponentTexture.h"
+#include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "ComponentCamera.h"
