@@ -59,13 +59,14 @@ enum update_status
 #define MODELS_FOLDER "Assets/Models/"
 #define TEXTURES_FOLDER "Assets/Textures/"
 
-
-
 #define MESH_EXTENSION ".asemesh"
 #define MATERIAL_EXTENSION	".asemat"
 #define SCENE_EXTENSION	".asescene"
 #define TEXTURE_EXTENSION ".asetex"
 #define ASE_EXTENSION ".ASE"
+
+#define VERTEX_SHADER "__Vertex_Shader__"
+#define FRAGMENT_SHADER "__Fragment_Shader__"
 
 // Deletes a buffer
 #define RELEASE( x )\

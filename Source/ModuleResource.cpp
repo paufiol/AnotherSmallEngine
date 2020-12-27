@@ -152,12 +152,6 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 	uint64 fileSize = 0;
 	if (type != ResourceType::Folder)
 		fileSize = App->fileSystem->Load(assetsFile, &buffer);
-	if (GetShader() && resource->type == ResourceType::Shader)
-	{
-		resource = GetResourceInMemory(GetShader()->UID);
-		resource->assetsFile = assetsFile;
-		fileSize = App->fileSystem->Load(assetsFile, &buffer);
-	}
 	switch (type)
 	{
 	case ResourceType::Texture: 
@@ -495,7 +489,7 @@ ResourceType ModuleResources::GetTypeFromFile(const char* path) const
 		return ResourceType::Scene;
 	if (extension == "FBX" || extension == "fbx")
 		return ResourceType::Model;
-	if (extension == "frag" || extension == "vert")
+	if (extension == "shader")
 		return ResourceType::Shader;
 
 	return App->fileSystem->IsDirectory(path) ? ResourceType::Folder : ResourceType::None;

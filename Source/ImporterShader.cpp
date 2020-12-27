@@ -19,8 +19,6 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 	std::string ext;
 	App->fileSystem->SplitFilePath(fullPath, &path, &name, &ext);
 
-	int vertexShader = -1, fragmentShader = -1;
-
 	char* buffer;
 	int size = App->fileSystem->Load(fullPath, &buffer);
 
@@ -31,65 +29,28 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 		return;
 	}
 	
-	// This is a temporal solution to the 2 paths issue
-
-	//Case the path points to th vertex shader import it and get the fragment one
-	if (ext == "vert")
+	std::string file(buffer);
+	if (file.find(VERTEX_SHADER) != std::string::npos)
 	{
-		vertexShader = ImportVertex(buffer, shader);
-
-		shader->vertexID = vertexShader;
-
-		////RELEASE_ARRAY(buffer);
-
-		//std::string fragPath = path + name + ".frag";
-
-		//size = App->fileSystem->Load(fragPath.c_str(), &buffer);
-
-		//if (size <= 0)
-		//{
-		//	delete[] buffer;
-		//	LOG("Shader: %s not found or can't be loaded.", fragPath);
-		//	return;
-		//}
-		//else
-		//{
-		//	fragmentShader = ImportFragment(buffer, shader);
-		//}
+		shader->vertexID = ImportVertex(file, shader);
 	}
-	//Case the path points to th fragment shader import it and get the vertex one
-	else if (ext == "frag")
+	if (file.find(FRAGMENT_SHADER) != std::string::npos)
 	{
-		fragmentShader = ImportFragment(buffer, shader);
-
-		shader->fragmentID = fragmentShader;
-		////RELEASE_ARRAY(buffer);
-
-		//std::string vertexPath = path + name + ".vert";
-
-		//size = App->fileSystem->Load(vertexPath.c_str(), &buffer);
-
-		//if (size <= 0)
-		//{
-		//	delete[] buffer;
-		//	LOG("Shader: %s not found or can't be loaded.", vertexPath);
-		//	return;
-		//}
-		//else
-		//{
-		//	vertexShader = ImportVertex(buffer, shader);
-		//}
+		shader->fragmentID = ImportFragment(file, shader);
 	}
-	//// Create the Shader Program and link it
-	if (shader->vertexID != -1 && shader->fragmentID != -1)
+
+	delete[] buffer;
+
+	// Create the Shader Program and link it
+	if (shader->vertexID != 0 && shader->fragmentID != 0)
 	{
 		GLint outcome;
-		vertexShader = (GLuint)vertexShader;
-		fragmentShader = (GLuint)fragmentShader;
+		shader->vertexID = (GLuint)shader->vertexID;
+		shader->fragmentID = (GLuint)shader->fragmentID;
 
 		shader->shaderProgramID = glCreateProgram();
-		glAttachShader(shader->shaderProgramID, vertexShader);
-		glAttachShader(shader->shaderProgramID, fragmentShader);
+		glAttachShader(shader->shaderProgramID, shader->vertexID);
+		glAttachShader(shader->shaderProgramID, shader->fragmentID);
 		glLinkProgram(shader->shaderProgramID);
 
 		glGetProgramiv(shader->shaderProgramID, GL_LINK_STATUS, &outcome);
@@ -100,25 +61,29 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 			LOG("Shader compiling error: %s", info);
 		}
 
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
+		glDeleteShader(shader->vertexID);
+		glDeleteShader(shader->fragmentID);
 		glDeleteShader(shader->shaderProgramID);
 	}
 	else
 	{
-		LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", vertexShader, fragmentShader);
+		LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
 	}
 	
 
 }
 
-int Importer::ShaderImporter::ImportVertex(const char* buffer, ResourceShader* shader)
+int Importer::ShaderImporter::ImportVertex(std::string shaderFile, ResourceShader* shader)
 {
-	std::string shaderFile(buffer);
+	std::string vertexFile = std::string ("#version 330 core\r\n") + 
+		std::string("#define ") +
+		VERTEX_SHADER + "\r\n";
+	vertexFile += shaderFile;
+
 	GLuint vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	const GLchar* source = (const GLchar*)shaderFile.c_str();
-	glShaderSource(vertexShader, 1, &source, 0);
+	const GLchar* source = (const GLchar*)vertexFile.c_str();
+	glShaderSource(vertexShader, 1, &source, nullptr);
 	glCompileShader(vertexShader);
 	
 	GLint outcome;
@@ -130,18 +95,22 @@ int Importer::ShaderImporter::ImportVertex(const char* buffer, ResourceShader* s
 		LOG("Vertex shader compilation error (%s)", info);
 	}
 
-	delete[] buffer;
+	
 
 	return (outcome != 0) ? vertexShader : -1;
 }
 
-int Importer::ShaderImporter::ImportFragment(const char* buffer, ResourceShader* shader)
+int Importer::ShaderImporter::ImportFragment(std::string shaderFile, ResourceShader* shader)
 {
-	std::string shaderFile(buffer);
+	std::string fragmentFile = std::string("#version 330 core\r\n") +
+		std::string("#define ") + 
+		FRAGMENT_SHADER + "\r\n";
+	fragmentFile += shaderFile;
+	
 	GLuint fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	const GLchar* source = (const GLchar*)shaderFile.c_str();
-	glShaderSource(fragmentShader, 1, &source, 0);
+	const GLchar* source = (const GLchar*)fragmentFile.c_str();
+	glShaderSource(fragmentShader, 1, &source, nullptr);
 	glCompileShader(fragmentShader);
 
 	GLint outcome;
@@ -152,8 +121,7 @@ int Importer::ShaderImporter::ImportFragment(const char* buffer, ResourceShader*
 		glGetShaderInfoLog(fragmentShader, 512, NULL, info);
 		LOG("Vertex shader compilation error (%s)", info);
 	}
-
-	delete[] buffer;
+ 
 
 	return (outcome != 0) ? fragmentShader : -1;
 }

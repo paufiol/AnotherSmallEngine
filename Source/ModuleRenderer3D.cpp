@@ -293,7 +293,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 	
 	if (componentMaterial->GetMaterial() != nullptr)
 	{
-		if (shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID() != 0)
+		shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID();
+		if (shaderProgram != 0)
 		{
 			glUseProgram(shaderProgram);
 		}
@@ -338,8 +339,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 	
 	if (!App->scene->root_object->children.empty() && componentMesh->GetMesh() != nullptr)
 	{
-		//glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
-		//glMultMatrixf((float*)&transform.Transposed());
+		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
+		glMultMatrixf((float*)&transform.Transposed());
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -368,7 +369,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		glDisable(GL_TEXTURE_2D);
 
 
-		//glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
+		glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glUseProgram(0);
 	}

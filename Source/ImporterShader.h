@@ -11,9 +11,9 @@ namespace Importer
 	{
 		void Import(const char* path, ResourceShader* shader);
 
-		int ImportVertex(const char* buffer, ResourceShader* shader);
+		int ImportVertex(std::string shaderFile, ResourceShader* shader);
 
-		int ImportFragment(const char* buffer, ResourceShader* shader);
+		int ImportFragment(std::string shaderFile, ResourceShader* shader);
 
 		uint64 Save(const ResourceShader* shader, char** buffer);
 
