@@ -199,18 +199,14 @@ void  ModuleEditor::SetupStyleFromHue()
 	
 	//TODO: This should be serialised; Maybe in a Loop 
 	ImVec4 temp_frustum;
-	
 	temp_frustum.w = frustumColor.a;
 	temp_frustum.x = frustumColor.r; 
 	temp_frustum.y = frustumColor.g;
 	temp_frustum.z = frustumColor.b; 
 	ImGui::ColorEdit3("Frustum", &temp_frustum.x);
 	frustumColor = Color(float(temp_frustum.x), float(temp_frustum.y), float(temp_frustum.z), float(temp_frustum.w));
-
-	ImGui::Separator();
 	
 	ImVec4 temp_normal;
-
 	temp_normal.w = NormalColor.a;
 	temp_normal.x = NormalColor.r;
 	temp_normal.y = NormalColor.g;
@@ -218,11 +214,7 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImGui::ColorEdit3("Normal", &temp_normal.x);
 	NormalColor = Color(float(temp_normal.x), float(temp_normal.y), float(temp_normal.z), float(temp_normal.w));
 	
-	ImGui::Separator();
-	
-
 	ImVec4 temp_AABB;
-
 	temp_AABB.w = AABBColor.a;
 	temp_AABB.x = AABBColor.r;
 	temp_AABB.y = AABBColor.g;
@@ -230,9 +222,7 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImGui::ColorEdit3("AABB", &temp_AABB.x);
 	AABBColor = Color(float(temp_AABB.x), float(temp_AABB.y), float(temp_AABB.z), float(temp_AABB.w));
 
-
 	ImVec4 temp_OBB;
-
 	temp_OBB.w = OBBColor.a;
 	temp_OBB.x = OBBColor.r;
 	temp_OBB.y = OBBColor.g;
@@ -240,7 +230,6 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImGui::ColorEdit3("OBB", &temp_OBB.x);
 	OBBColor = Color(float(temp_OBB.x), float(temp_OBB.y), float(temp_OBB.z), float(temp_OBB.w));
 
-	
 	ImGui::Separator();
 
 	ImGui::ShowStyleEditor();
@@ -253,56 +242,54 @@ void  ModuleEditor::SetupStyleFromHue()
 	ImVec4 col_back = ImColor::HSV(hue / 255.f, col_back_sat, col_back_val);
 	ImVec4 col_area = ImColor::HSV(hue / 255.f, col_area_sat, col_area_val);
 
-	style.Colors[ImGuiCol_Text] = ImVec4(col_text.x, col_text.y, col_text.z, 1.00f);
-	style.Colors[ImGuiCol_TextDisabled] = ImVec4(col_text.x, col_text.y, col_text.z, 0.58f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(col_back.x, col_back.y, col_back.z, 1.00f);
-	style.Colors[ImGuiCol_Border] = ImVec4(col_text.x, col_text.y, col_text.z, 0.30f);
-	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style.Colors[ImGuiCol_FrameBg] = ImVec4(col_area.x, col_area.y, col_area.z, 1.00f);
-	style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.68f);
-	style.Colors[ImGuiCol_FrameBgActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_TitleBg] = ImVec4(col_main.x, col_main.y, col_main.z, 0.45f);
-	style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(col_main.x, col_main.y, col_main.z, 0.35f);
-	style.Colors[ImGuiCol_TitleBgActive] = ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
-	style.Colors[ImGuiCol_MenuBarBg] = ImVec4(col_area.x, col_area.y, col_area.z, 0.57f);
-	style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(col_area.x, col_area.y, col_area.z, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(col_main.x, col_main.y, col_main.z, 0.31f);
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
-	style.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_CheckMark] = ImVec4(col_main.x, col_main.y, col_main.z, 0.80f);
-	style.Colors[ImGuiCol_SliderGrab] = ImVec4(col_main.x, col_main.y, col_main.z, 0.24f);
-	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_Button] = ImVec4(col_main.x, col_main.y, col_main.z, 0.44f);
-	style.Colors[ImGuiCol_ButtonHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.86f);
-	style.Colors[ImGuiCol_ButtonActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_Header] = ImVec4(col_main.x, col_main.y, col_main.z, 0.76f);
-	style.Colors[ImGuiCol_HeaderHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.86f);
-	style.Colors[ImGuiCol_HeaderActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_ResizeGrip] = ImVec4(col_main.x, col_main.y, col_main.z, 0.20f);
-	style.Colors[ImGuiCol_ResizeGripHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
-	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_PlotLines] = ImVec4(col_text.x, col_text.y, col_text.z, 0.63f);
-	style.Colors[ImGuiCol_PlotLinesHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_PlotHistogram] = ImVec4(col_text.x, col_text.y, col_text.z, 0.63f);
-	style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
-	style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(col_main.x, col_main.y, col_main.z, 0.43f);
-	style.Colors[ImGuiCol_DragDropTarget] = ImVec4(col_main.x, col_main.y, col_main.z, 0.92f);
-	style.Colors[ImGuiCol_ModalWindowDarkening] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+	ExplorerIconsTint = ImVec4(col_main.x + 0.2f, col_main.y + 0.2f, col_main.z + 0.2f, 1.0f);
 
-	style.Colors[ImGuiCol_Tab] = ImVec4(col_area.x, col_area.y, col_area.z, 0.62f);
-	style.Colors[ImGuiCol_TabActive] = ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
-	style.Colors[ImGuiCol_TabHovered] = ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
-	style.Colors[ImGuiCol_TabUnfocused] = ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
-	style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
-
-	style.Colors[ImGuiCol_SeparatorHovered] = ImVec4(col_main.x, col_main.y, col_main.z, 0.92f);
-	style.Colors[ImGuiCol_SeparatorActive] = ImVec4(col_main.x, col_main.y, col_main.z, 0.92f);
-
-	style.Colors[ImGuiCol_DockingPreview] = ImVec4(col_main.x, col_main.y, col_main.z, 0.62f);
-
-	style.Colors[ImGuiCol_NavHighlight] = ImVec4(col_text.x, col_text.y, col_text.z, 0.62f);
-	style.Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(col_text.x, col_text.y, col_text.z, 0.62f);
-	style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(col_text.x, col_text.y, col_text.z, 0.62f);
+	style.Colors[ImGuiCol_Text] =					ImVec4(col_text.x, col_text.y, col_text.z, 1.00f);
+	style.Colors[ImGuiCol_TextDisabled] =			ImVec4(col_text.x, col_text.y, col_text.z, 0.58f);
+	style.Colors[ImGuiCol_WindowBg] =				ImVec4(col_back.x, col_back.y, col_back.z, 1.00f);
+	style.Colors[ImGuiCol_Border] =					ImVec4(col_text.x, col_text.y, col_text.z, 0.30f);
+	style.Colors[ImGuiCol_BorderShadow] =			ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+	style.Colors[ImGuiCol_FrameBg] =				ImVec4(col_area.x, col_area.y, col_area.z, 1.00f);
+	style.Colors[ImGuiCol_FrameBgHovered] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.68f);
+	style.Colors[ImGuiCol_FrameBgActive] =			ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_TitleBg] =				ImVec4(col_main.x, col_main.y, col_main.z, 0.45f);
+	style.Colors[ImGuiCol_TitleBgCollapsed] =		ImVec4(col_main.x, col_main.y, col_main.z, 0.35f);
+	style.Colors[ImGuiCol_TitleBgActive] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
+	style.Colors[ImGuiCol_MenuBarBg] =				ImVec4(col_area.x, col_area.y, col_area.z, 0.57f);
+	style.Colors[ImGuiCol_ScrollbarBg] =			ImVec4(col_area.x, col_area.y, col_area.z, 1.00f);
+	style.Colors[ImGuiCol_ScrollbarGrab] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.31f);
+	style.Colors[ImGuiCol_ScrollbarGrabHovered] =	ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
+	style.Colors[ImGuiCol_ScrollbarGrabActive] =	ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_CheckMark] =				ImVec4(col_main.x, col_main.y, col_main.z, 0.80f);
+	style.Colors[ImGuiCol_SliderGrab] =				ImVec4(col_main.x, col_main.y, col_main.z, 0.24f);
+	style.Colors[ImGuiCol_SliderGrabActive] =		ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_Button] =					ImVec4(col_main.x, col_main.y, col_main.z, 0.44f);
+	style.Colors[ImGuiCol_ButtonHovered] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.86f);
+	style.Colors[ImGuiCol_ButtonActive] =			ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_Header] =					ImVec4(col_main.x, col_main.y, col_main.z, 0.76f);
+	style.Colors[ImGuiCol_HeaderHovered] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.86f);
+	style.Colors[ImGuiCol_HeaderActive] =			ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_ResizeGrip] =				ImVec4(col_main.x, col_main.y, col_main.z, 0.20f);
+	style.Colors[ImGuiCol_ResizeGripHovered] =		ImVec4(col_main.x, col_main.y, col_main.z, 0.78f);
+	style.Colors[ImGuiCol_ResizeGripActive] =		ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_PlotLines] =				ImVec4(col_text.x, col_text.y, col_text.z, 0.63f);
+	style.Colors[ImGuiCol_PlotLinesHovered] =		ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_PlotHistogram] =			ImVec4(col_text.x, col_text.y, col_text.z, 0.63f);
+	style.Colors[ImGuiCol_PlotHistogramHovered] =	ImVec4(col_main.x, col_main.y, col_main.z, 1.00f);
+	style.Colors[ImGuiCol_TextSelectedBg] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.43f);
+	style.Colors[ImGuiCol_DragDropTarget] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.92f);
+	style.Colors[ImGuiCol_ModalWindowDarkening] =	ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+	style.Colors[ImGuiCol_Tab] =					ImVec4(col_area.x, col_area.y, col_area.z, 0.62f);
+	style.Colors[ImGuiCol_TabActive] =				ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
+	style.Colors[ImGuiCol_TabHovered] =				ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
+	style.Colors[ImGuiCol_TabUnfocused] =			ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
+	style.Colors[ImGuiCol_TabUnfocusedActive] =		ImVec4(col_area.x, col_area.y, col_area.z, 0.92f);
+	style.Colors[ImGuiCol_SeparatorHovered] =		ImVec4(col_main.x, col_main.y, col_main.z, 0.92f);
+	style.Colors[ImGuiCol_SeparatorActive] =		ImVec4(col_main.x, col_main.y, col_main.z, 0.92f);
+	style.Colors[ImGuiCol_DockingPreview] =			ImVec4(col_main.x, col_main.y, col_main.z, 0.62f);
+	style.Colors[ImGuiCol_NavHighlight] =			ImVec4(col_text.x, col_text.y, col_text.z, 0.62f);
+	style.Colors[ImGuiCol_NavWindowingHighlight] =	ImVec4(col_text.x, col_text.y, col_text.z, 0.62f);
+	style.Colors[ImGuiCol_NavWindowingDimBg] =		ImVec4(col_text.x, col_text.y, col_text.z, 0.62f);
 }
 
 
@@ -368,8 +355,6 @@ void ModuleEditor::LoadIcons()
 	size = App->fileSystem->Load("Assets/Icons/Return_Icon_x1.png", &buffer);
 	if (size > 0) Importer::TextureImporter::ImportTexture(returnIcon, buffer, size);
 	RELEASE_ARRAY(buffer);
-
-
 }
 
 void ModuleEditor::AssetExplorerWindow()
@@ -402,7 +387,6 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 				}
 				ImGui::TreePop();
 			}
-
 		}
 	}
 }
@@ -420,11 +404,9 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::Text(assetFolder.localPath.c_str());
 
-	ImGui::SameLine();
+	ImGui::SameLine(ImGui::GetWindowWidth() - 30);
 
-	ImGui::SetCursorPosX(iconSize + offset * 17);
-
-	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.9f));
+	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 	if (ImGui::IsItemClicked()) 
 		nextFolder = previousFolder;
@@ -458,29 +440,27 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			switch (resource->type)
 			{
 			case ResourceType::Model:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 				break;
 			case ResourceType::Scene:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 				break;
 			case ResourceType::Texture:
-				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 
 				break;
 			case ResourceType::Folder:
-				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 				break;
 			default:
-
-
 				break;
 			}
 		}
 		else
 		{
-			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ImVec4(0.0f, 0.9f, 0.9f, 0.7f));
+			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 		}
 
 		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)
@@ -566,9 +546,7 @@ void ModuleEditor::DropTargetWindow()
 					material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
 					compTexture = (ComponentTexture*)App->scene->selected_object->GetComponent(ComponentType::Material);
 					if (compTexture) compTexture->SetMaterial(material);
-
-					
-
+					break;
 				default:
 					break;
 				}
@@ -968,7 +946,6 @@ void ModuleEditor::InspectorWindow()
 					}
 				}
 			}
-
 		}
 		ImGui::End();
 	}
@@ -1037,8 +1014,6 @@ void ModuleEditor::ConsoleWindow()
 {
 	if (show_console_window) {
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 6));
-
-
 
 		ImGui::Begin("Console", &show_console_window);
 
