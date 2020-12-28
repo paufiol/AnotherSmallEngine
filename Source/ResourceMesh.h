@@ -24,6 +24,8 @@ public:
 		texture,
 		NONE
 	};
+
+	uint VAO = 0;
 	uint ID[NONE];
 	uint size[NONE];
 

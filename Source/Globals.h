@@ -68,6 +68,7 @@ enum update_status
 #define VERTEX_SHADER "__Vertex_Shader__"
 #define FRAGMENT_SHADER "__Fragment_Shader__"
 
+#define MAX_SHADERS 1000
 // Deletes a buffer
 #define RELEASE( x )\
     {\

@@ -261,7 +261,7 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 ResourceShader* ModuleResources::GetShader()
 {
 
-	ResourceShader* tempShader = nullptr;
+	ResourceShader* tempShader = new ResourceShader();
 	Resource* resource = nullptr;
 	std::map<uint32, Resource*>::iterator item;
 	for (item = importedResources.begin(); item != importedResources.end(); item++)
@@ -270,7 +270,12 @@ ResourceShader* ModuleResources::GetShader()
 		{
 			resource = item->second;
 			tempShader = (ResourceShader*)resource;
-			//tempShader = (ResourceShader*)LoadResource(resource->UID);
+		}
+		if (tempShader->shaderProgramID > MAX_SHADERS)
+		{
+			tempShader->shaderProgramID = 0;
+			tempShader->fragmentID = 0;
+			tempShader->vertexID = 0;
 		}
 			
 	}		

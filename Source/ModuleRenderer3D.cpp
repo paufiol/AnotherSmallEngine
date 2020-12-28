@@ -5,6 +5,7 @@
 #include "ModuleEditor.h"
 #include "ModuleScene.h"
 
+#include "ModuleResource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ImporterTexture.h"
@@ -298,13 +299,14 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		{
 			glUseProgram(shaderProgram);
 		}
-		
-		if (componentMaterial->GetMaterial()->GetId() == 0)
+		else
 		{
-			Color color = componentMaterial->GetMaterial()->GetColor();
-			glColor4f(color.r, color.g, color.b, color.a);
+			App->resources->LoadResource(componentMaterial->GetMaterial()->GetShader()->UID);
+			shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID();
+			glUseProgram(shaderProgram);
 		}
-		else if (App->editor->drawTexture && !App->editor->drawCheckerTex)
+
+		if (App->editor->drawTexture && !App->editor->drawCheckerTex && componentMaterial->GetMaterial()->GetId() != 0)
 		{
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, componentMaterial->GetMaterial()->GetId());
@@ -321,17 +323,14 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 			uint colorLoc = glGetUniformLocation(shaderProgram, "inColor");
 			glUniform4fv(colorLoc, 1, (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
 
-			//Sending prefab matrix
 			uint modelLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, meshOwner->transform->GetLocalTransform().ptr());
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transform.Transposed().ptr());
 
-			//Sending view matrix
-			uint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
-
-			//Sending projection matrix
 			uint viewLoc = glGetUniformLocation(shaderProgram, "view");
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetRawViewMatrix());
+
+			uint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
 
 		}
 		
@@ -339,38 +338,31 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 	
 	if (!App->scene->root_object->children.empty() && componentMesh->GetMesh() != nullptr)
 	{
-		//glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
-		//glMultMatrixf((float*)&transform.Transposed());
+		glBindVertexArray(componentMesh->GetMesh()->VAO);
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_NORMAL_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		//glEnableVertexAttribArray(0);
+		//glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::vertex]);
+		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::vertex]);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		//glEnableVertexAttribArray(1);
+		//glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::texture]);
+		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-		glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::normal]);
-		glNormalPointer(GL_FLOAT, 0, NULL);
+		//glEnableVertexAttribArray(2);
+		//glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::normal]);
+		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::index]);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::index]);
 
-		glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::texture]);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+		glDrawElements(GL_TRIANGLES, componentMesh->GetMesh()->size[ResourceMesh::index], GL_UNSIGNED_INT, nullptr);
 
-		glDrawElements(GL_TRIANGLES, componentMesh->GetMesh()->size[ResourceMesh::index], GL_UNSIGNED_INT, NULL);
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_NORMAL_ARRAY, 0);
-
-		glDisableClientState(GL_NORMAL_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
+		//glDisableVertexAttribArray(0);
+		//glDisableVertexAttribArray(1);
 
-
-		//glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
-		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glBindVertexArray(0);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glUseProgram(0);
 	}
 	else

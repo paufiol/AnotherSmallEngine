@@ -128,19 +128,15 @@ int Importer::ShaderImporter::ImportFragment(std::string shaderFile, ResourceSha
 
 uint64 Importer::ShaderImporter::Save(const ResourceShader* shader, char** buffer)
 {
-	GLint formats = 0;
-	glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &formats);
-	if (formats < 1) return 0;
-	
-	
 	char* binaryBuffer = nullptr;
 	GLint binarySize = 0;
 	int fullSize = 0;
 
 	glGetProgramiv(shader->shaderProgramID, GL_PROGRAM_BINARY_LENGTH, &binarySize);
+
 	if(binarySize > 0)
 	{
-		fullSize = sizeof(unsigned int) + binarySize;
+		fullSize = sizeof(uint32) + binarySize;
 		*buffer = new char[fullSize];
 		binaryBuffer = new char[binarySize];
 
@@ -150,8 +146,8 @@ uint64 Importer::ShaderImporter::Save(const ResourceShader* shader, char** buffe
 		glGetProgramBinary(shader->shaderProgramID, binarySize, &lenght, &binaryFormat, binaryBuffer);
 
 		char* cursor = *buffer;
-		memcpy(cursor, &binaryFormat, sizeof(unsigned int));
-		cursor += sizeof(unsigned int);
+		memcpy(cursor, &binaryFormat, sizeof(uint32));
+		cursor += sizeof(uint32);
 
 		memcpy(cursor, binaryBuffer, binarySize);
 		RELEASE_ARRAY(binaryBuffer);
@@ -165,22 +161,12 @@ void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, 
 	GLenum binaryFormat;
 
 	const char* cursor = buffer;
-	memcpy(&binaryFormat, cursor, sizeof(unsigned int));
-	cursor += sizeof(unsigned int);
+	memcpy(&binaryFormat, cursor, sizeof(uint32));
+	cursor += sizeof(uint32);
 
 	shader->shaderProgramID = glCreateProgram();
-	glProgramBinary(shader->shaderProgramID, 36385, cursor, size - sizeof(unsigned int));
+	glProgramBinary(shader->shaderProgramID, binaryFormat, cursor, size - sizeof(uint32));
 
-	//GLint state;
-	//glGetProgramiv(shader->shaderProgramID, GL_LINK_STATUS, &state);
-
-	//if (state == GL_FALSE)
-	//{
-	//	char str[512];
-	//	glGetProgramInfoLog(shader->shaderProgramID, 512, nullptr, str);
-	//	LOG("Shader Compilation Error: %s", str);
-	//	glDeleteProgram(shader->shaderProgramID);
-	//}
 
 	GLint outcome = 0;
 	GLchar info[512];
@@ -190,6 +176,10 @@ void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, 
 		glGetShaderInfoLog(shader->shaderProgramID, 512, NULL, info);
 		LOG("Vertex shader compilation error (%s)", info);
 		glDeleteProgram(shader->shaderProgramID);
+
+		Importer::ShaderImporter::Import(shader->assetsFile.c_str(), shader);
 	}
+
+
 
 }

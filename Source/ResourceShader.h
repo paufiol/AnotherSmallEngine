@@ -8,6 +8,7 @@ class ResourceShader : public Resource
 public:
 
 	ResourceShader(const char* assetsFile, const char* libraryFile, const char* name, uint32 UID);
+	ResourceShader();
 	~ResourceShader();
 
 public:

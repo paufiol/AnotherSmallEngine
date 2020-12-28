@@ -8,6 +8,10 @@ ResourceShader::ResourceShader(const char* assetsFile, const char* libraryFile, 
 	if (UID != 0) this->UID = UID;
 }
 
+ResourceShader::ResourceShader() : Resource(ResourceType::Shader)
+{
+}
+
 ResourceShader::~ResourceShader()
 {
 
