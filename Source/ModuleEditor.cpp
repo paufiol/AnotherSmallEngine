@@ -73,13 +73,7 @@ bool ModuleEditor::Start()
 
 	//Load the icons into TextureResource
 	LoadIcons();
-
-	//Set Asset folder via FileSystem || This will go on a function
-	std::vector<std::string> ignore_ext;
-	ignore_ext.push_back("meta");
-	assetsFolder = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
-
-
+	UpdateAssetExplorer();
 	currentFolder = assetsFolder;
 
 	//ImGui::SaveIniSettingsToDisk()
@@ -87,7 +81,7 @@ bool ModuleEditor::Start()
 	//Set Up
 	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::HLSL();
 
-	fileToEdit = "Assets/Shaders/DefaultShader.frag";
+	fileToEdit = "Assets/Shaders/DefaultShader.shader";
 
 	std::ifstream t(fileToEdit.c_str());
 	if (t.good())
@@ -169,13 +163,18 @@ void ModuleEditor::DrawGUI()
 {
 	
 	ImGuiIO& io = ImGui::GetIO();
-
-
-
 	ImGui::Render();
 	glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
 	//ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleEditor::UpdateAssetExplorer()
+{
+	std::vector<std::string> ignore_ext;
+	ignore_ext.push_back("meta");
+	assetsFolder = App->fileSystem->GetAllFiles("Assets", nullptr, &ignore_ext);
+
 }
 
 void ModuleEditor::GUIisHovered()
@@ -380,6 +379,15 @@ void ModuleEditor::LoadIcons()
 
 void ModuleEditor::AssetExplorerWindow()
 {
+	Timer timer;
+	timer.Start();
+	if (updateTimer.ReadSec() > updateTime)
+	{
+		UpdateAssetExplorer();
+		updateTimer.Start();
+	}
+	double time = timer.Read();
+	
 	ImGui::Begin("Assets Tree");
 	AssetsTree(assetsFolder);
 	ImGui::End();
@@ -476,6 +484,8 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 				break;
 			default:
+				ImGui::ImageButton((ImTextureID)defaultIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
+
 				break;
 			}
 		}
@@ -501,11 +511,12 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 				break;
 			case ResourceType::Scene:
 				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
-
 				break;
 			case ResourceType::Texture:
 				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
-
+				break;
+			case ResourceType::Shader:
+				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
 			}
 
@@ -568,7 +579,8 @@ void ModuleEditor::DropTargetWindow()
 					compTexture = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
 					if (compTexture) compTexture->SetMaterial(material);
 					break;
-				default:
+				case ResourceType::Shader:
+					App->resources->LoadResource(UID);
 					break;
 				}
 

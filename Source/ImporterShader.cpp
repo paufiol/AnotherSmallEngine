@@ -140,18 +140,18 @@ uint64 Importer::ShaderImporter::Save(const ResourceShader* shader, char** buffe
 	glGetProgramiv(shader->shaderProgramID, GL_PROGRAM_BINARY_LENGTH, &binarySize);
 	if(binarySize > 0)
 	{
-		fullSize = sizeof(int) + binarySize;
+		fullSize = sizeof(unsigned int) + binarySize;
 		*buffer = new char[fullSize];
 		binaryBuffer = new char[binarySize];
 
-		GLsizei lenght;
+		GLsizei lenght = 0;
 		GLenum binaryFormat;
 
 		glGetProgramBinary(shader->shaderProgramID, binarySize, &lenght, &binaryFormat, binaryBuffer);
 
 		char* cursor = *buffer;
-		memcpy(cursor, &binaryFormat, sizeof(int));
-		cursor += sizeof(int);
+		memcpy(cursor, &binaryFormat, sizeof(unsigned int));
+		cursor += sizeof(unsigned int);
 
 		memcpy(cursor, binaryBuffer, binarySize);
 		RELEASE_ARRAY(binaryBuffer);
@@ -171,14 +171,25 @@ void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, 
 	shader->shaderProgramID = glCreateProgram();
 	glProgramBinary(shader->shaderProgramID, 36385, cursor, size - sizeof(unsigned int));
 
-	GLint state;
-	glGetProgramiv(shader->shaderProgramID, GL_LINK_STATUS, &state);
+	//GLint state;
+	//glGetProgramiv(shader->shaderProgramID, GL_LINK_STATUS, &state);
 
-	if (state == GL_FALSE)
+	//if (state == GL_FALSE)
+	//{
+	//	char str[512];
+	//	glGetProgramInfoLog(shader->shaderProgramID, 512, nullptr, str);
+	//	LOG("Shader Compilation Error: %s", str);
+	//	glDeleteProgram(shader->shaderProgramID);
+	//}
+
+	GLint outcome = 0;
+	GLchar info[512];
+	glGetShaderiv(shader->shaderProgramID, GL_COMPILE_STATUS, &outcome);
+	if (outcome == 0)
 	{
-		char str[512];
-		glGetProgramInfoLog(shader->shaderProgramID, 512, nullptr, str);
-		LOG("Shader Compilation Error: %s", str);
+		glGetShaderInfoLog(shader->shaderProgramID, 512, NULL, info);
+		LOG("Vertex shader compilation error (%s)", info);
 		glDeleteProgram(shader->shaderProgramID);
 	}
+
 }

@@ -269,7 +269,8 @@ ResourceShader* ModuleResources::GetShader()
 		if (item->second->type == ResourceType::Shader)
 		{
 			resource = item->second;
-			tempShader = (ResourceShader*)LoadResource(resource->UID);
+			tempShader = (ResourceShader*)resource;
+			//tempShader = (ResourceShader*)LoadResource(resource->UID);
 		}
 			
 	}		
@@ -423,11 +424,13 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 	
 	Resource* resource = nullptr;
 	resource = GetResource(UID);
-	if (resource) return resource;
+	/*if (resource) return resource;
 	else 
 	{
 		resource = GetResourceInMemory(UID);
-	}
+	}*/
+	if (!resource) resource = GetResourceInMemory(UID);
+
 
 	Resource* tempResource = CreateNewResource(resource->assetsFile.c_str(),resource->GetType(),resource->name.c_str(),resource->UID);
 	char* buffer = nullptr;
@@ -450,7 +453,8 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
 		break;
 	case(ResourceType::Scene):
-		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
+		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer); //Works for now
+		 //Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
 		break;
 	case(ResourceType::Texture):
 		Importer::TextureImporter::Load((ResourceTexture*)tempResource, buffer,size);

@@ -30,6 +30,7 @@ public:
 	bool CleanUp() override;
 
 	void DrawGUI();
+	void UpdateAssetExplorer();
 
 	void Docking();
 	void RequestBrowser(const char*);
@@ -72,6 +73,9 @@ public:
 
 	PathNode assetsFolder;
 	PathNode currentFolder;
+
+	uint updateTime = 5;
+	Timer updateTimer;
 
 	ResourceTexture* modelIcon = nullptr;
 	ResourceTexture* defaultIcon = nullptr;

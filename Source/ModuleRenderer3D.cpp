@@ -323,7 +323,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 			//Sending prefab matrix
 			uint modelLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transform.ptr());
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, meshOwner->transform->GetLocalTransform().ptr());
 
 			//Sending view matrix
 			uint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
@@ -339,8 +339,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 	
 	if (!App->scene->root_object->children.empty() && componentMesh->GetMesh() != nullptr)
 	{
-		glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
-		glMultMatrixf((float*)&transform.Transposed());
+		//glPushMatrix();	// Set the matrix on top of the stack identical to the one below it
+		//glMultMatrixf((float*)&transform.Transposed());
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_NORMAL_ARRAY);
@@ -369,8 +369,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		glDisable(GL_TEXTURE_2D);
 
 
-		glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		//glPopMatrix();	// Pops the current matrix stack, replacing the current matrix with the one below it on the stack
+		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glUseProgram(0);
 	}
 	else
