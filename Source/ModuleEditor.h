@@ -108,6 +108,8 @@ public:
 	bool show_hierarchy_window = true;
 	bool show_inspector_window = true;
 	bool show_dropTarget_window = false;
+	bool show_texteditor_window = false;
+	bool show_saveeditor_popup = false;
 
 	bool depthtest = false;
 	bool cullface = false;

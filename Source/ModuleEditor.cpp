@@ -78,17 +78,6 @@ bool ModuleEditor::Start()
 
 	//ImGui::SaveIniSettingsToDisk()
 
-	//Set Up
-	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::HLSL();
-
-	fileToEdit = "Assets/Shaders/DefaultShader.shader";
-
-	std::ifstream t(fileToEdit.c_str());
-	if (t.good())
-	{
-		std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-		editor.SetText(str);
-	}
 	editor.SetPalette(TextEditor::GetDarkPalette());
 
 	return true;
@@ -516,11 +505,9 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
 			case ResourceType::Shader:
-				ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+				ImGui::Image((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
 			}
-
-
 			ImGui::EndDragDropSource();
 		}
 
@@ -581,99 +568,144 @@ void ModuleEditor::DropTargetWindow()
 					break;
 				case ResourceType::Shader:
 					App->resources->LoadResource(UID);
+
+					if (true)
+					{
+						TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
+						
+						fileToEdit = resource->GetAssetsFile();
+
+						std::ifstream t(fileToEdit.c_str());
+						if (t.good())
+						{
+							std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+							editor.SetText(str);
+						}
+
+						show_saveeditor_popup = true;
+					}
 					break;
 				}
-
 				// Else make a pop up Error
 			}
 			ImGui::EndDragDropTarget();
 			show_dropTarget_window = false;
 		}
-
 		ImGui::End();
 	}
-	
-
 }
 
 void ModuleEditor::TextEditorWindow()
 {
-	ImGui::Begin("Text Editor", nullptr, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar);
-	
-
-
-	//Update
-	auto cpos = editor.GetCursorPosition();
-	if (ImGui::BeginMenuBar())
+	if (show_saveeditor_popup) //TODO: Create and and handle HasUnsavedChanges
 	{
-		if (ImGui::BeginMenu("File"))
+		if (!show_texteditor_window) //Only 
 		{
-			if (ImGui::MenuItem("Save"))
+			show_texteditor_window = true;
+			show_saveeditor_popup = false;
+		}
+		else {
+			if (ImGui::Begin("Save Previous File")) //TODO: Turn Into PopUp
 			{
-				std::string textToSave = editor.GetText();
-				/// save text....
+				if (ImGui::Button("Save Changes"))
+				{
+					std::string textToSave = editor.GetText();
+					App->fileSystem->Remove(fileToEdit.c_str());
+					App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
 
-				//Borrar archivo viejo
-				App->fileSystem->Remove("Assets/Shaders/DefaultShader.frag");
-
-				//Crear Archivo nuevo con get text
-				App->fileSystem->Save("Assets/Shaders/DefaultShader.frag", textToSave.c_str(), editor.GetText().size());
-				//Llamar program shader compilation
+					show_saveeditor_popup = false;
+					show_texteditor_window = true;
+				
+					//ImGui::CloseCurrentPopup();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Don't Save"))
+				{
+					show_saveeditor_popup = false;
+					show_texteditor_window = true;
+				
+					//ImGui::CloseCurrentPopup();
+				}
+				ImGui::End();
 			}
-			
-			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Edit"))
-		{
-			bool ro = editor.IsReadOnly();
-			if (ImGui::MenuItem("Read-only mode", nullptr, &ro))
-				editor.SetReadOnly(ro);
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Undo", "ALT-Backspace", nullptr, !ro && editor.CanUndo()))
-				editor.Undo();
-			if (ImGui::MenuItem("Redo", "Ctrl-Y", nullptr, !ro && editor.CanRedo()))
-				editor.Redo();
-
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr, editor.HasSelection()))
-				editor.Copy();
-			if (ImGui::MenuItem("Cut", "Ctrl-X", nullptr, !ro && editor.HasSelection()))
-				editor.Cut();
-			if (ImGui::MenuItem("Delete", "Del", nullptr, !ro && editor.HasSelection()))
-				editor.Delete();
-			if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr, !ro && ImGui::GetClipboardText() != nullptr))
-				editor.Paste();
-
-			ImGui::Separator();
-
-			if (ImGui::MenuItem("Select all", nullptr, nullptr))
-				editor.SetSelection(TextEditor::Coordinates(), TextEditor::Coordinates(editor.GetTotalLines(), 0));
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("View"))
-		{
-			if (ImGui::MenuItem("Dark palette"))
-				editor.SetPalette(TextEditor::GetDarkPalette());
-			if (ImGui::MenuItem("Light palette"))
-				editor.SetPalette(TextEditor::GetLightPalette());
-			if (ImGui::MenuItem("Retro blue palette"))
-				editor.SetPalette(TextEditor::GetRetroBluePalette());
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenuBar();
 	}
 
-	ImGui::Text("%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1, cpos.mColumn + 1, editor.GetTotalLines(),
-		editor.IsOverwrite() ? "Ovr" : "Ins",
-		editor.CanUndo() ? "*" : " ",
-		editor.GetLanguageDefinition().mName.c_str(), fileToEdit.c_str());
 
-	editor.Render("TextEditor");
-	ImGui::End();
+	if (show_texteditor_window) {
+
+		if (ImGui::Begin("Text Editor", &show_texteditor_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
+		{
+			//Update
+			auto cpos = editor.GetCursorPosition();
+			if (ImGui::BeginMenuBar())
+			{
+				if (ImGui::BeginMenu("File"))
+				{
+					if (ImGui::MenuItem("Save"))
+					{
+						std::string textToSave = editor.GetText();
+
+						App->fileSystem->Remove(fileToEdit.c_str());
+						App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
+					
+						//TODO: Add Reload of Shader Program (method yet to implement)
+					}
+			
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("Edit"))
+				{
+					bool ro = editor.IsReadOnly();
+					if (ImGui::MenuItem("Read-only mode", nullptr, &ro))
+						editor.SetReadOnly(ro);
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Undo", "ALT-Backspace", nullptr, !ro && editor.CanUndo()))
+						editor.Undo();
+					if (ImGui::MenuItem("Redo", "Ctrl-Y", nullptr, !ro && editor.CanRedo()))
+						editor.Redo();
+
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Copy", "Ctrl-C", nullptr, editor.HasSelection()))
+						editor.Copy();
+					if (ImGui::MenuItem("Cut", "Ctrl-X", nullptr, !ro && editor.HasSelection()))
+						editor.Cut();
+					if (ImGui::MenuItem("Delete", "Del", nullptr, !ro && editor.HasSelection()))
+						editor.Delete();
+					if (ImGui::MenuItem("Paste", "Ctrl-V", nullptr, !ro && ImGui::GetClipboardText() != nullptr))
+						editor.Paste();
+
+					ImGui::Separator();
+
+					if (ImGui::MenuItem("Select all", nullptr, nullptr))
+						editor.SetSelection(TextEditor::Coordinates(), TextEditor::Coordinates(editor.GetTotalLines(), 0));
+
+					ImGui::EndMenu();
+				}
+				if (ImGui::BeginMenu("View")) //Might not be necessary? 
+				{
+					if (ImGui::MenuItem("Dark palette"))
+						editor.SetPalette(TextEditor::GetDarkPalette());
+					if (ImGui::MenuItem("Light palette"))
+						editor.SetPalette(TextEditor::GetLightPalette());
+					if (ImGui::MenuItem("Retro blue palette"))
+						editor.SetPalette(TextEditor::GetRetroBluePalette());
+					ImGui::EndMenu();
+				}
+				ImGui::EndMenuBar();
+			}
+
+			ImGui::Text("%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1, cpos.mColumn + 1, editor.GetTotalLines(),
+				editor.IsOverwrite() ? "Ovr" : "Ins",
+				editor.CanUndo() ? "*" : " ",
+				editor.GetLanguageDefinition().mName.c_str(), fileToEdit.c_str());
+
+			editor.Render("TextEditor");
+			ImGui::End();
+		}
+	}
 }
 
 bool ModuleEditor::MainMenuBar()
@@ -724,6 +756,14 @@ bool ModuleEditor::MainMenuBar()
 			ImGui::EndMenu();
 
 		}
+		if (ImGui::BeginMenu("Tools"))
+		{
+			if (ImGui::MenuItem("Set Guizmo: Translate (W)","W"))	App->scene->gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+			if (ImGui::MenuItem("Set Guizmo: Rotate (E)","E"))		App->scene->gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+			if (ImGui::MenuItem("Set Guizmo: Scale (R)","R"))		App->scene->gizmoOperation = ImGuizmo::OPERATION::SCALE;
+
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Help"))
 		{
 			if (ImGui::MenuItem("ImGui Demo"))show_demo_window = !show_demo_window;
@@ -731,14 +771,6 @@ bool ModuleEditor::MainMenuBar()
 			if (ImGui::MenuItem("Latest Release")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine");
 			if (ImGui::MenuItem("Report a bug")) RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/issues");
 			if (ImGui::MenuItem("About")) show_about_window = !show_about_window;
-			ImGui::EndMenu();
-		}
-		if (ImGui::BeginMenu("Tools"))
-		{
-			if (ImGui::MenuItem("Set Guizmo: Translate (W)"))	App->scene->gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-			if (ImGui::MenuItem("Set Guizmo: Rotate (E)"))		App->scene->gizmoOperation = ImGuizmo::OPERATION::ROTATE;
-			if (ImGui::MenuItem("Set Guizmo: Scale (R)"))		App->scene->gizmoOperation = ImGuizmo::OPERATION::SCALE;
-
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
@@ -770,7 +802,6 @@ void ModuleEditor::AboutWindow()
 		if (ImGui::Selectable(label, true))	RequestBrowser("https://github.com/paufiol/AnotherSmallEngine/blob/master/LICENSE.txt");
 		
 		ImGui::End();
-
 	}
 }
 
