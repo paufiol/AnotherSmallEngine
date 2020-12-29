@@ -15,7 +15,7 @@ using namespace std;
 class GameObject;
 class Resource;
 class ResourceTexture;
-//class TextEditor;
+class ResourceShader;
 
 class ModuleEditor : public Module 
 {
@@ -81,6 +81,8 @@ public:
 	ResourceTexture* defaultIcon = nullptr;
 	ResourceTexture* folderIcon = nullptr;
 	ResourceTexture* returnIcon = nullptr;
+
+	ResourceShader* shaderToRecompile = nullptr;
 
 	PathNode nextFolder;
 	PathNode previousFolder;

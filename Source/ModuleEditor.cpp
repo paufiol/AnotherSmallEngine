@@ -14,12 +14,15 @@
 
 #include "ResourceScene.h"
 #include "ResourceMaterial.h"
+#include "ResourceShader.h"
 #include "Resource.h"
 #include "ModuleResource.h"
 #include "ModuleFileSystem.h"
 #include "JsonConfig.h"
+
 #include "ImporterScene.h"
 #include "ImporterMaterials.h"
+#include "ImporterShader.h"
 
 #include "Dependencies/ImGUI/imgui.h"
 #include "Dependencies/ImGUI/imgui_internal.h"
@@ -566,12 +569,14 @@ void ModuleEditor::DropTargetWindow()
 					compMaterial->GetMaterial()->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
 					break;
 				case ResourceType::Shader:
-					App->resources->LoadResource(UID);
 
-					if (true)
+					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
+					compMaterial->GetMaterial()->SetShader((ResourceShader*)App->resources->LoadResource(UID));
+					
+					if (true) //TODO
 					{
 						TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
-						
+
 						fileToEdit = resource->GetAssetsFile();
 
 						std::ifstream t(fileToEdit.c_str());
@@ -582,10 +587,10 @@ void ModuleEditor::DropTargetWindow()
 						}
 
 						show_saveeditor_popup = true;
+
+						shaderToRecompile = compMaterial->GetMaterial()->GetShader();
 					}
-					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
-					compMaterial->GetMaterial()->SetShader((ResourceShader*)App->resources->LoadResource(UID));
-					
+
 					break;
 				}
 				// Else make a pop up Error
@@ -652,6 +657,12 @@ void ModuleEditor::TextEditorWindow()
 						App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
 					
 						//TODO: Add Reload of Shader Program (method yet to implement)
+
+						glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->vertexID);
+						glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->fragmentID);
+						glDeleteProgram(shaderToRecompile->shaderProgramID);
+
+						Importer::ShaderImporter::Import(shaderToRecompile->assetsFile.c_str(), shaderToRecompile);
 					}
 			
 					ImGui::EndMenu();
