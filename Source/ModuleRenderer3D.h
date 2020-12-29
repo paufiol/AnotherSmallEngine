@@ -47,9 +47,8 @@ public:
 
 private:
 	bool DoesIntersect(const AABB& aabb);
-
 	void DrawCuboid(const float3* corners, Color color);
-
+	uint32 SetDefaultShader(ComponentMaterial* componentMaterial);
 public:
 	Light lights[MAX_LIGHTS];
 	SDL_GLContext context;

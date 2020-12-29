@@ -226,13 +226,6 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 
 void ModuleRenderer3D::IterateMeshDraw()
 {
-	/*for(uint i = 0; i < Importer::MeshImporter::meshes.size(); i++)
-	{
-		DrawMesh(Importer::MeshImporter::meshes[i]);
-
-		if (App->editor->drawNormals) DrawNormals(Importer::MeshImporter::meshes[i]);
-		//LOG("Mesh rendered with %d vertices", Importer::MeshImporter::meshes[i]->size[Mesh::vertex]);
-	}*/
 
 	for (uint i = 0; i < App->scene->game_objects.size(); i++) 
 	{
@@ -291,18 +284,13 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 			return;
 		}
 	}
-	
 	if (componentMaterial->GetMaterial() != nullptr)
 	{
-		shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID();
-		if (shaderProgram != 0)
-		{
-			glUseProgram(shaderProgram);
-		}
+		if(componentMaterial->GetMaterial()->GetShader()) shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID();
+		if (shaderProgram != 0) glUseProgram(shaderProgram);
 		else
 		{
-			App->resources->LoadResource(componentMaterial->GetMaterial()->GetShader()->UID);
-			shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID();
+			shaderProgram = SetDefaultShader(componentMaterial);
 			glUseProgram(shaderProgram);
 		}
 
@@ -333,43 +321,35 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
 
 		}
-		
 	}
 	
 	if (!App->scene->root_object->children.empty() && componentMesh->GetMesh() != nullptr)
 	{
 		glBindVertexArray(componentMesh->GetMesh()->VAO);
 
-		//glEnableVertexAttribArray(0);
-		//glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::vertex]);
-		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
-		//glEnableVertexAttribArray(1);
-		//glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::texture]);
-		//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
-		//glEnableVertexAttribArray(2);
-		//glBindBuffer(GL_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::normal]);
-		//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, componentMesh->GetMesh()->ID[ResourceMesh::index]);
-
 		glDrawElements(GL_TRIANGLES, componentMesh->GetMesh()->size[ResourceMesh::index], GL_UNSIGNED_INT, nullptr);
 
-
 		glDisable(GL_TEXTURE_2D);
-		//glDisableVertexAttribArray(0);
-		//glDisableVertexAttribArray(1);
 
 		glBindVertexArray(0);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glUseProgram(0);
 	}
-	else
-	{
-		//LOG("Unable to render mesh");
-	}
 }
+uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
+{
+	Resource* resource = nullptr;
+	std::vector<ResourceShader*> shadersInMemory = App->resources->GetShadersInMemory();
+	for (uint i = 0; i < shadersInMemory.size(); i++)
+	{
+		if (shadersInMemory[i]->name == "DefaultShader") componentMaterial->GetMaterial()->SetShader(shadersInMemory[i]);
+	}
+	resource = App->resources->LoadResource(componentMaterial->GetMaterial()->GetShader()->UID);
+
+	return componentMaterial->GetMaterial()->GetShaderProgramID();
+
+}
+
 
 void ModuleRenderer3D::UseCheckerTexture() {
 
@@ -527,3 +507,4 @@ void ModuleRenderer3D::DrawCuboid(const float3* corners, Color color) {
 	glColor4f(1.0, 1.0, 1.0, 1.0);
 
 }
+
