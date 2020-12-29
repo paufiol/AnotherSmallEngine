@@ -374,6 +374,7 @@ void ModuleEditor::AssetExplorerWindow()
 	{
 		UpdateAssetExplorer();
 		updateTimer.Start();
+		textureIconLoaded = true;
 	}
 	double time = timer.Read();
 	
@@ -451,7 +452,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		{
 			UID = JsonConfig(buffer).GetNumber("UID");
 			resource = App->resources->GetResourceInMemory(UID);
-			if(resource->type == ResourceType::Texture) App->resources->LoadResource(UID);
+			if(resource->type == ResourceType::Texture && !textureIconLoaded) App->resources->LoadResource(UID);
 			textureIcon = (ResourceTexture*)resource;
 			RELEASE_ARRAY(buffer);
 
@@ -545,8 +546,7 @@ void ModuleEditor::DropTargetWindow()
 		if (ImGui::BeginDragDropTarget())
 		{
 			ResourceMaterial* material = new ResourceMaterial();
-			ComponentMaterial* compTexture;
-
+			ComponentMaterial* compMaterial;
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
 			{
 				uint32 UID = *(const uint32*)payload->Data;
@@ -562,9 +562,8 @@ void ModuleEditor::DropTargetWindow()
 					break;
 				case ResourceType::Texture:
 
-					material->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
-					compTexture = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
-					if (compTexture) compTexture->SetMaterial(material);
+					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
+					compMaterial->GetMaterial()->SetTexture((ResourceTexture*)App->resources->LoadResource(UID));
 					break;
 				case ResourceType::Shader:
 					App->resources->LoadResource(UID);
@@ -584,6 +583,9 @@ void ModuleEditor::DropTargetWindow()
 
 						show_saveeditor_popup = true;
 					}
+					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
+					compMaterial->GetMaterial()->SetShader((ResourceShader*)App->resources->LoadResource(UID));
+					
 					break;
 				}
 				// Else make a pop up Error

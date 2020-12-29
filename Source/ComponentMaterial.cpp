@@ -51,11 +51,14 @@ void ComponentMaterial::DrawInspector() {
 
 	if (ImGui::CollapsingHeader("Component Material"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
+		ImGui::Text("Texture:");
+		ImGui::SameLine();
+		ImGui::TextColored(GREEN,"%s", rMaterial->GetTexture()->name.c_str());
 		if (rMaterial->GetTexture() != nullptr)
 		{
 			ImGui::Text("Path: ");
 			ImGui::SameLine();
-			ImGui::TextColored(GREEN,"%s", rMaterial->GetPath().c_str());
+			ImGui::TextColored(GREEN,"%s", rMaterial->GetTexture()->assetsFile.c_str());
 			ImGui::Text("Id: ");
 			ImGui::SameLine();
 			ImGui::TextColored(YELLOW, "%d", rMaterial->GetId());
@@ -64,30 +67,28 @@ void ComponentMaterial::DrawInspector() {
 		{
 			ImGui::Text("Texture is nullptr");
 		}
+		ImGui::Separator();
+		ImGui::Text("Material:");
+		ImGui::SameLine();
+		ImGui::TextColored(GREEN, "%s", rMaterial->name.c_str());
+		if (rMaterial)
+		{
+			ImGui::Text("Color: ");
+			ImGui::SameLine();
+			ImGui::TextColored(YELLOW, "%d, ", rMaterial->GetColor().r);
+			ImGui::SameLine();
+			ImGui::TextColored(YELLOW, "%d, ", rMaterial->GetColor().g);
+			ImGui::SameLine();
+			ImGui::TextColored(YELLOW, "%d, ", rMaterial->GetColor().b);
+			ImGui::SameLine();
+			ImGui::TextColored(YELLOW, "%d", rMaterial->GetColor().a);
+		}
+		ImGui::Separator();
+		ImGui::Text("Shader:");
+		ImGui::SameLine();
+		ImGui::TextColored(GREEN, "%s", rMaterial->GetShader()->name.c_str());
+		ImGui::Button("Edit Shader");
+		
 	}
 }
 
-//void ComponentTexture::SetTexture(Texture* texture)
-//{
-//	this->texture->id = texture->id;
-//	this->texture->path = texture->path;
-//}
-//
-//void ComponentTexture::SetTexture(uint id, const char* path)
-//{
-//	this->texture->id = id;
-//	this->texture->path = path;
-//}
-//
-//Texture* ComponentTexture::GetTexture()
-//{
-//	if (this != nullptr) {
-//		Texture ret;
-//
-//		ret.id = this->texture->id;
-//		ret.path = this->texture->path;
-//
-//		return &ret;
-//	}
-//	return nullptr;
-//}

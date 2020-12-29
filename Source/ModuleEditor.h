@@ -135,6 +135,7 @@ public:
 
 	bool enableObject = true;
 
+	bool textureIconLoaded = false;
 
 	Color frustumColor = Color(1.0f, 1.0f, 0.2f, 0.75f);
 	Color NormalColor = Color(.8f, .8f, 0.0f, 0.75f);

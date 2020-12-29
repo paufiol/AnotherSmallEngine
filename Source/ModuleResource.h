@@ -44,7 +44,7 @@ public:
 	Resource* GetResource(uint32 UID);
 	Resource* GetResourceInMemory(uint32 UID);
 
-	ResourceShader* GetShader();
+	std::vector<ResourceShader*> GetShadersInMemory();
 	void UnloadResource(uint32 UID);
 	void DeleteResource(uint32 UID);
 

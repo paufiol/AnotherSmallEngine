@@ -31,10 +31,3 @@ ResourceMaterial::~ResourceMaterial()
 {
 
 }
-
-uint32 const ResourceMaterial::GetShaderProgramID()
-{
-	SetShader(App->resources->GetShader());
-
-	return rShader->shaderProgramID;
-}

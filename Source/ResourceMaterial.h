@@ -32,7 +32,7 @@ public:
 	inline std::string GetPath() const { return texture->path; }
 	inline void SetPath(std::string path) { this->texture->path = path; }
 
-	uint32 const GetShaderProgramID();
+	inline uint32 const GetShaderProgramID() { return rShader->shaderProgramID; }
 	inline ResourceShader* const GetShader() { return rShader; }
 	inline void SetShaderProgramID(uint32 ID) { rShader->shaderProgramID = ID; }
 	inline void SetShader(ResourceShader* rShader) { this->rShader = rShader; }

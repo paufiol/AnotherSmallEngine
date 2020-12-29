@@ -258,18 +258,17 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 
 
 
-ResourceShader* ModuleResources::GetShader()
+std::vector<ResourceShader*> ModuleResources::GetShadersInMemory()
 {
 
 	ResourceShader* tempShader = new ResourceShader();
-	Resource* resource = nullptr;
+	std::vector<ResourceShader*> shadersInMemory;
 	std::map<uint32, Resource*>::iterator item;
 	for (item = importedResources.begin(); item != importedResources.end(); item++)
 	{
 		if (item->second->type == ResourceType::Shader)
 		{
-			resource = item->second;
-			tempShader = (ResourceShader*)resource;
+			tempShader = (ResourceShader*)item->second;
 		}
 		if (tempShader->shaderProgramID > MAX_SHADERS)
 		{
@@ -277,9 +276,9 @@ ResourceShader* ModuleResources::GetShader()
 			tempShader->fragmentID = 0;
 			tempShader->vertexID = 0;
 		}
-			
+		shadersInMemory.push_back(tempShader);
 	}		
-	return tempShader;
+	return shadersInMemory;
 }
 
 void ModuleResources::UnloadResource(uint32 UID)
