@@ -308,17 +308,14 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 		if (shaderProgram != 0)
 		{
-			uint colorLoc = glGetUniformLocation(shaderProgram, "inColor");
-			glUniform4fv(colorLoc, 1, (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
+			
+			//componentMaterial->GetMaterial()->GetShader()->SetUniform4f("inColor", (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
 
-			uint modelLoc = glGetUniformLocation(shaderProgram, "model_matrix");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, transform.Transposed().ptr());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("model_matrix", transform.Transposed().ptr());
 
-			uint viewLoc = glGetUniformLocation(shaderProgram, "view");
-			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, App->camera->GetRawViewMatrix());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("view", App->camera->GetRawViewMatrix());
 
-			uint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-			glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("projection", App->camera->GetProjectionMatrix());
 
 		}
 	}

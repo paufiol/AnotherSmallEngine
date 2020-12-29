@@ -87,6 +87,16 @@ void ComponentMaterial::DrawInspector() {
 		ImGui::Text("Shader:");
 		ImGui::SameLine();
 		ImGui::TextColored(GREEN, "%s", rMaterial->GetShader()->name.c_str());
+
+		Color color;
+		uint uinformLoc = glGetUniformLocation(rMaterial->GetShader()->shaderProgramID, "inColor");
+		glGetUniformfv(rMaterial->GetShader()->shaderProgramID, uinformLoc, &color);
+		if (ImGui::DragFloat4("Uniform Color", (float*)&color, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None)) 
+		{ 
+			rMaterial->SetColor(color);
+			rMaterial->GetShader()->SetUniform4f("inColor", (GLfloat*)&color); 
+		}
+
 		ImGui::Button("Edit Shader");
 		
 	}
