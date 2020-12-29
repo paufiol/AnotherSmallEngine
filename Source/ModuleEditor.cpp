@@ -570,26 +570,13 @@ void ModuleEditor::DropTargetWindow()
 					break;
 				case ResourceType::Shader:
 
+					if ((ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material) == nullptr)
+					{
+						break;
+					}
+
 					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
 					compMaterial->GetMaterial()->SetShader((ResourceShader*)App->resources->LoadResource(UID));
-					
-					if (true) //TODO
-					{
-						TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
-
-						fileToEdit = resource->GetAssetsFile();
-
-						std::ifstream t(fileToEdit.c_str());
-						if (t.good())
-						{
-							std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-							editor.SetText(str);
-						}
-
-						show_saveeditor_popup = true;
-
-						shaderToRecompile = compMaterial->GetMaterial()->GetShader();
-					}
 
 					break;
 				}
@@ -604,45 +591,48 @@ void ModuleEditor::DropTargetWindow()
 
 void ModuleEditor::TextEditorWindow()
 {
-	if (show_saveeditor_popup) //TODO: Create and and handle HasUnsavedChanges
+
+	if (show_texteditor_window) 
 	{
-		if (!show_texteditor_window) //Only 
+		if (show_saveeditor_popup)
 		{
-			show_texteditor_window = true;
+			ImGui::OpenPopup("Save Previous File"); 
 			show_saveeditor_popup = false;
 		}
-		else {
-			if (ImGui::Begin("Save Previous File")) //TODO: Turn Into PopUp
+
+		if (ImGui::BeginPopupModal("Save Previous File", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::Text("Do you want to save changes before closing the editor? \n\n");
+			if (ImGui::Button("Save Changes"))
 			{
-				if (ImGui::Button("Save Changes"))
-				{
-					std::string textToSave = editor.GetText();
-					App->fileSystem->Remove(fileToEdit.c_str());
-					App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
+				std::string textToSave = editor.GetText();
+				App->fileSystem->Remove(fileToEdit.c_str());
+				App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
 
-					show_saveeditor_popup = false;
-					show_texteditor_window = true;
-				
-					//ImGui::CloseCurrentPopup();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Don't Save"))
-				{
-					show_saveeditor_popup = false;
-					show_texteditor_window = true;
-				
-					//ImGui::CloseCurrentPopup();
-				}
-				ImGui::End();
+				glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->vertexID);
+				glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->fragmentID);
+				glDeleteProgram(shaderToRecompile->shaderProgramID);
+
+				Importer::ShaderImporter::Import(shaderToRecompile->assetsFile.c_str(), shaderToRecompile);
+
+				show_saveeditor_popup = false;
+				show_texteditor_window = true;
+
+				ImGui::CloseCurrentPopup();
 			}
+			ImGui::SameLine();
+			if (ImGui::Button("Don't Save"))
+			{
+				show_saveeditor_popup = false;
+				show_texteditor_window = true;
+
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
-	}
-
-
-	if (show_texteditor_window) {
-
 		if (ImGui::Begin("Text Editor", &show_texteditor_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
 		{
+
 			//Update
 			auto cpos = editor.GetCursorPosition();
 			if (ImGui::BeginMenuBar())
@@ -656,8 +646,6 @@ void ModuleEditor::TextEditorWindow()
 						App->fileSystem->Remove(fileToEdit.c_str());
 						App->fileSystem->Save(fileToEdit.c_str(), textToSave.c_str(), editor.GetText().size());
 					
-						//TODO: Add Reload of Shader Program (method yet to implement)
-
 						glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->vertexID);
 						glDetachShader(shaderToRecompile->shaderProgramID, shaderToRecompile->fragmentID);
 						glDeleteProgram(shaderToRecompile->shaderProgramID);
@@ -707,6 +695,16 @@ void ModuleEditor::TextEditorWindow()
 						editor.SetPalette(TextEditor::GetRetroBluePalette());
 					ImGui::EndMenu();
 				}
+				if (ImGui::BeginMenu("Close")) //Might not be necessary? 
+				{
+					if (ImGui::MenuItem("Dark palette"))
+						editor.SetPalette(TextEditor::GetDarkPalette());
+					if (ImGui::MenuItem("Light palette"))
+						editor.SetPalette(TextEditor::GetLightPalette());
+					if (ImGui::MenuItem("Retro blue palette"))
+						editor.SetPalette(TextEditor::GetRetroBluePalette());
+					ImGui::EndMenu();
+				}
 				ImGui::EndMenuBar();
 			}
 
@@ -719,6 +717,26 @@ void ModuleEditor::TextEditorWindow()
 			ImGui::End();
 		}
 	}
+}
+
+void ModuleEditor::CallTextEditor(ResourceMaterial* resource)
+{
+	//Only Handles GLSL
+	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
+
+	fileToEdit = resource->GetShader()->assetsFile;
+
+	std::ifstream t(fileToEdit.c_str());
+	if (t.good())
+	{
+		std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
+		editor.SetText(str);
+	}
+
+	show_saveeditor_popup = true;
+	show_texteditor_window = true;
+
+	shaderToRecompile = resource->GetShader();
 }
 
 bool ModuleEditor::MainMenuBar()

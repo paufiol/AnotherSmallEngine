@@ -1,8 +1,10 @@
 #pragma once
+#include "Application.h"
 #include "ComponentMaterial.h"
 #include "ResourceMaterial.h"
 #include "ResourceShader.h"
 #include "GameObject.h"
+#include "ModuleEditor.h"
 #include <string>
 #include "Dependencies/ImGUI/imgui.h"
 
@@ -87,8 +89,10 @@ void ComponentMaterial::DrawInspector() {
 		ImGui::Text("Shader:");
 		ImGui::SameLine();
 		ImGui::TextColored(GREEN, "%s", rMaterial->GetShader()->name.c_str());
-		ImGui::Button("Edit Shader");
-		
+		if (ImGui::Button("Edit Shader"))
+		{
+			App->editor->CallTextEditor(this->rMaterial);
+		}
 	}
 }
 

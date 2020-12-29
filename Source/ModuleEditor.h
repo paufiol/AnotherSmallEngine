@@ -16,6 +16,7 @@ class GameObject;
 class Resource;
 class ResourceTexture;
 class ResourceShader;
+class ResourceMaterial;
 
 class ModuleEditor : public Module 
 {
@@ -50,6 +51,8 @@ public:
 	void AssetsExplorer(PathNode& assetFolder);
 	void DropTargetWindow();
 	void TextEditorWindow();
+
+	void CallTextEditor(ResourceMaterial* resource);
 
 	void GUIisHovered();
 
