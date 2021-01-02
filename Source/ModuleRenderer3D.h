@@ -4,6 +4,8 @@
 #include "glmath.h"
 #include "Light.h"
 #include "OpenGL.h"
+#include "Timer.h"
+
 #include "Dependencies/SDL/include/SDL.h"
 
 //#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
@@ -58,8 +60,9 @@ public:
 	GLbyte checkerImage[64][64][4];
 	GLuint checkerID;
 
-	//ResourceMesh* mesh = nullptr;
 	GLuint newTexture = 0;
 
 	bool drawboundingboxes = false;
+
+	Timer timer;
 };

@@ -15,6 +15,10 @@ namespace Importer
 
 		int ImportFragment(std::string shaderFile, ResourceShader* shader);
 
+		void GetShaderUniforms(ResourceShader* shader);
+
+		void SetShaderUniforms(ResourceShader* shader);
+
 		uint64 Save(const ResourceShader* shader, char** buffer);
 
 		void Load(ResourceShader* shader, const char* buffer, uint size = 0);

@@ -60,6 +60,10 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 			glGetProgramInfoLog(shader->shaderProgramID, 512, NULL, info);
 			LOG("Shader compiling error: %s", info);
 		}
+		else
+		{
+			GetShaderUniforms(shader);
+		}
 
 		glDeleteShader(shader->vertexID);
 		glDeleteShader(shader->fragmentID);
@@ -124,6 +128,118 @@ int Importer::ShaderImporter::ImportFragment(std::string shaderFile, ResourceSha
  
 
 	return (outcome != 0) ? fragmentShader : -1;
+}
+
+void Importer::ShaderImporter::GetShaderUniforms(ResourceShader* shader)
+{
+	GLint activeUniforms;
+
+	glGetProgramiv(shader->shaderProgramID, GL_ACTIVE_UNIFORMS, &activeUniforms);
+
+	for (uint i = 0; i < activeUniforms; i++)
+	{
+		Uniform uniform;
+		GLint length;
+		GLint size;
+		GLchar name[32];
+		glGetActiveUniform(shader->shaderProgramID, i, sizeof(name), &length, &size, &uniform.GLtype, name);
+		uniform.name = name;
+		if (uniform.name != "model_matrix" && uniform.name != "view" && uniform.name != "projection")
+		{
+			uint uinformLoc = glGetUniformLocation(shader->shaderProgramID, uniform.name.c_str());
+
+			switch (uniform.GLtype)
+			{
+			case GL_INT:
+				uniform.uniformType = UniformType::INT;
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, &uniform.integer);
+				break;
+			case GL_FLOAT:
+				uniform.uniformType = UniformType::FLOAT;
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.floatNumber);
+				break;
+			case GL_BOOL:
+				uniform.uniformType = UniformType::BOOL;
+				//glGetnUniformiv(shader->shaderProgramID, uinformLoc, (GLsizei)uniform.boolean);
+				break;
+			case GL_INT_VEC2:
+				uniform.uniformType = UniformType::INT_VEC2;
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec2.x);
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec2.y);
+				break;
+			case GL_INT_VEC3:
+				uniform.uniformType = UniformType::INT_VEC3;
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec3.x);
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec3.y);
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec3.z);
+				break;
+			case GL_INT_VEC4:
+				uniform.uniformType = UniformType::INT_VEC4;
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec4.x);
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec4.y);
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec4.z);
+				glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.vec4.w);
+				break;
+			case GL_FLOAT_VEC2:
+				uniform.uniformType = UniformType::FLOAT_VEC2;
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec2.x);
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec2.y);
+				break;
+			case GL_FLOAT_VEC3:
+				uniform.uniformType = UniformType::FLOAT_VEC3;
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec3.x);
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec3.y);
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec3.z);
+				break;
+			case GL_FLOAT_VEC4:
+				uniform.uniformType = UniformType::FLOAT_VEC4;
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec4.x);
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec4.y);
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec4.z);
+				glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.vec4.w);
+				break;
+			case GL_FLOAT_MAT4:
+				uniform.uniformType = UniformType::MATRIX4;
+				//for (uint i = 0; i < 4; i++)
+				//{
+				//	for (uint j = 0; j < 4; j++)
+				//	{
+				//		//glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.matrix4.v[j][i]);
+				//		glGetnUniformfv(shader->shaderProgramID, uinformLoc,sizeof(uniform.matrix4), &uniform.matrix4.v[i][j]);
+				//	}
+				//}
+				glGetnUniformfv(shader->shaderProgramID, uinformLoc, sizeof(uniform.matrix4), &uniform.matrix4.v[0][0]);
+
+				break;
+			default: uniform.uniformType = UniformType::NONE; break;
+
+			}
+
+			shader->uniforms.push_back(uniform);
+		}
+
+		
+	}
+}
+
+void Importer::ShaderImporter::SetShaderUniforms(ResourceShader* shader)
+{
+	for (uint i = 0; i < shader->uniforms.size(); i++)
+	{
+		switch (shader->uniforms[i].uniformType)
+		{
+		case  UniformType::INT: shader->SetUniform1i(shader->uniforms[i].name.c_str(),shader->uniforms[i].integer); break;
+		case  UniformType::FLOAT: shader->SetUniform1f(shader->uniforms[i].name.c_str(), shader->uniforms[i].floatNumber); break;
+		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec2.ptr()); break;
+		case  UniformType::INT_VEC3: shader->SetUniformVec3f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec3.ptr()); break;
+		case  UniformType::INT_VEC4: shader->SetUniformVec4f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec4.ptr()); break;
+		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec2.ptr()); break;
+		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec3.ptr()); break;
+		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec4.ptr()); break;
+		case UniformType::MATRIX4: shader->SetUniformMatrix4(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].matrix4.Transposed().ptr()); break;
+		default: break;
+		}
+	}
 }
 
 uint64 Importer::ShaderImporter::Save(const ResourceShader* shader, char** buffer)

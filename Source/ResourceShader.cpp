@@ -23,10 +23,40 @@ void ResourceShader::SetUniformMatrix4(std::string name, GLfloat* value)
 	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, value);
 }
 
-void ResourceShader::SetUniform4f(std::string name, GLfloat* value)
+void ResourceShader::SetUniformVec2f(std::string name, GLfloat* value)
+{
+	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
+	glUniform2fv(uinformLoc, 1, value);
+}
+
+void ResourceShader::SetUniformVec3f(std::string name, GLfloat* value)
+{
+	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
+	glUniform3fv(uinformLoc, 1, value);
+}
+
+void ResourceShader::SetUniformVec4f(std::string name, GLfloat* value)
 {
 	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
 	glUniform4fv(uinformLoc, 1, value);
+}
+
+void ResourceShader::SetUniformVec2i(std::string name, GLint* value)
+{
+	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
+	glUniform2iv(uinformLoc, 1, value);
+}
+
+void ResourceShader::SetUniformVec3i(std::string name, GLint* value)
+{
+	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
+	glUniform3iv(uinformLoc, 1, value);
+}
+
+void ResourceShader::SetUniformVec4i(std::string name, GLint* value)
+{
+	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
+	glUniform4iv(uinformLoc, 1, value);
 }
 
 void ResourceShader::SetUniform1f(std::string name, GLfloat value)

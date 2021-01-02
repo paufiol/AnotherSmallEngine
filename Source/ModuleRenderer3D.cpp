@@ -9,6 +9,7 @@
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ImporterTexture.h"
+#include "ImporterShader.h"
 
 #include "GameObject.h"
 
@@ -17,6 +18,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+
 #include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
 
@@ -120,6 +122,9 @@ bool ModuleRenderer3D::Init()
 	Importer::TextureImporter::InitDevil();
 
 	UseCheckerTexture();
+
+	
+	timer.Start();
 
 	return ret;
 }
@@ -309,7 +314,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		if (shaderProgram != 0)
 		{
 			
-			//componentMaterial->GetMaterial()->GetShader()->SetUniform4f("inColor", (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("model_matrix", transform.Transposed().ptr());
 
@@ -317,6 +322,9 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("projection", App->camera->GetProjectionMatrix());
 
+			componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", timer.ReadSec());
+
+			Importer::ShaderImporter::SetShaderUniforms(componentMaterial->GetMaterial()->GetShader());
 		}
 	}
 	

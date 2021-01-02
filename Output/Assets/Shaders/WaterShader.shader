@@ -10,6 +10,8 @@ out vec2 TexCoord;
 
 uniform vec4 inColor;
 
+uniform float time;
+
 uniform mat4 model_matrix;
 uniform mat4 view;
 uniform mat4 projection;
@@ -30,12 +32,17 @@ void main()
 in vec4 ourColor;
 in vec2 TexCoord;
 out vec4 color;
+
+uniform float contrast;
+
 uniform sampler2D ourTexture;
 void main()
 {
     //color = texture(ourTexture, TexCoord) * ourColor;
-    color = vec4(0, 1, 1, 1);
+    color = vec4(0 * contrast, 1 * contrast, 1, 1);
+
 }
 
 #endif
+
 
