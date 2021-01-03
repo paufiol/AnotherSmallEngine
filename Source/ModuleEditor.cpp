@@ -630,7 +630,7 @@ void ModuleEditor::TextEditorWindow()
 			}
 			ImGui::EndPopup();
 		}
-		if (ImGui::Begin("Text Editor", &show_texteditor_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar))
+		if (ImGui::Begin("Text Editor", &show_texteditor_window, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse))
 		{
 
 			//Update
@@ -686,16 +686,6 @@ void ModuleEditor::TextEditorWindow()
 					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("View")) //Might not be necessary? 
-				{
-					if (ImGui::MenuItem("Dark palette"))
-						editor.SetPalette(TextEditor::GetDarkPalette());
-					if (ImGui::MenuItem("Light palette"))
-						editor.SetPalette(TextEditor::GetLightPalette());
-					if (ImGui::MenuItem("Retro blue palette"))
-						editor.SetPalette(TextEditor::GetRetroBluePalette());
-					ImGui::EndMenu();
-				}
-				if (ImGui::BeginMenu("Close")) //Might not be necessary? 
 				{
 					if (ImGui::MenuItem("Dark palette"))
 						editor.SetPalette(TextEditor::GetDarkPalette());
