@@ -400,7 +400,10 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 	{
 		if (ImGui::TreeNodeEx(assetFolder.localPath.c_str(), treeFlags, assetFolder.localPath.c_str()))
 		{
-			if (ImGui::IsItemClicked()) currentFolder = assetFolder;
+			if (ImGui::IsItemClicked()) 
+			{
+				currentFolder = assetFolder;
+			}
 			if (!assetFolder.IsLastFolder())
 			{
 				for (uint i = 0; i < assetFolder.children.size(); i++)
