@@ -100,7 +100,7 @@ update_status ModuleCamera3D::Update(float dt)
 		if (App->input->GetMouseZMotion() != 0)
 		{
 			float dz = (float)App->input->GetMouseZMotion() * dt;
-			currentCamera->Zoom(dz * 50.0f);
+			currentCamera->Zoom(dz * 500.0f);
 		}
 	}
 

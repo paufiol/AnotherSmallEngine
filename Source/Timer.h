@@ -12,17 +12,19 @@ public:
 	Timer();
 
 	void Start();
+	void Resume();
 	void Stop();
 	void Restart();
 
 
 
 	Uint32 Read();
-	float ReadSec() const;
+	float ReadSec();
 
 	bool	running;
 	Uint32	started_at;
 	Uint32	stopped_at;
+	float	time;
 
 private:
 

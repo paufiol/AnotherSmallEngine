@@ -316,7 +316,7 @@ void ModuleEditor::PlayPauseWindow()
 	{
 		//App->scene->GameTime.running = !App->scene->GameTime.running;
 		
-		if (App->scene->GameTime.running == false)	App->scene->GameTime.Start();
+		if (App->scene->GameTime.running == false)	App->scene->GameTime.Resume();
 		else if (App->scene->GameTime.running == true)	App->scene->GameTime.Stop();
 	}
 	
@@ -725,6 +725,7 @@ void ModuleEditor::CallTextEditor(ResourceMaterial* resource)
 	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
 
 	fileToEdit = resource->GetShader()->assetsFile;
+	editor.SetShowWhitespaces(false);
 
 	std::ifstream t(fileToEdit.c_str());
 	if (t.good())

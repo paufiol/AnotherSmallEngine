@@ -295,7 +295,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		if (shaderProgram != 0) glUseProgram(shaderProgram);
 		else
 		{
-			shaderProgram = SetDefaultShader(componentMaterial);
+			shaderProgram = SetDefaultShader(componentMaterial); //SetDefaultShader?
 			glUseProgram(shaderProgram);
 		}
 
@@ -311,9 +311,9 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 			glBindTexture(GL_TEXTURE_2D, checkerID);
 		}
 
-		if (shaderProgram != 0)
+		if (shaderProgram != 0) 
 		{
-			
+			//Lo que sea que modifique dentro de est if no lo pilla bien el shader
 			componentMaterial->GetMaterial()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("model_matrix", transform.Transposed().ptr());
@@ -322,10 +322,25 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("projection", App->camera->GetProjectionMatrix());
 
-			componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", timer.ReadSec());
+			/*
+			mat4x4 Model_mat =		mat4x4( transform.Transposed().Col(0).x, transform.Transposed().Col(0).y, transform.Transposed().Col(0).z, transform.Transposed().Col(0).w,
+											transform.Transposed().Col(1).x, transform.Transposed().Col(1).y, transform.Transposed().Col(1).z, transform.Transposed().Col(1).w,
+											transform.Transposed().Col(2).x, transform.Transposed().Col(2).y, transform.Transposed().Col(2).z, transform.Transposed().Col(2).w,
+											transform.Transposed().Col(3).x, transform.Transposed().Col(3).y, transform.Transposed().Col(3).z, transform.Transposed().Col(3).w);
+			
+
+			mat4x4 ModelView = App->camera->GetViewMatrix() * Model_mat;
+
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("normal_matrix", ModelView.inverse().M);
+			*/
+
+			componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", App->scene->GameTime.ReadSec());
 
 			Importer::ShaderImporter::SetShaderUniforms(componentMaterial->GetMaterial()->GetShader());
 		}
+
+		//Update Each Time?
+		componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", App->scene->GameTime.ReadSec());
 	}
 	
 	if (!App->scene->root_object->children.empty() && componentMesh->GetMesh() != nullptr)
@@ -338,7 +353,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 		glBindVertexArray(0);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glUseProgram(0);
+		glUseProgram(0);	//Porque 0 y no shaderProgram?
 	}
 }
 uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
