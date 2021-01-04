@@ -46,7 +46,7 @@ public:
 
 	std::map<uint32, Resource*> GetAllResourcesInMemory() { return importedResources; }
 
-	std::vector<ResourceShader*> GetShadersInMemory();
+	std::map<uint32, ResourceShader*> GetShadersInMemory();
 	std::map<uint32, ResourceTexture*>GetTexturesInMemory();
 
 	void UnloadResource(uint32 UID);

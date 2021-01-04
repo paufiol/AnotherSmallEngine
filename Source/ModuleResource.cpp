@@ -270,32 +270,36 @@ std::map<uint32, ResourceTexture*> ModuleResources::GetTexturesInMemory()
 		if (item->second->type == ResourceType::Texture)
 		{
 			tempTexture = (ResourceTexture*)item->second;
+
+			texturesInMemory[tempTexture->UID] = tempTexture;
 		}
-		texturesInMemory[tempTexture->UID] = tempTexture;
+
 	}
 	return texturesInMemory;
 }
 
 
-std::vector<ResourceShader*> ModuleResources::GetShadersInMemory()
+std::map<uint32, ResourceShader*> ModuleResources::GetShadersInMemory()
 {
 
 	ResourceShader* tempShader = new ResourceShader();
-	std::vector<ResourceShader*> shadersInMemory;
+	std::map<uint32, ResourceShader*> shadersInMemory;
 	std::map<uint32, Resource*>::iterator item;
 	for (item = importedResources.begin(); item != importedResources.end(); item++)
 	{
-		if (item->second->type == ResourceType::Shader)
+		if (item->second->type == ResourceType::Shader && item->second->name != "")
 		{
 			tempShader = (ResourceShader*)item->second;
+
+			if (tempShader->shaderProgramID > MAX_SHADERS)
+			{
+				tempShader->shaderProgramID = 0;
+				tempShader->fragmentID = 0;
+				tempShader->vertexID = 0;
+			}
+			shadersInMemory[tempShader->UID] = tempShader;
 		}
-		if (tempShader->shaderProgramID > MAX_SHADERS)
-		{
-			tempShader->shaderProgramID = 0;
-			tempShader->fragmentID = 0;
-			tempShader->vertexID = 0;
-		}
-		shadersInMemory.push_back(tempShader);
+		
 	}		
 	return shadersInMemory;
 }

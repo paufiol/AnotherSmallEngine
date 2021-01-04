@@ -57,25 +57,36 @@ void ComponentMaterial::DrawInspector() {
 
 	if (ImGui::CollapsingHeader("Component Material"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-		ImGui::Text("Texture:");
-		ImGui::SameLine();
-		ImGui::TextColored(GREEN,"%s", rMaterial->GetTexture()->name.c_str());
-
 
 		std::map<uint32, ResourceTexture*> texturesInMemory = App->resources->GetTexturesInMemory();
 
 		std::map<uint32, ResourceTexture*>::iterator nameIt = texturesInMemory.begin();
 
-		const char* combo_label = nameIt->second->name.c_str();
-		if (ImGui::BeginCombo("combo 1", combo_label, ImGuiComboFlags_PopupAlignLeft))
+		if (ImGui::BeginCombo("Texture", rMaterial->GetTexture()->name.c_str(), ImGuiComboFlags_PopupAlignLeft))
 		{
 			for (std::map<uint32, ResourceTexture*>::iterator item = texturesInMemory.begin(); item != texturesInMemory.end(); item++)
 			{
 				const bool is_selected = (nameIt == item);
 				if (ImGui::Selectable(item->second->name.c_str(), is_selected))
+				{
+					
+					if (item->second->id > 1000)
+					{
+						ResourceTexture* newTexture = (ResourceTexture*)App->resources->LoadResource(item->second->UID);
+						rMaterial->SetTexture(newTexture);
+					}
+					else
+					{
+						rMaterial->SetTexture(item->second);
+					}
+
 					nameIt = item;
+				}
+					
 				if (is_selected)
+				{
 					ImGui::SetItemDefaultFocus();
+				}
 			}
 			ImGui::EndCombo();
 		}
@@ -115,6 +126,40 @@ void ComponentMaterial::DrawInspector() {
 		ImGui::SameLine();
 		ImGui::TextColored(GREEN, "%s", rMaterial->GetShader()->name.c_str());
 		
+
+		std::map<uint32, ResourceShader*> shadersInMemory = App->resources->GetShadersInMemory();
+
+		std::map<uint32, ResourceShader*>::iterator shaderName = shadersInMemory.begin();
+
+		if (ImGui::BeginCombo("Shader", rMaterial->GetShader()->name.c_str(), ImGuiComboFlags_PopupAlignLeft))
+		{
+			for (std::map<uint32, ResourceShader*>::iterator iterator = shadersInMemory.begin(); iterator != shadersInMemory.end(); iterator++)
+			{
+				const bool selectedShader = (shaderName == iterator);
+				if (ImGui::Selectable(iterator->second->name.c_str(), selectedShader))
+				{
+					if (iterator->second->shaderProgramID == 0)
+					{
+						ResourceShader* newShader = (ResourceShader*)App->resources->LoadResource(iterator->second->UID);
+						rMaterial->SetShader(newShader);
+					}
+					else
+					{
+						rMaterial->SetShader(iterator->second);
+					}
+
+					shaderName = iterator;
+				}
+
+				if (selectedShader)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+
+
 		if (ImGui::Button("Edit Shader"))
 		{
 			App->editor->CallTextEditor(this->rMaterial);

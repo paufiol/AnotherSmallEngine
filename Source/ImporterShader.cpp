@@ -287,13 +287,18 @@ void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, 
 		glGetShaderInfoLog(shader->shaderProgramID, 512, NULL, info);
 		LOG("Vertex shader compilation error (%s)", info);
 
-		glDetachShader(shader->shaderProgramID, shader->vertexID);
-		glDetachShader(shader->shaderProgramID, shader->fragmentID);
-		glDeleteProgram(shader->shaderProgramID);
-
-		Importer::ShaderImporter::Import(shader->assetsFile.c_str(), shader);
+		Recompile(shader);
 	}
 
 
 
+}
+
+void Importer::ShaderImporter::Recompile(ResourceShader* shader)
+{
+	glDetachShader(shader->shaderProgramID, shader->vertexID);
+	glDetachShader(shader->shaderProgramID, shader->fragmentID);
+	glDeleteProgram(shader->shaderProgramID);
+
+	Importer::ShaderImporter::Import(shader->assetsFile.c_str(), shader);
 }

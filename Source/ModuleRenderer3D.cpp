@@ -359,12 +359,21 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
 {
 	Resource* resource = nullptr;
-	std::vector<ResourceShader*> shadersInMemory = App->resources->GetShadersInMemory();
-	for (uint i = 0; i < shadersInMemory.size(); i++)
+	std::map<uint32, ResourceShader*> shadersInMemory = App->resources->GetShadersInMemory();
+	for (std::map<uint32, ResourceShader*>::iterator item = shadersInMemory.begin(); item != shadersInMemory.end(); item++)
 	{
-		if (shadersInMemory[i]->name == "DefaultShader") componentMaterial->GetMaterial()->SetShader(shadersInMemory[i]);
+		if (item->second->name == "DefaultShader")
+		{
+			if (item->second->shaderProgramID == 0)
+			{
+				resource = App->resources->LoadResource(item->second->UID);
+				componentMaterial->GetMaterial()->SetShader((ResourceShader*)resource);
+			}
+			else 
+				componentMaterial->GetMaterial()->SetShader(item->second);
+			
+		}
 	}
-	resource = App->resources->LoadResource(componentMaterial->GetMaterial()->GetShader()->UID);
 
 	return componentMaterial->GetMaterial()->GetShaderProgramID();
 
