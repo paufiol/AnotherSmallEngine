@@ -6,6 +6,7 @@ layout(location = 1) in vec2 texCoord;
 layout(location = 2) in vec3 normal;
 
 #define PI 3.1416
+#define g 9.81
 
 out vec4 ourColor;
 out vec2 TexCoord;
@@ -15,30 +16,101 @@ out vec3 fPos;
 uniform vec4 inColor;
 
 uniform float time;
-vec3 pos;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-uniform float wavelenght = 0.2;
-uniform float frequency;
-uniform float amplitude = 5;
+uniform float wavelenght_A = 64;
+uniform float steepness_A = 0.25; //0 to 1;
+uniform vec2 direction_A = vec2(1, 1);
+
+uniform float wavelenght_B = 32;
+uniform float steepness_B = 0.25; //0 to 1;
+uniform vec2 direction_B = vec2(1, 0.6);
+
+uniform float wavelenght_C = 16;
+uniform float steepness_C = 0.25; //0 to 1;
+uniform vec2 direction_C = vec2(1, 1.3);
+
+vec3 GerstnerWave(float wavelenght, float steepness, vec2 direction, vec3 pos, inout vec3 tangent, inout vec3 binormal)
+{
+	
+	
+	float k = (2 * PI) / wavelenght;
+    float a = steepness/ k;
+    float c = sqrt(g / k);
+    vec2 d = normalize(direction);
+    float f  =  (dot(d, pos.xy)  - c * time) * k;
+    
+    tangent += vec3(
+    		- d.x * d.x * (steepness * sin(f)), 
+    		- d.x * d.y * (steepness * sin(f)),
+    		d.x * (steepness * cos(f))
+    );
+    
+  binormal += vec3(
+    	- d.x *  d.y *(steepness * sin(f)),
+    	 - d.y * d.y *(steepness * sin(f)),
+    	  d.y * (steepness * cos(f))
+    );
+    
+	return vec3( (cos(f) * a) * d.x,
+							(cos(f) * a) * d.y,
+							sin(f) * a
+	);
+}
+
 
 void main()
 {
+	vec3 pos;
 	pos = position;
-	pos.z += sin(pos.x * wavelenght -  time) * amplitude;
-     
-	float k = 2 * PI / wavelenght;
+
+    /*
+    	float k = (2 * PI) / wavelenght;
+    float a = steepness/ k;
+    float c = sqrt(g / k);
+    vec2 d = normalize(direction_A);
+    float f  =  (dot(d, pos.xy)  - c * time) * k;
     
-    float f  =  (pos.x * wavelenght - time);
-    vec3 tangent = normalize(vec3(1, 0,  amplitude * cos(f)));
-    vec3 wave_normal = vec3(-tangent.z, tangent.x, 0);
+    pos.x += (cos(f) * a) * d.x;  
+    pos.y += (cos(f) * a) * d.y; 
+    pos.z = sin(f) * a;
+    */
+    
+    vec3 tangent = vec3( 1, 0, 0 );
+    vec3 binormal = vec3( 0, 1, 0 );
+    
+    pos += GerstnerWave(wavelenght_A, steepness_A, direction_A, position, tangent, binormal);
+	pos += GerstnerWave(wavelenght_B, steepness_B, direction_B, position, tangent, binormal);
+    pos += GerstnerWave(wavelenght_C, steepness_C, direction_C, position, tangent, binormal);
+    
+    /*
+        vec3 old_tangent = normalize(vec3 (
+    		1 - steepness * sin(f),
+    		0,
+    		-  steepness * cos(f)
+    ));
+    
+        vec3 tangent = vec3(
+    		- d.x * d.x * (steepness * sin(f)), 
+    		- d.x * d.y * (steepness * sin(f)),
+    		d.x * (steepness * cos(f))
+    );
+    
+    vec3 binormal = vec3(
+    		 - d.x *  d.y *(steepness * sin(f)),
+    	 1 - d.y * d.y *(steepness * sin(f)),
+    	  d.y * (steepness * cos(f))
+    );
+    */
+
+    //vec3(-tangent.z, tangent.x, 0);
     
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(pos, 1.0f);
 	
-	fNormal = wave_normal;
+	fNormal = normalize(cross(binormal, tangent));
     ourColor = inColor;
     TexCoord = texCoord;
     fPos = pos;
@@ -56,7 +128,11 @@ in vec3 fNormal;
 in vec3 fPos;
 out vec4 color;
 
-uniform float contrast;
+uniform float Ka = 0.5;
+uniform float Kd = 4.5;
+uniform float Ks = 0.0;
+uniform float shininess = 10;
+
 
 uniform sampler2D ourTexture;
 
@@ -75,23 +151,25 @@ void main()
 {
 
 	vec3 lcolor;
-	lcolor = vec3(0.9,0.95,1);
+	
     if(fPos.z > 2.5)
     {
     	lcolor = vec3(0.9,0.95,1);
     }
     else
     {
-    	lcolor = vec3(0,0.2,0.7);
+    	lcolor = vec3(0,0.5,0.9);
 	}
-	vec2 inten = blinnPhongDir(vec3(1,0,0), 0.5, 0.2, 0.8, 0.8, 80.0);
+	
+	vec2 inten = blinnPhongDir(vec3(1, 1, 0), 0.5, Ka, Kd, Ks, shininess);
 	
 	color = vec4(lcolor*inten.x + vec3(1.0) * inten.y, 1.0);
 	
-	//color = vec4(fNormal,1.0);
+	//color = vec4(fNormal.r, fNormal.g, fNormal.b, 1.0);
 }
 
 #endif
+
 
 
 

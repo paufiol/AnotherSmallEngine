@@ -402,7 +402,7 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 		{
 			if (ImGui::IsItemClicked()) 
 			{
-				currentFolder = assetFolder;
+				currentFolder = assetFolder; 
 			}
 			if (!assetFolder.IsLastFolder())
 			{
@@ -418,7 +418,7 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 
 void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 {
-	if(assetFolder.path == "Assets") previousFolder = assetFolder;
+	//if(assetFolder.path == "Assets") previousFolder = assetFolder;
 
 	uint row = 0;
 	uint column = 7;
