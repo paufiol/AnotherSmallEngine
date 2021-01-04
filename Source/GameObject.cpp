@@ -99,7 +99,7 @@ void GameObject::SetParent(GameObject* _parent)
 	if (_parent != nullptr)
 	{
 		this->parent = _parent;
-		LOG("Game Object %s new parent: %s", this->name.c_str(), _parent->name.c_str());
+		//LOG("Game Object %s new parent: %s", this->name.c_str(), _parent->name.c_str());
 	}
 	else if (_parent == nullptr)
 	{

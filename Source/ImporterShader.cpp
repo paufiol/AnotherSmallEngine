@@ -60,7 +60,7 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 			glGetProgramInfoLog(shader->shaderProgramID, 512, NULL, info);
 			LOG("Shader compiling error: %s", info);
 		}
-		else
+		else if(shader->uniforms.size() == 0)
 		{
 			GetShaderUniforms(shader);
 		}
@@ -144,7 +144,7 @@ void Importer::ShaderImporter::GetShaderUniforms(ResourceShader* shader)
 		GLchar name[32];
 		glGetActiveUniform(shader->shaderProgramID, i, sizeof(name), &length, &size, &uniform.GLtype, name);
 		uniform.name = name;
-		if (uniform.name != "model_matrix" && uniform.name != "view" && uniform.name != "projection")
+		if (uniform.name != "inColor" && uniform.name != "time" && uniform.name != "modelMatrix" && uniform.name != "viewMatrix" && uniform.name != "projectionMatrix")
 		{
 			uint uinformLoc = glGetUniformLocation(shader->shaderProgramID, uniform.name.c_str());
 
@@ -200,16 +200,11 @@ void Importer::ShaderImporter::GetShaderUniforms(ResourceShader* shader)
 				break;
 			case GL_FLOAT_MAT4:
 				uniform.uniformType = UniformType::MATRIX4;
-				//for (uint i = 0; i < 4; i++)
-				//{
-				//	for (uint j = 0; j < 4; j++)
-				//	{
-				//		//glGetUniformfv(shader->shaderProgramID, uinformLoc, &uniform.matrix4.v[j][i]);
-				//		glGetnUniformfv(shader->shaderProgramID, uinformLoc,sizeof(uniform.matrix4), &uniform.matrix4.v[i][j]);
-				//	}
-				//}
 				glGetnUniformfv(shader->shaderProgramID, uinformLoc, sizeof(uniform.matrix4), &uniform.matrix4.v[0][0]);
-
+				break;
+			case GL_SAMPLER_2D:
+				uniform.uniformType = UniformType::TEXTURE;
+				
 				break;
 			default: uniform.uniformType = UniformType::NONE; break;
 

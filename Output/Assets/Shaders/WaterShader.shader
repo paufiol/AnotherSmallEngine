@@ -17,9 +17,9 @@ uniform vec4 inColor;
 uniform float time;
 vec3 pos;
 
-uniform mat4 model_matrix;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 
 uniform float wavelenght = 0.2;
 uniform float frequency;
@@ -36,7 +36,7 @@ void main()
     vec3 tangent = normalize(vec3(1, 0,  amplitude * cos(f)));
     vec3 wave_normal = vec3(-tangent.z, tangent.x, 0);
     
-    gl_Position = projection * view * model_matrix * vec4(pos, 1.0f);
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(pos, 1.0f);
 	
 	fNormal = wave_normal;
     ourColor = inColor;
@@ -92,6 +92,7 @@ void main()
 }
 
 #endif
+
 
 
 

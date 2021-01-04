@@ -1,5 +1,6 @@
 #pragma once
 #include "Application.h"
+#include "ModuleResource.h"
 #include "ComponentMaterial.h"
 #include "ResourceMaterial.h"
 #include "ResourceShader.h"
@@ -59,6 +60,27 @@ void ComponentMaterial::DrawInspector() {
 		ImGui::Text("Texture:");
 		ImGui::SameLine();
 		ImGui::TextColored(GREEN,"%s", rMaterial->GetTexture()->name.c_str());
+
+
+		std::map<uint32, ResourceTexture*> texturesInMemory = App->resources->GetTexturesInMemory();
+
+		std::map<uint32, ResourceTexture*>::iterator nameIt = texturesInMemory.begin();
+
+		const char* combo_label = nameIt->second->name.c_str();
+		if (ImGui::BeginCombo("combo 1", combo_label, ImGuiComboFlags_PopupAlignLeft))
+		{
+			for (std::map<uint32, ResourceTexture*>::iterator item = texturesInMemory.begin(); item != texturesInMemory.end(); item++)
+			{
+				const bool is_selected = (nameIt == item);
+				if (ImGui::Selectable(item->second->name.c_str(), is_selected))
+					nameIt = item;
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
+
+
 		if (rMaterial->GetTexture() != nullptr)
 		{
 			ImGui::Text("Path: ");
@@ -111,28 +133,10 @@ void ComponentMaterial::DrawInspector() {
 			case  UniformType::INT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
 			case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
 			case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-			case  UniformType::FLOAT_VEC4:
-				if (ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None))
-				{
-					//shader->SetUniformVec4f(shader->uniforms[i].name.c_str(), (GLfloat*)&shader->uniforms[i].vec4);
-					if (shader->uniforms[i].name == "inColor")
-					{
-						Color color;
-						color.r = shader->uniforms[i].vec4.x;
-						color.g = shader->uniforms[i].vec4.y;
-						color.b = shader->uniforms[i].vec4.z;
-						color.a = shader->uniforms[i].vec4.w;
-						rMaterial->SetColor(color);
-					}
-
-				}
-				break;
+			case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), (float*)&shader->uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
 			case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
-			}
-				
+			}		
 		}
-
-
 	}
 }
 

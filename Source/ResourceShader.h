@@ -21,6 +21,7 @@ enum class UniformType
 	FLOAT_VEC3,
 	FLOAT_VEC4,
 	MATRIX4,
+	TEXTURE,
 	NONE
 };
 

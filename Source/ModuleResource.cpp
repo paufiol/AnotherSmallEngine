@@ -98,9 +98,10 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 						importedResources[dataInModel->UID] = dataInModel;
 					}
 				}
-				
+
 				importedResources[resource->UID] = resource;
 				ID = resource->UID;
+
 			}
 			
 		}
@@ -158,7 +159,11 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 
 		Importer::TextureImporter::ImportTexture((ResourceTexture*)resource, buffer, fileSize);
 		SaveResource((ResourceTexture*)resource);
-		importedResources[resource->UID] = resource;
+		if (GetResourceInMemory(resource->UID) != nullptr)
+		{
+			//importedResources[resource->UID] = resource;
+		}
+
 		break;
 	case ResourceType::Scene: 
 		App->scene->sceneLibraryPath = resource->libraryFile;
@@ -255,7 +260,21 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 
 }
 
-
+std::map<uint32, ResourceTexture*> ModuleResources::GetTexturesInMemory()
+{
+	ResourceTexture* tempTexture = new ResourceTexture();
+	std::map<uint32, ResourceTexture*> texturesInMemory;
+	std::map<uint32, Resource*>::iterator item;
+	for (item = importedResources.begin(); item != importedResources.end(); item++)
+	{
+		if (item->second->type == ResourceType::Texture)
+		{
+			tempTexture = (ResourceTexture*)item->second;
+		}
+		texturesInMemory[tempTexture->UID] = tempTexture;
+	}
+	return texturesInMemory;
+}
 
 
 std::vector<ResourceShader*> ModuleResources::GetShadersInMemory()
@@ -351,6 +370,8 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 		resource->libraryFile.append(std::to_string(resource->GetUID()));
 		resource->libraryFile.append(ASE_EXTENSION);
 		importedResources[resource->UID] = resource;
+
+
 	}
 
 	return resources[resource->UID] = resource;

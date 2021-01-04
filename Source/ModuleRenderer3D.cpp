@@ -316,11 +316,11 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 			//Lo que sea que modifique dentro de est if no lo pilla bien el shader
 			componentMaterial->GetMaterial()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
 
-			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("model_matrix", transform.Transposed().ptr());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
 
-			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("view", App->camera->GetRawViewMatrix());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetRawViewMatrix());
 
-			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("projection", App->camera->GetProjectionMatrix());
+			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetProjectionMatrix());
 
 			/*
 			mat4x4 Model_mat =		mat4x4( transform.Transposed().Col(0).x, transform.Transposed().Col(0).y, transform.Transposed().Col(0).z, transform.Transposed().Col(0).w,
@@ -353,7 +353,7 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 		glBindVertexArray(0);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glUseProgram(0);	//Porque 0 y no shaderProgram?
+		glUseProgram(0);
 	}
 }
 uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)

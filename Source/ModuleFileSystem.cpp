@@ -307,8 +307,8 @@ uint ModuleFileSystem::Load(const char* file, char** buffer) const
 		if (PHYSFS_close(fs_file) == 0)
 			LOG("File System error while closing file %s: %s\n", file, PHYSFS_getLastError());
 	}
-	else
-		LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
+	//else
+	//	LOG("File System error while opening file %s: %s\n", file, PHYSFS_getLastError());
 
 	return ret;
 }
