@@ -3,7 +3,9 @@
 
 #include "Dependencies/Parson/parson.h"
 //#include "Dependencies/MathGeoLib/include/MathGeoLib.h" //To delete
+#include "Dependencies/MathGeoLib/include/Math/float2.h"
 #include "Dependencies/MathGeoLib/include/Math/float3.h"
+#include "Dependencies/MathGeoLib/include/Math/float4.h"
 
 #include "Globals.h"
 
@@ -41,6 +43,9 @@ public:
 	double GetNumber(const string name);
 	void SetNumber(const string name, const double number);
 
+	int GetInteger(const string name);
+	void SetInteger(const string name, const int number);
+
 	string GetString(const string name) const;
 	void SetString(string name, string destination);
 
@@ -50,8 +55,14 @@ public:
 	Color GetColor(const string name);
 	void SetColor(const string name, const Color color);
 
+	float2 GetFloat2(const string name);
+	void SetFloat2(const string name, const float2 float2);
+
 	float3 GetFloat3(const string name);
 	void SetFloat3(const string name, const float3 float3);
+
+	float4 GetFloat4(const string name);
+	void SetFloat4(const string name, const float4 float4);
 
 	Quat GetQuat(const string name);
 	void SetQuat(const string name, const Quat quat);

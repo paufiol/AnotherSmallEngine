@@ -182,6 +182,11 @@ void ComponentMaterial::DrawInspector() {
 			case UniformType::MATRIX4: ImGui::DragFloat4(shader->uniforms[i].name.c_str(), shader->uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
 			}		
 		}
+
+		if (ImGui::Button("Save Uniforms"))
+		{
+			App->resources->SaveResource(rMaterial->GetShader());
+		}
 	}
 }
 
