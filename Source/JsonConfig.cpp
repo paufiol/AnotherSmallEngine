@@ -61,6 +61,16 @@ void JsonConfig::SetNumber(string name, const double number)
     json_object_set_number(node, name.c_str(), number);
 }
 
+int JsonConfig::GetInteger(const string name)
+{
+    return json_object_get_number(node, name.c_str());
+}
+
+void JsonConfig::SetInteger(const string name, const int number)
+{
+    json_object_set_number(node, name.c_str(), number);
+}
+
 string JsonConfig::GetString(const string name) const
 {
     return json_object_get_string(node, name.c_str());
@@ -103,6 +113,31 @@ void JsonConfig::SetColor(const string name, const Color color)
 
 }
 
+float2 JsonConfig::GetFloat2(const string name)
+{
+    JSON_Array* tempArray = json_object_get_array(node, name.data());
+    float2 floats;
+    floats.x = json_array_get_number(tempArray, 0);
+    floats.y = json_array_get_number(tempArray, 1);
+
+    return floats;
+}
+
+void JsonConfig::SetFloat2(const string name, const float2 float2)
+{
+    JSON_Array* tempArray = json_object_get_array(node, name.data());
+    if (tempArray == nullptr) {
+        JSON_Value* val = json_value_init_array();
+        tempArray = json_value_get_array(val);
+        json_object_dotset_value(node, name.data(), val);
+    }
+    else {
+        json_array_clear(tempArray);
+    }
+    json_array_append_number(tempArray, float2.x);
+    json_array_append_number(tempArray, float2.y);
+}
+
 
 float3 JsonConfig::GetFloat3(const string name)
 {
@@ -129,6 +164,34 @@ void JsonConfig::SetFloat3(const string name, const float3 float3)
     json_array_append_number(tempArray, float3.x);
     json_array_append_number(tempArray, float3.y);
     json_array_append_number(tempArray, float3.z);
+}
+
+float4 JsonConfig::GetFloat4(const string name)
+{
+    JSON_Array* tempArray = json_object_get_array(node, name.data());
+    float4 floats;
+    floats.x = json_array_get_number(tempArray, 0);
+    floats.y = json_array_get_number(tempArray, 1);
+    floats.z = json_array_get_number(tempArray, 2);
+    floats.w = json_array_get_number(tempArray, 3);
+    return floats;
+}
+
+void JsonConfig::SetFloat4(const string name, const float4 float4)
+{
+    JSON_Array* tempArray = json_object_get_array(node, name.data());
+    if (tempArray == nullptr) {
+        JSON_Value* val = json_value_init_array();
+        tempArray = json_value_get_array(val);
+        json_object_dotset_value(node, name.data(), val);
+    }
+    else {
+        json_array_clear(tempArray);
+    }
+    json_array_append_number(tempArray, float4.x);
+    json_array_append_number(tempArray, float4.y);
+    json_array_append_number(tempArray, float4.z);
+    json_array_append_number(tempArray, float4.w);
 }
 
 Quat JsonConfig::GetQuat(const string name)
