@@ -117,10 +117,10 @@ public:
 	bool show_saveeditor_popup = false;
 
 	bool depthtest = false;
-	bool cullface = false;
-	bool lighting = false;
+	bool cullface = true;
+	bool lighting = true;
 	bool colormaterial = false;
-	bool texture2D = false;
+	bool texture2D = true;
 	bool cubemap = false;
 	bool polygonssmooth = false;
 

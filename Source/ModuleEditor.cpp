@@ -926,7 +926,7 @@ void ModuleEditor::ConfigurationWindow()
 			if (ImGui::Checkbox("Lightning", &lighting)) {
 				App->renderer3D->SetLighting(lighting);
 			}
-			if (ImGui::Checkbox("2D", &texture2D)) {
+			if (ImGui::Checkbox("Texture2D", &texture2D)) {
 				App->renderer3D->SetTexture2D(texture2D);
 			}
 			if (ImGui::Checkbox("Color Material", &colormaterial)) {

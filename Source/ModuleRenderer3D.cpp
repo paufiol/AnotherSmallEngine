@@ -112,11 +112,13 @@ bool ModuleRenderer3D::Init()
 
 		lights[0].Active(true);
 		SetDepthtest(false);
-		SetCullface(false);
-		SetLighting(false);
 		SetColormaterial(false);
-		SetTexture2D(false);	
-		//glEnable(GL_BLEND);
+
+		
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendEquation(GL_FUNC_ADD);
 		
 	}	
 	Importer::TextureImporter::InitDevil();
@@ -139,15 +141,17 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 
 	glLoadMatrixf(App->camera->GetRawViewMatrix());
 
-	// light 0 on cam pos
-
 	lights[0].SetPos(App->camera->currentCamera->frustum.Pos().x, App->camera->currentCamera->frustum.Pos().y, App->camera->currentCamera->frustum.Pos().z);
 
 	for(uint i = 0; i < MAX_LIGHTS; ++i)
 		lights[i].Render();
 
+	SetCullface(App->editor->cullface);
+	SetLighting(App->editor->lighting);
+	SetTexture2D(App->editor->texture2D);
+
 	//Scene Grid
-	glLineWidth(1.0f);
+	glLineWidth(2.0f);
 	glBegin(GL_LINES);
 	glColor4f(0.7f, 0.7f, 0.7f, 0.7f);
 	float z = 70.0f;
@@ -165,7 +169,14 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		frustum_corners = App->camera->gameCamera->GetFrustumPoints();
 		DrawCuboid(frustum_corners, App->editor->frustumColor);
 	}
+	
+	//for (uint i = 0; i < App->scene->game_objects.size(); i++)
+	//{
+	//	float distance = math::Length(App->camera->currentCamera->frustum.Pos() - App->scene->game_objects[i]->transform->GetPosition());
+	//	sorted[distance] = App->scene->game_objects[i];
+	//}
 
+	glColor4f(1,1,1,1);
 	glEnd();
 
 	return UPDATE_CONTINUE;
@@ -181,13 +192,12 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 	ImGui::GetBackgroundDrawList();
 	
-
-	
 	App->editor->DrawGUI();
 
 	UpdateProjectionMatrix();
 
 	SDL_GL_SwapWindow(App->window->window);
+
 	return UPDATE_CONTINUE;
 }
 
@@ -232,7 +242,7 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 void ModuleRenderer3D::IterateMeshDraw()
 {
 
-	for (uint i = 0; i < App->scene->game_objects.size(); i++) 
+	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{
 		if (!App->scene->game_objects.at(i)->active && !App->scene->game_objects.at(i)->children.empty()) break;
 
@@ -292,24 +302,14 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 	if (componentMaterial->GetMaterial() != nullptr)
 	{
 		if(componentMaterial->GetMaterial()->GetShader()) shaderProgram = componentMaterial->GetMaterial()->GetShaderProgramID();
-		if (shaderProgram != 0) glUseProgram(shaderProgram);
-		else
-		{
-			shaderProgram = SetDefaultShader(componentMaterial); //SetDefaultShader?
-			glUseProgram(shaderProgram);
-		}
 
-		if (App->editor->drawTexture && !App->editor->drawCheckerTex && componentMaterial->GetMaterial()->GetId() != 0)
-		{
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, componentMaterial->GetMaterial()->GetId());
+		shaderProgram ? shaderProgram : shaderProgram = SetDefaultShader(componentMaterial);
 
-		}
-		else if (!App->editor->drawTexture && App->editor->drawCheckerTex)
-		{
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, checkerID);
-		}
+		glUseProgram(shaderProgram);
+		
+		App->editor->drawCheckerTex ? glBindTexture(GL_TEXTURE_2D, checkerID) : glBindTexture(GL_TEXTURE_2D, componentMaterial->GetMaterial()->GetId());
+
+		componentMaterial->GetMaterial()->GetId() ? componentMaterial->GetMaterial()->GetShader()->SetUniform1i("hasTexture", (GLint)true) : componentMaterial->GetMaterial()->GetShader()->SetUniform1i("hasTexture", (GLint)false);
 
 		if (shaderProgram != 0) 
 		{
@@ -321,18 +321,6 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("viewMatrix", App->camera->GetRawViewMatrix());
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("projectionMatrix", App->camera->GetProjectionMatrix());
-
-			/*
-			mat4x4 Model_mat =		mat4x4( transform.Transposed().Col(0).x, transform.Transposed().Col(0).y, transform.Transposed().Col(0).z, transform.Transposed().Col(0).w,
-											transform.Transposed().Col(1).x, transform.Transposed().Col(1).y, transform.Transposed().Col(1).z, transform.Transposed().Col(1).w,
-											transform.Transposed().Col(2).x, transform.Transposed().Col(2).y, transform.Transposed().Col(2).z, transform.Transposed().Col(2).w,
-											transform.Transposed().Col(3).x, transform.Transposed().Col(3).y, transform.Transposed().Col(3).z, transform.Transposed().Col(3).w);
-			
-
-			mat4x4 ModelView = App->camera->GetViewMatrix() * Model_mat;
-
-			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("normal_matrix", ModelView.inverse().M);
-			*/
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", App->scene->GameTime.ReadSec());
 
@@ -348,13 +336,13 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		glBindVertexArray(componentMesh->GetMesh()->VAO);
 
 		glDrawElements(GL_TRIANGLES, componentMesh->GetMesh()->size[ResourceMesh::index], GL_UNSIGNED_INT, nullptr);
-
-		glDisable(GL_TEXTURE_2D);
-
+		
 		glBindVertexArray(0);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glUseProgram(0);
 	}
+
+	
 }
 uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
 {
@@ -369,12 +357,12 @@ uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
 				resource = App->resources->LoadResource(item->second->UID);
 				componentMaterial->GetMaterial()->SetShader((ResourceShader*)resource);
 			}
-			else 
+			else
+			{
 				componentMaterial->GetMaterial()->SetShader(item->second);
-			
+			}
 		}
 	}
-
 	return componentMaterial->GetMaterial()->GetShaderProgramID();
 
 }

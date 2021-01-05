@@ -69,4 +69,5 @@ void ResourceShader::SetUniform1i(std::string name, GLint value)
 {
 	uint uinformLoc = glGetUniformLocation(shaderProgramID, name.c_str());
 	glUniform1i(uinformLoc, value);
-}
+ }
+

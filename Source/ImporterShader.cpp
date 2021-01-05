@@ -161,7 +161,7 @@ void Importer::ShaderImporter::GetShaderUniforms(ResourceShader* shader)
 				break;
 			case GL_BOOL:
 				uniform.uniformType = UniformType::BOOL;
-				//glGetnUniformiv(shader->shaderProgramID, uinformLoc, (GLsizei)uniform.boolean);
+				//glGetUniformiv(shader->shaderProgramID, uinformLoc, (GLint*)&uniform.boolean);
 				break;
 			case GL_INT_VEC2:
 				uniform.uniformType = UniformType::INT_VEC2;
@@ -222,6 +222,7 @@ void Importer::ShaderImporter::SetShaderUniforms(ResourceShader* shader)
 	{
 		switch (shader->uniforms[i].uniformType)
 		{
+		//case UniformType::BOOL: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].boolean); break;
 		case  UniformType::INT: shader->SetUniform1i(shader->uniforms[i].name.c_str(),shader->uniforms[i].integer); break;
 		case  UniformType::FLOAT: shader->SetUniform1f(shader->uniforms[i].name.c_str(), shader->uniforms[i].floatNumber); break;
 		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec2.ptr()); break;
@@ -249,6 +250,7 @@ uint64 Importer::ShaderImporter::Save(const ResourceShader* shader, char** buffe
 		node.SetInteger("Type", (int)shader->uniforms[i].uniformType);
 		switch (shader->uniforms[i].uniformType)
 		{
+		//case  UniformType::BOOL: node.SetInteger("Value", shader->uniforms[i].boolean); break;
 		case  UniformType::INT: node.SetInteger("Value", shader->uniforms[i].integer); break;
 		case  UniformType::FLOAT: node.SetNumber("Value", shader->uniforms[i].floatNumber); break;
 		case  UniformType::INT_VEC2: node.SetFloat2("Value", shader->uniforms[i].vec2); break;
@@ -306,7 +308,7 @@ void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, 
 		uniform.uniformType = (UniformType)node.GetInteger("Type");
 		switch (uniform.uniformType)
 		{
-
+		//case  UniformType::BOOL: uniform.boolean = node.GetInteger("Value"); break;
 		case  UniformType::INT: uniform.integer = node.GetInteger("Value"); break;
 		case  UniformType::FLOAT: uniform.floatNumber = node.GetNumber("Value"); break;
 		case  UniformType::INT_VEC2: uniform.vec2 = node.GetFloat2("Value"); break;

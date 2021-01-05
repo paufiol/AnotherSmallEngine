@@ -30,7 +30,7 @@ struct Uniform
 	std::string name;
 	GLenum GLtype;
 
-	GLboolean boolean;
+	bool boolean;
 	GLint integer;
 	GLfloat floatNumber;
 	float2 vec2;
@@ -59,6 +59,7 @@ public:
 
 	void SetUniform1f(std::string name, GLfloat value);
 	void SetUniform1i(std::string name, GLint value);
+
 
 
 public:

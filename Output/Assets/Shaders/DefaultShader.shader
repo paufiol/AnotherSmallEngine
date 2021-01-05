@@ -30,11 +30,16 @@ void main()
 in vec4 ourColor;
 in vec2 TexCoord;
 out vec4 color;
+uniform bool hasTexture;
 uniform sampler2D ourTexture;
 void main()
 {
-    color = texture(ourTexture, TexCoord) * ourColor;
-    //color = vec4(1, 0, 0, 1);
+   vec4 texColor = (hasTexture) ? texture(ourTexture, TexCoord) : vec4(1,1,1,1);
+   
+   color = texColor  * ourColor;
+
 }
 
 #endif
+
+

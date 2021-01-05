@@ -5,10 +5,8 @@
 #include "Light.h"
 #include "OpenGL.h"
 #include "Timer.h"
-
+#include <map>
 #include "Dependencies/SDL/include/SDL.h"
-
-//#include "Dependencies/MathGeoLib/include/MathGeoLib.h"
 #include "Dependencies/MathGeoLib/include/Math/float4x4.h"
 
 #define MAX_LIGHTS 8
@@ -65,4 +63,6 @@ public:
 	bool drawboundingboxes = false;
 
 	Timer timer;
+
+	std::map<float, GameObject*> sortedGO;
 };
