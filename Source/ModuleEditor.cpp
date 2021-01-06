@@ -402,6 +402,7 @@ void ModuleEditor::AssetsTree(PathNode& assetFolder)
 		{
 			if (ImGui::IsItemClicked()) 
 			{
+				nextFolder = previousFolder;
 				currentFolder = assetFolder; 
 			}
 			if (!assetFolder.IsLastFolder())

@@ -6,8 +6,10 @@
 #include "OpenGL.h"
 #include "Timer.h"
 #include <map>
+#include <vector>
 #include "Dependencies/SDL/include/SDL.h"
 #include "Dependencies/MathGeoLib/include/Math/float4x4.h"
+#include "Dependencies/MathGeoLib/include/Math/float3x3.h"
 
 #define MAX_LIGHTS 8
 
@@ -23,11 +25,16 @@ public:
 	~ModuleRenderer3D();
 
 	bool Init();
+	bool Start();
 	update_status PreUpdate(float dt) override;
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
 	void OnResize(int width, int height);
+
+	void CreateSkybox();
+	uint32 SetSkyboxShader();
+	void CreateSkyboxBuffers();
 
 	void UseCheckerTexture();
 	void IterateMeshDraw();
@@ -60,9 +67,72 @@ public:
 
 	GLuint newTexture = 0;
 
+
+
 	bool drawboundingboxes = false;
 
 	Timer timer;
 
 	std::map<float, GameObject*> sortedGO;
+
+private:
+	GLuint SkyboxTex_id = 0; //Initialise?
+	std::vector<std::string> faces
+	{
+			"0_GloriousPink_Right-X",
+			"1_GloriousPink_Left+X",
+			"2_GloriousPink_Up+Y",
+			"3_GloriousPink_Down-Y",
+			"4_GloriousPink_Back-Z",
+			"5_GloriousPink_Front+Z"
+	}; //Add proper names
+
+	uint Skybox_VAO = 0;
+	uint Skybox_id = 0;
+	uint32 Skybox_programid = 0;
+
+	float Skybox_vertices[108] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
 };

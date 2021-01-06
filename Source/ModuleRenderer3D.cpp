@@ -8,8 +8,8 @@
 #include "ModuleResource.h"
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
-#include "ImporterTexture.h"
 #include "ImporterShader.h"
+#include "ImporterMaterials.h"
 
 #include "GameObject.h"
 
@@ -21,6 +21,14 @@
 
 #include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
+
+#include "Dependencies/Devil/Include/ilut.h"
+#include "Dependencies/Devil/Include/ilu.h"
+#include "Dependencies/Devil/Include/il.h"
+
+#pragma comment (lib, "Dependencies/Devil/libx86/DevIL.lib")
+#pragma comment (lib, "Dependencies/Devil/libx86/ILU.lib")
+#pragma comment (lib, "Dependencies/Devil/libx86/ILUT.lib")
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -131,6 +139,13 @@ bool ModuleRenderer3D::Init()
 	return ret;
 }
 
+bool ModuleRenderer3D::Start()
+{
+	CreateSkybox();
+
+	return true;
+}
+
 // PreUpdate: clear buffer
 update_status ModuleRenderer3D::PreUpdate(float dt)
 {
@@ -224,6 +239,63 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 }
 
+void ModuleRenderer3D::CreateSkybox()
+{
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		std::map<uint32, ResourceTexture*> inmemory_tex = App->resources->GetTexturesInMemory();
+
+		for(std::map<uint32, ResourceTexture*>::iterator j = inmemory_tex.begin(); j != inmemory_tex.end(); j++)
+		{
+			ResourceTexture* newTexture = (ResourceTexture*)App->resources->LoadResource(j->second->UID);
+			if (j->second->name == faces[i])
+			{
+				glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, newTexture->id);
+				
+			}
+		}
+		ILubyte* data = 	ilGetData();
+	}
+
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	SkyboxTex_id = textureID;
+}
+
+void ModuleRenderer3D::CreateSkyboxBuffers()
+{
+	
+	glGenBuffers(1, (GLuint*)&(Skybox_id));
+	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, Skybox_vertices, GL_STATIC_DRAW);
+}
+
+uint32 ModuleRenderer3D::SetSkyboxShader()
+{
+	uint32 program_id;
+
+	ResourceShader* resource;
+	std::map<uint32, ResourceShader*> shadersInMemory = App->resources->GetShadersInMemory();
+	for (std::map<uint32, ResourceShader*>::iterator item = shadersInMemory.begin(); item != shadersInMemory.end(); item++)
+	{
+		if (item->second->name == "SkyBoxShader")
+		{
+			resource = (ResourceShader*)App->resources->LoadResource(item->second->UID);
+			return resource->shaderProgramID;
+		}
+	}
+	return 0;
+}
+
 void ModuleRenderer3D::UpdateProjectionMatrix()
 {
 	//Only do if cameras are up and running
@@ -241,6 +313,76 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 
 void ModuleRenderer3D::IterateMeshDraw()
 {
+	glDepthMask(GL_FALSE);
+	
+	CreateSkyboxBuffers();
+	
+	if (Skybox_programid == 0)
+	{
+		Skybox_programid = SetSkyboxShader(); //skyboxShader.use();
+	}
+
+	if (Skybox_programid != 0)
+	{
+		glUseProgram(Skybox_programid);
+	}
+	else LOG("Error loading skybox shader program");
+	
+	/*
+	static float4x4 m;
+	//static mat4x4 m;
+
+	m = App->camera->currentCamera->frustum.ViewMatrix();
+	m.Transpose();
+
+
+	float3 position = float3::zero;
+	float3 scale = float3::one;
+	Quat   rotation = Quat::identity;
+
+	m.Decompose(position, rotation, scale);
+
+	float3 rot_axis;
+	float rot_angle;
+
+	rotation.ToAxisAngle(rot_axis, rot_angle);
+
+	vec3 rot_axis_asvec;
+	rot_axis_asvec.x = rot_axis.x;
+	rot_axis_asvec.y = rot_axis.y;
+	rot_axis_asvec.z = rot_axis.z;
+
+	mat4x4 a;
+	a.translate(position.x, position.y, position.z);
+	a.rotate(rot_angle, rot_axis_asvec);
+	a.scale(scale.x, scale.y, scale.z);
+
+	mat4x4 edited_viewMatrix = mat4x4(mat3x3(a));
+	
+	*/
+	
+	
+
+	int uinformLoc = glGetUniformLocation(Skybox_programid, "viewMatrix");
+	//glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, edited_viewMatrix.M);
+	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, App->camera->GetRawViewMatrix());
+
+	uinformLoc = glGetUniformLocation(Skybox_programid, "projectionMatrix");
+	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
+
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
+	
+	glUniform1i(glGetUniformLocation(Skybox_programid, "skybox"),3);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	// … bind and use other buffers
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDisableClientState(GL_VERTEX_ARRAY);
+	
+	glDepthMask(GL_TRUE);
 
 	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{
@@ -313,7 +455,6 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 		if (shaderProgram != 0) 
 		{
-			//Lo que sea que modifique dentro de est if no lo pilla bien el shader
 			componentMaterial->GetMaterial()->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&componentMaterial->GetMaterial()->GetColor());
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
@@ -340,10 +481,9 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 		glBindVertexArray(0);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glUseProgram(0);
-	}
-
-	
+	}	
 }
+
 uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
 {
 	Resource* resource = nullptr;
