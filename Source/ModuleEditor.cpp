@@ -420,6 +420,8 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 {
 	//if(assetFolder.path == "Assets") previousFolder = assetFolder;
 
+	nextFolder = previousFolder;
+
 	uint row = 0;
 	uint column = 7;
 	uint offset = 50;
@@ -428,13 +430,15 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 	ImVec2 flipH = ImVec2(1.0f, 0.0f);
 
 	ImGui::Text(assetFolder.localPath.c_str());
-
+	
+	/*
 	ImGui::SameLine(ImGui::GetWindowWidth() - 30);
 
 	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 
 	if (ImGui::IsItemClicked()) 
 		nextFolder = previousFolder;
+	*/
 
 	ImGui::Separator();
 

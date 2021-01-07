@@ -81,11 +81,9 @@ update_status ModuleScene::Update(float dt)
 		primitives[n]->Update();
 	}
 
-
-	if(!App->editor->isUserTyping)
+	if(!App->editor->GUIhovered)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
-			App->scene->DeleteGameObject(App->scene->selected_object);
+		if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN) App->scene->DeleteGameObject(App->scene->selected_object);
 		if (App->input->GetKey(SDL_SCANCODE_W)) gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 		else if (App->input->GetKey(SDL_SCANCODE_E)) gizmoOperation = ImGuizmo::OPERATION::ROTATE;
 		else if (App->input->GetKey(SDL_SCANCODE_R)) gizmoOperation = ImGuizmo::OPERATION::SCALE;
