@@ -2,10 +2,9 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
-
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
-
 #include "Timer.h"
+#include <map>
 
 class GameObject;
 class Primitive;
@@ -22,14 +21,14 @@ public:
 	update_status PostUpdate(float dt) override;
 	bool CleanUp();
 
-
-	void LoadModel(const char* path);
-	//void SaveScene();
+	std::map<uint32, GameObject*> FillGameObjectsMap();
+	void FillGameObjectsVector(std::map<uint32, GameObject*> gameObjectsMap);
 
 	void AddGameObject(GameObject* object);
 	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);
 	void SelectObject(GameObject* object);
 	void DeleteGameObject(GameObject* object);
+	void DeleteAllGameObjects();
 
 	GameObject* CreateGameCamera();
 

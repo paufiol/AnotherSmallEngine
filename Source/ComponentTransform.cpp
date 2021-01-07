@@ -10,6 +10,9 @@ ComponentTransform::ComponentTransform(GameObject* owner) :
 {
 	local_transform = float4x4::FromTRS(local_position, local_rotation, local_scale);
 	global_transform = Quat::identity;
+	global_position = float3::zero;
+	global_scale = float3::one;
+	global_rotation = Quat::identity;
 	type = ComponentType::Transform;
 
 };
@@ -19,6 +22,15 @@ ComponentTransform::ComponentTransform(GameObject* owner, float3 position, float
 {
 	local_transform = float4x4::FromTRS(position, rotation, scale);
 	global_transform = Quat::identity;
+	type = ComponentType::Transform;
+
+};
+
+ComponentTransform::ComponentTransform(GameObject* owner, float3 position, float3 scale, Quat rotation, float3 globalPosition, float3 globalScale, Quat globalRotation) :
+	Component(owner), local_scale(scale), local_rotation(rotation), local_position(position), global_scale(globalScale), global_rotation(globalRotation), global_position(globalPosition)
+{
+	local_transform = float4x4::FromTRS(position, rotation, scale);
+	global_transform = float4x4::FromTRS(globalPosition, globalRotation, globalScale);
 	type = ComponentType::Transform;
 
 };
@@ -76,6 +88,7 @@ void ComponentTransform::UpdateLocalTransform()
 
 void ComponentTransform::UpdateGlobalTransform()
 {
+
 	GameObject* tempParent = owner->parent;
 	if (tempParent != nullptr)
 	{

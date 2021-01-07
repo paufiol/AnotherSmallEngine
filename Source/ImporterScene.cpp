@@ -12,15 +12,16 @@
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ResourceScene.h"
-
+#include "ResourceModel.h"
 #include "Component.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 #include "ComponentMaterial.h"
-
+#include "ModuleScene.h"
 #include "ResourceScene.h"
+#include "ModuleCamera3D.h"
 
 #include "Dependencies/Assimp/include/cimport.h"
 #include "Dependencies/Assimp/include/scene.h"
@@ -40,7 +41,7 @@ const aiScene* Importer::ModelImporter::ImportAssimpScene(const char* buffer, ui
 	return aiScene;
 }
 
-void Importer::ModelImporter::ImportScene(const aiScene* aiScene, ResourceScene* resourceScene)
+void Importer::ModelImporter::ImportScene(const aiScene* aiScene, ResourceModel* resourceScene)
 {
 	//LOG("Importing Scene: %s", scenePath);
 	//char* buffer = nullptr;
@@ -52,7 +53,7 @@ void Importer::ModelImporter::ImportScene(const aiScene* aiScene, ResourceScene*
 
 }
 
-void Importer::ModelImporter::IterateNodes(const aiScene* aiScene, aiNode* node, ResourceScene* resourceScene, uint32 ID)
+void Importer::ModelImporter::IterateNodes(const aiScene* aiScene, aiNode* node, ResourceModel* resourceScene, uint32 ID)
 {
 	GameObject* tempObject = new GameObject();
 
@@ -101,47 +102,6 @@ void Importer::ModelImporter::IterateNodes(const aiScene* aiScene, aiNode* node,
 
 	resourceScene->models.push_back(model);
 	
-	
-
-
-	//if (node->mNumMeshes > 0)
-	//{
-	//	//Importing meshes------------------------------------------------------------
-	//	
-	//	std::vector<ResourceMesh*> meshes = Importer::MeshImporter::LoadMeshes(aiScene, node);
-
-	//	for (uint i = 0; i < meshes.size(); i++)
-	//	{
-	//		
-	//		ComponentMesh* tempCompMesh = new ComponentMesh(tempObject);
-	//		tempCompMesh->SetMesh(meshes[i]);
-	//		//tempCompMesh->SetPath(scenePath);
-	//		tempObject->AddComponent(tempCompMesh);
-
-	//		LOG("Imported the mesh of the node: %s", node->mName.C_Str());
-
-	//		//Importing Materials--------------------------------------------------------
-
-	//		aiMesh* aiTempMesh = aiScene->mMeshes[node->mMeshes[i]];
-
-	//		if (aiTempMesh->mMaterialIndex >= 0)
-	//		{
-	//			aiMaterial* material = aiScene->mMaterials[aiTempMesh->mMaterialIndex];
-
-	//			Importer::MaterialsImporter::ImportMaterial(material,tempObject);
-	//			
-	//		}
-	//	}
-	//}
-
-	////---------------------------------------------------------------------------------
-	//tempObject->SetName(node->mName.C_Str());
-	//
-	//parent->AddChildren(tempObject);
-
-	//tempObject->transform->UpdateTransform(position, scale, rotation);
-
-	//App->scene->game_objects.push_back(tempObject);
 
 	for (uint i = 0; i < node->mNumChildren; ++i)
 	{
@@ -149,7 +109,7 @@ void Importer::ModelImporter::IterateNodes(const aiScene* aiScene, aiNode* node,
 	}
 }
 
-uint32 Importer::ModelImporter::Save(const ResourceScene* resourceScene, char** buffer)
+uint32 Importer::ModelImporter::Save(const ResourceModel* resourceScene, char** buffer)
 {
 	JsonConfig jsonFile;
 	ArrayConfig jsonArrray = jsonFile.SetArray("Models");
@@ -179,7 +139,7 @@ uint32 Importer::ModelImporter::Save(const ResourceScene* resourceScene, char** 
 	return size;
 }
 
-void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
+void Importer::ModelImporter::Load(ResourceModel* resourceScene, char* buffer)
 {
 
 	JsonConfig jsonFile(buffer); //needs buffer??
@@ -194,11 +154,7 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 
 		string name = model.GetString("Name");
 		GameObject* tempGameObject = new GameObject(name);
-		//Setting up the GameObject
 
-		//Set name
-
-		//Set parent
 		GameObject* parent = nullptr;
 		std::map<uint32, GameObject*>::iterator it = GameObjects.find(model.GetNumber("Parent UID"));
 		if (it != GameObjects.end())
@@ -217,7 +173,6 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		}
 
 		GameObjects[model.GetNumber("UID")] = tempGameObject;
-		//if (!parent)  tempGameObject->parent = App->scene->root_object;
 
 	
 		uint meshUID = model.GetNumber("Mesh UID");
@@ -235,17 +190,12 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		{
 			ComponentMaterial* tempCompMaterial = new ComponentMaterial(tempGameObject);
 
-			//std::string path = MATERIALS_PATH + std::to_string(materialUID);
-			//char* buffer = nullptr;
-			//uint size = App->fileSystem->Load(path.c_str(), &buffer);
-
 			Resource* resource = App->resources->GetResourceInMemory(materialUID);
 
  			ResourceMaterial* tempResourceMaterial = (ResourceMaterial*)App->resources->LoadResource(resource->UID);
 
 			tempCompMaterial->SetMaterial(tempResourceMaterial);
 			tempGameObject->AddComponent(tempCompMaterial);
-			//Link resource with component
 		}
 
 
@@ -261,7 +211,7 @@ void Importer::ModelImporter::Load(ResourceScene* resourceScene, char* buffer)
 		tempGameObject->transform->SetPosition(position);
 		tempGameObject->transform->SetScale(scale);
 		tempGameObject->transform->SetRotation(rotation);
-		//tempGameObject->transform->UpdateTransform(position, scale, rotation);
+
 
 		App->scene->game_objects.push_back(tempGameObject);
 	}
@@ -273,21 +223,14 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 	JsonConfig jsonFile;
 	ArrayConfig jsonGOArray = jsonFile.SetArray("GameObjects");
 
-	//std::vector<GameObject*> GOarray;
-	
-	//App->scene->root_object->FillGameObjectArray(App->scene->root_object, GOarray);
-
-
-
 	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{
 		JsonConfig& sceneConfig = jsonGOArray.AddNode();
 
 		sceneConfig.SetString("Name", App->scene->game_objects[i]->name.c_str());
 		sceneConfig.SetNumber("UID", App->scene->game_objects[i]->GetUID());
-		sceneConfig.SetNumber("Parent UID", App->scene->game_objects[i]->IsRootObject() ? 0 : App->scene->game_objects[i]->parent->GetUID());
+		sceneConfig.SetNumber("Parent UID", App->scene->game_objects[i]->parent == nullptr ? 0 : App->scene->game_objects[i]->parent->GetUID());
 		sceneConfig.SetBool("IsSelected", App->scene->game_objects[i]->IsSelected());
-		//config.SetBool("IsOpenHeriarchy")
 
 		ArrayConfig jsonCompArray = sceneConfig.SetArray("Components");
 
@@ -297,7 +240,7 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 			JsonConfig& compConfig = jsonCompArray.AddNode();
 			
 			ComponentMesh* componentMesh = (ComponentMesh*)App->scene->game_objects[i]->GetComponent(ComponentType::Mesh);
-			ComponentMaterial* componentTex = (ComponentMaterial*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
+			ComponentMaterial* componentMat = (ComponentMaterial*)App->scene->game_objects[i]->GetComponent(ComponentType::Material);
 			ComponentTransform* componentTransform = (ComponentTransform*)App->scene->game_objects[i]->GetComponent(ComponentType::Transform);
 			ComponentCamera* componentCamera = (ComponentCamera*)App->scene->game_objects[i]->GetComponent(ComponentType::Camera);
 
@@ -310,10 +253,9 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 			case (ComponentType::Material):
 				
 				compConfig.SetString("Type", "Material");
-				compConfig.SetNumber("Resource UID", componentTex->GetMaterial()->GetUID());
-
-				//compConfig.SetColor("Color", componentTex->GetMaterial()->GetColor());
-
+				compConfig.SetNumber("Resource UID", componentMat->GetMaterial()->GetUID());
+				compConfig.SetNumber("Shader UID", componentMat->GetMaterial()->GetShader()->GetUID());
+				componentMat->GetMaterial()->GetTexture()->id != 0 ? compConfig.SetNumber("Texture UID", componentMat->GetMaterial()->GetTexture()->GetUID()) : 0 ;
 				break;
 			case (ComponentType::Transform):
 				
@@ -321,17 +263,26 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 				compConfig.SetFloat3("Position", componentTransform->GetPosition());
 				compConfig.SetFloat3("Scale", componentTransform->GetScale());
 				compConfig.SetQuat("Rotation", componentTransform->GetRotation());
+
+
+				compConfig.SetFloat3("GlobalPosition", componentTransform->GetGlobalPosition());
+				compConfig.SetFloat3("GlobalScale", componentTransform->GetGlobalScale());
+				compConfig.SetQuat("GlobalRotation", componentTransform->GetGlobalRotation());
 				break;
 			case(ComponentType::Camera):
-				
-				compConfig.SetBool("Is Active", componentCamera->active_camera);
+				compConfig.SetString("Type", "Camera");
+				compConfig.SetNumber("NearPlane", componentCamera->GetNearPlane());
+				compConfig.SetNumber("FarPlane", componentCamera->GetFarPlane());
+				compConfig.SetNumber("FOV", componentCamera->GetFOV());
+				compConfig.SetBool("Culling", componentCamera->frustum_culling);
+				compConfig.SetBool("BoundingBoxes", componentCamera->draw_boundingboxes);
+				compConfig.SetBool("isActive", componentCamera->active_camera);
 				break;
 			}
 
 		}
 	}
 
-	//char* buffer = nullptr;
 	uint size = jsonFile.SerializeConfig(buffer);
 	return size;
 }
@@ -340,16 +291,22 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 {
 	JsonConfig jsonFile(buffer);
 	std::map<uint32, GameObject*> importedGameObjects;
+	App->scene->DeleteAllGameObjects();
 	ArrayConfig arrayGameObjects = jsonFile.GetArray("GameObjects");
 
 	for (uint i = 0; i < arrayGameObjects.GetSize(); i++)
 	{
 		JsonConfig node = arrayGameObjects.GetNode(i);
-
+		//Set Game Object Name
 		string name = node.GetString("Name");
 		GameObject* gameObject = new GameObject(name);
+		//Set Game Object UID & selected bool
+		gameObject->SetUID(node.GetNumber("UID"));
+		if (node.GetBool("IsSelected")) App->scene->selected_object = gameObject;
 
+		//Set Game Object Parent if it has one
 		GameObject* parent = nullptr;
+		uint32 parentUID = node.GetNumber("Parent UID");
 		std::map<uint32, GameObject*>::iterator it = importedGameObjects.find(node.GetNumber("Parent UID"));
 		if (it != importedGameObjects.end())
 		{
@@ -362,28 +319,65 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 		}
 		else
 		{
-			gameObject->SetParent(App->scene->root_object);
-			App->scene->root_object->AddChildren(gameObject);
+			App->scene->root_object = gameObject;
 		}
-
-		gameObject->SetUID(node.GetNumber("UID"));
-		if(node.GetBool("IsSelected")) App->scene->selected_object = gameObject;
-		
+		//Set all Game Objects components 
 		ArrayConfig componentsArray = node.GetArray("Components");
 		for (uint i = 0; i < componentsArray.GetSize(); i++)
 		{
 			JsonConfig componentNode = componentsArray.GetNode(i);
 			string type = componentNode.GetString("Type");
-			if(type == "Mesh") {}
-			if (type == "Material") {}
-			if (type == "Transform") 
+			if(type == "Mesh") 
 			{
-				ComponentTransform* transform = new ComponentTransform(parent, componentNode.GetFloat3("Position"), componentNode.GetFloat3("Scale"), componentNode.GetQuat("Rotation"));
-				gameObject->AddComponent(transform);
+				ComponentMesh* tempCompMesh = new ComponentMesh(gameObject);
+				uint32 UID = componentNode.GetNumber("Resource UID");
+				ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResourceInMemory(UID);
+				tempCompMesh->SetMesh(mesh);
+				gameObject->AddComponent(tempCompMesh);
+			}
+			else if (type == "Material") 
+			{
+				ComponentMaterial* tempCompMaterial = new ComponentMaterial(gameObject);
+				ResourceMaterial* material = (ResourceMaterial*)App->resources->GetResourceInMemory(componentNode.GetNumber("Resource UID"));
+
+				ResourceShader* shader = (ResourceShader*)App->resources->GetResourceInMemory(componentNode.GetNumber("Shader UID"));	
+				material->SetShader(shader);
+
+				uint32 textureUID = componentNode.GetNumber("Texture UID");
+				if (textureUID != 0)
+				{
+					ResourceTexture* texture = (ResourceTexture*)App->resources->GetResourceInMemory(componentNode.GetNumber("Texture UID"));
+					material->SetTexture(texture);
+				}
+
+				tempCompMaterial->SetMaterial(material);
+				gameObject->AddComponent(tempCompMaterial);
+			}
+			else if (type == "Transform") 
+			{
+				gameObject->transform->SetPosition(componentNode.GetFloat3("Position"));
+				gameObject->transform->SetScale(componentNode.GetFloat3("Scale"));
+				gameObject->transform->SetRotation(componentNode.GetQuat("Rotation"));
+
+				gameObject->transform->SetGlobalTransform(componentNode.GetFloat3("GlobalPosition"), componentNode.GetFloat3("GlobalScale"), componentNode.GetQuat("GlobalRotation"));
+
+			}
+			else if (type == "Camera")
+			{
+				ComponentCamera* camera = new ComponentCamera(gameObject);
+				App->camera->gameCamera = camera;
+				camera->draw_boundingboxes = componentNode.GetBool("BoundingBoxes");
+				camera->frustum_culling = componentNode.GetBool("Culling");
+				camera->active_camera = componentNode.GetBool("isActive");
+				camera->SetFOV(componentNode.GetNumber("FOV"));
+				camera->SetNearPlane(componentNode.GetNumber("NearPlane"));
+				camera->SetFarPlane(componentNode.GetNumber("FarPlane"));
+				gameObject->AddComponent(camera);
 			}
 		}
-		App->scene->game_objects.push_back(gameObject);
+		importedGameObjects.emplace(gameObject->GetUID(),gameObject);
 	}
+	App->scene->FillGameObjectsVector(importedGameObjects);
 
 }
 

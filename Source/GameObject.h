@@ -73,6 +73,7 @@ public:
 
 	void CreateGOfromResource(ResourceScene* model);
 
+	
 
 	bool selected = false;
 private:

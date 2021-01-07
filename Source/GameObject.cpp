@@ -319,6 +319,8 @@ void GameObject::CreateGOfromResource(ResourceScene* model)
 
 }
 
+
+
 Component* GameObject::GetComponent(ComponentType type)
 {
 

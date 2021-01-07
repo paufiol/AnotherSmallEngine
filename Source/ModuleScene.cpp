@@ -17,6 +17,7 @@
 #include "ResourceMesh.h"
 #include "ModuleWindow.h"
 #include "ModuleEditor.h"
+#include "GameObject.h"
 
 #include <map>
 
@@ -25,8 +26,12 @@
 
 ModuleScene::ModuleScene(bool start_enabled) : Module(start_enabled)
 {
-	root_object = new GameObject("Scene");
-	game_objects.push_back(root_object);
+	
+	if (!root_object)
+	{
+		root_object = new GameObject("Scene");
+		game_objects.push_back(root_object);
+	}
 	root_object->parent = nullptr;
 	selected_object = root_object;
 
@@ -61,20 +66,6 @@ bool ModuleScene::CleanUp()
 	LOG("Unloading Intro scene");
 
 	return true;
-}
-
-void ModuleScene::LoadModel (const char* path)
-{
-	//char* buffer = nullptr;
-	//uint size = App->fileSystem->Load(path, &buffer);
-	//if (size == 0)
-	//{
-	//	LOG("ERROR Could not load %s from Assets!", path);
-	//	return;
-	//}
-
-
-
 }
 
 // Update
@@ -175,6 +166,7 @@ void ModuleScene::DeleteGameObject(GameObject* object)
 		}
 	}
 }
+
 
 GameObject* ModuleScene::CreateGameCamera() {
 
@@ -310,6 +302,44 @@ void ModuleScene::SelectObject(GameObject* object)
 	if (object != nullptr)
 	{
 		selected_object = object;
+	}
+}
+
+
+void ModuleScene::DeleteAllGameObjects()
+{
+	selected_object = nullptr;
+	for (uint i = 0; i < game_objects.size(); i++)
+	{
+		if (game_objects[i] != nullptr)
+		{
+			if (game_objects[i]->parent) game_objects[i]->parent->EraseChild(game_objects[i]);
+		}
+
+	}
+	game_objects.clear();
+}
+
+
+std::map<uint32, GameObject*> ModuleScene::FillGameObjectsMap()
+{
+	std::map<uint32, GameObject*> gameObjects;
+	for (uint i = 0; i < game_objects.size(); i++)
+	{
+		//gameObjects[game_objects[i]->GetUID()] = game_objects[i];
+		gameObjects.emplace(game_objects[i]->GetUID(), game_objects[i]);
+	}
+
+	return gameObjects;
+}
+
+//Store the Game Objects passed as reference in a Map into the GameObject vector in the scene
+void ModuleScene::FillGameObjectsVector(std::map<uint32, GameObject*> gameObjectsMap)
+{
+	std::map<uint32, GameObject*>::iterator it = gameObjectsMap.begin();
+	for (; it != gameObjectsMap.end(); it++)
+	{
+		game_objects.push_back(it->second);
 	}
 }
 

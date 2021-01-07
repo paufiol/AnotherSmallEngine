@@ -505,9 +505,9 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			case ResourceType::Model:
 				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
-			case ResourceType::Scene:
-				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
-				break;
+			//case ResourceType::Scene:
+			//	ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
+			//	break;
 			case ResourceType::Texture:
 				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
@@ -563,9 +563,9 @@ void ModuleEditor::DropTargetWindow()
 				case ResourceType::Model:
 					App->resources->LoadResource(UID);
 					break;
-				case ResourceType::Scene:
-					App->resources->LoadResource(UID);
-					break;
+				//case ResourceType::Scene:
+				//	App->resources->LoadResource(UID);
+				//	break;
 				case ResourceType::Texture:
 
 					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
@@ -742,19 +742,31 @@ bool ModuleEditor::MainMenuBar()
 		{ 
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				ResourceScene* scene = new ResourceScene();
-				std::map<uint32, Resource*>::iterator it = App->resources->resources.find(App->scene->sceneUID);
-				if (it != App->resources->resources.end())
-				{
-					scene = (ResourceScene*)it->second;
-				}
-				char* buffer;
-				string path = SCENES_PATH;
-				path.append(std::to_string(scene->UID));
-				path.append(ASE_EXTENSION); 
-				uint size = Importer::SceneImporter::Save(scene, &buffer);
-				App->fileSystem->Save(path.c_str(), buffer, size);
+				Resource* scene = App->resources->CreateNewResource("", ResourceType::Scene, "scene");
+				//std::map<uint32, Resource*>::iterator it = App->resources->resources.find(App->scene->sceneUID);
+				//if (it != App->resources->resources.end())
+				//{
+				//	scene = (ResourceScene*)it->second;
+				//}
+				//char* buffer;
+				//string path = SCENES_PATH;
+				//path.append(std::to_string(scene->UID));
+				//path.append(ASE_EXTENSION); 
+				//uint size = Importer::SceneImporter::Save(scene, &buffer);
+				//App->fileSystem->Save(path.c_str(), buffer, size);
+				App->resources->SaveResource(scene);
 
+			}
+			if (ImGui::MenuItem("Load Scene"))
+			{
+				std::map<uint32, Resource*>::iterator it = App->resources->importedResources.begin();
+				for (; it != App->resources->importedResources.end(); it++)
+				{
+					if (it->second->type == ResourceType::Scene)
+					{
+  						App->resources->LoadResource(it->second->UID);
+					}
+				}
 			}
 			if(ImGui::MenuItem("Exit")) ret = false;
 			

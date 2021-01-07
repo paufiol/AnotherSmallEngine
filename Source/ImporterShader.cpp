@@ -225,12 +225,12 @@ void Importer::ShaderImporter::SetShaderUniforms(ResourceShader* shader)
 		//case UniformType::BOOL: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].boolean); break;
 		case  UniformType::INT: shader->SetUniform1i(shader->uniforms[i].name.c_str(),shader->uniforms[i].integer); break;
 		case  UniformType::FLOAT: shader->SetUniform1f(shader->uniforms[i].name.c_str(), shader->uniforms[i].floatNumber); break;
-		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec2.ptr()); break;
-		case  UniformType::INT_VEC3: shader->SetUniformVec3f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec3.ptr()); break;
-		case  UniformType::INT_VEC4: shader->SetUniformVec4f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec4.ptr()); break;
-		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec2.ptr()); break;
-		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec3.ptr()); break;
-		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec4.ptr()); break;
+		case  UniformType::INT_VEC2: shader->SetUniformVec2i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec2.ptr()); break;
+		case  UniformType::INT_VEC3: shader->SetUniformVec3i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec3.ptr()); break;
+		case  UniformType::INT_VEC4: shader->SetUniformVec4i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec4.ptr()); break;
+		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2f(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].vec2.ptr()); break;
+		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3f(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].vec3.ptr()); break;
+		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4f(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].vec4.ptr()); break;
 		case UniformType::MATRIX4: shader->SetUniformMatrix4(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].matrix4.Transposed().ptr()); break;
 		default: break;
 		}

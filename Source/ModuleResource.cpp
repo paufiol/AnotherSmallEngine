@@ -7,6 +7,7 @@
 #include "ResourceMesh.h"
 #include "ResourceMaterial.h"
 #include "ResourceScene.h"
+#include "ResourceModel.h"
 #include "ResourceFolder.h"
 
 #include "ImporterMaterials.h"
@@ -159,21 +160,12 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 
 		Importer::TextureImporter::ImportTexture((ResourceTexture*)resource, buffer, fileSize);
 		SaveResource((ResourceTexture*)resource);
-		if (GetResourceInMemory(resource->UID) != nullptr)
-		{
-			//importedResources[resource->UID] = resource;
-		}
-
-		break;
-	case ResourceType::Scene: 
-		App->scene->sceneLibraryPath = resource->libraryFile;
-		LoadScene(buffer, fileSize, (ResourceScene*)resource);
 
 		break;
 	case ResourceType::Model:
 		
-		LoadScene(buffer, fileSize, (ResourceScene*)resource);
-		SaveResource((ResourceScene*)resource);
+		LoadModel(buffer, fileSize, (ResourceModel*)resource);
+		SaveResource((ResourceModel*)resource);
 
 		break;
 
@@ -198,29 +190,27 @@ void ModuleResources::LoadShader(const char* buffer, uint size, ResourceShader* 
 }
 
 
-void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* scene)
+void ModuleResources::LoadModel(const char* buffer, uint size, ResourceModel* model)
 {
-	//ResourceScene* resourceScene = new ResourceScene(scene->assetsFile.c_str(),scene->libraryFile.c_str(),scene->name.c_str(),scene->UID);
-
 	const aiScene* aiScene = Importer::ModelImporter::ImportAssimpScene(buffer, size);
-	Importer::ModelImporter::ImportScene(aiScene, scene);
+	Importer::ModelImporter::ImportScene(aiScene, model);
 
 	std::vector<uint32> meshes;
 
 	for (uint i = 0; i < aiScene->mNumMeshes; i++)
 	{
 		std::string name;
-		for (uint h = 0; h < scene->models.size(); h++)
+		for (uint h = 0; h < model->models.size(); h++)
 		{
-			if (scene->models[h].meshID == i) name = scene->models[h].name;
+			if (model->models[h].meshID == i) name = model->models[h].name;
 		}
 		aiScene->mMeshes[i]->mName = name;
-		ResourceMesh* resourceMesh = (ResourceMesh*)CreateNewResource(scene->GetAssetsFile().c_str(), ResourceType::Mesh, aiScene->mMeshes[i]->mName.C_Str());
+		ResourceMesh* resourceMesh = (ResourceMesh*)CreateNewResource(model->GetAssetsFile().c_str(), ResourceType::Mesh, aiScene->mMeshes[i]->mName.C_Str());
 		Importer::MeshImporter::LoadMeshes(resourceMesh, aiScene->mMeshes[i]);
 		SaveResource(resourceMesh);
 
 		meshes.push_back(resourceMesh->GetUID());
-		scene->resourcesInModels.push_back(resourceMesh->GetUID());
+		model->resourcesInModels.push_back(resourceMesh->GetUID());
 	}
 	std::vector<uint32> materials;
 	for (uint i = 0; i < aiScene->mNumMaterials; i++)
@@ -228,33 +218,33 @@ void ModuleResources::LoadScene(const char* buffer, uint size, ResourceScene* sc
 		std::string name;
 		aiScene->mMaterials[i]->Get(AI_MATKEY_NAME, name);
 			
-		ResourceMaterial* resourceMaterial = (ResourceMaterial*)CreateNewResource(scene->GetAssetsFile().c_str(), ResourceType::Material, aiScene->mMeshes[i]->mName.C_Str());
+		ResourceMaterial* resourceMaterial = (ResourceMaterial*)CreateNewResource(model->GetAssetsFile().c_str(), ResourceType::Material, aiScene->mMeshes[i]->mName.C_Str());
 
 
 		Importer::MaterialsImporter::ImportMaterial(aiScene->mMaterials[i], resourceMaterial);
 		SaveResource(resourceMaterial);
 		//SaveResource(resourceMaterial->GetTexture());
 		materials.push_back(resourceMaterial->GetUID());
-		scene->resourcesInModels.push_back(resourceMaterial->GetUID());
+		model->resourcesInModels.push_back(resourceMaterial->GetUID());
 	}
 
-	for (uint i = 0; i < scene->models.size(); i++)
+	for (uint i = 0; i < model->models.size(); i++)
 	{
-		if (scene->models[i].meshID != -1)
+		if (model->models[i].meshID != -1)
 		{
-			scene->models[i].meshID = meshes[scene->models[i].meshID];
+			model->models[i].meshID = meshes[model->models[i].meshID];
 		}
 		else
 		{
-			scene->models[i].meshID = 0;
+			model->models[i].meshID = 0;
 		}
-		if (scene->models[i].materialID != -1)
+		if (model->models[i].materialID != -1)
 		{
-			scene->models[i].materialID = materials[scene->models[i].materialID];
+			model->models[i].materialID = materials[model->models[i].materialID];
 		}
 		else
 		{
-			scene->models[i].materialID = 0;
+			model->models[i].materialID = 0;
 		}
 	}
 
@@ -359,7 +349,7 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 		
 		break;
 	case ResourceType::Model:
-		resource = new ResourceScene(assetsFile, MODELS_PATH, name, UID);
+		resource = new ResourceModel(assetsFile, MODELS_PATH, name, UID);
 		break;
 	case ResourceType::Shader:
 		resource = new ResourceShader(assetsFile, SHADERS_PATH, name, UID);
@@ -372,7 +362,8 @@ Resource* ModuleResources::CreateNewResource(const char* assetsFile, ResourceTyp
 	if (resource->type != ResourceType::None)
 	{
 		resource->libraryFile.append(std::to_string(resource->GetUID()));
-		resource->libraryFile.append(ASE_EXTENSION);
+		if (resource->type != ResourceType::Scene) resource->libraryFile.append(ASE_EXTENSION);
+		else resource->libraryFile.append(".scene");
 		importedResources[resource->UID] = resource;
 
 
@@ -433,8 +424,8 @@ void ModuleResources::SaveResource(Resource* resource)
 	case(ResourceType::Mesh): { size = Importer::MeshImporter::Save((ResourceMesh*)resource, &buffer); break; }
 	case(ResourceType::Texture): { size = Importer::TextureImporter::Save((ResourceTexture*)resource, &buffer); break; }
 	case(ResourceType::Material): { size = Importer::MaterialsImporter::Save((ResourceMaterial*)resource, &buffer); break; }
-	case(ResourceType::Scene): { size = Importer::ModelImporter::Save((ResourceScene*)resource, &buffer);break; }
-	case(ResourceType::Model):{ size = Importer::ModelImporter::Save((ResourceScene*)resource, & buffer); break; }
+	case(ResourceType::Scene): { size = Importer::SceneImporter::Save((ResourceScene*)resource, &buffer);break; }
+	case(ResourceType::Model):{ size = Importer::ModelImporter::Save((ResourceModel*)resource, & buffer); break; }
 	case(ResourceType::Shader): {size = Importer::ShaderImporter::Save((ResourceShader*)resource, &buffer); break; }
 	}
 
@@ -479,11 +470,10 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 		Importer::MaterialsImporter::Load((ResourceMaterial*)tempResource, buffer);
 		break;
 	case (ResourceType::Model):
-		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
+		Importer::ModelImporter::Load((ResourceModel*)tempResource, buffer);
 		break;
 	case(ResourceType::Scene):
-		Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer); //Works for now
-		 //Importer::ModelImporter::Load((ResourceScene*)tempResource, buffer);
+		 Importer::SceneImporter::Load((ResourceScene*)tempResource, buffer);
 		break;
 	case(ResourceType::Texture):
 		Importer::TextureImporter::Load((ResourceTexture*)tempResource, buffer,size);
@@ -564,7 +554,7 @@ std::string ModuleResources::GetStringFromResource(Resource* resource)
 		return "Model";
 		break;
 	case ResourceType::Scene:
-		return "Model";			//TODO: Improve system
+		return "Scene";	
 		break;
 	case ResourceType::Texture:
 		return "Texture";

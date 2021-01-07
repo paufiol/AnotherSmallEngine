@@ -10,6 +10,7 @@ class ResourceMesh;
 class ResourceShader;
 class ResourceTexture;
 class ResourceScene;
+class ResourceModel;
 
 struct PathNode;
 
@@ -26,7 +27,7 @@ public:
 	void LoadAssets();
 	bool IterateAssets(PathNode node, uint32 ID = 0);
 
-	void LoadScene(const char* buffer, uint size, ResourceScene* scene);
+	void LoadModel(const char* buffer, uint size, ResourceModel* scene);
 	void LoadShader(const char* buffer, uint size, ResourceShader* shader);
 
 	uint32 Find(const char* file);
@@ -57,10 +58,10 @@ public:
 public:
 
 	std::map<uint32, Resource*> resources;
+	std::map<uint32, Resource*> importedResources;
 
 private:
 
-	std::map<uint32, Resource*> importedResources;
 
 
 	Random randomNum;

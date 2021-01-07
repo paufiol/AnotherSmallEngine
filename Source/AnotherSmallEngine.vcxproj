@@ -334,6 +334,7 @@
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="OpenGL.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="ResourceModel.h" />
     <ClInclude Include="ResourceScene.h" />
     <ClInclude Include="ResourceShader.h" />
     <ClInclude Include="ResourceTexture.h" />
@@ -425,6 +426,7 @@
     <ClCompile Include="ModuleScene.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="ResourceModel.cpp" />
     <ClCompile Include="ResourceScene.cpp" />
     <ClCompile Include="ResourceShader.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
