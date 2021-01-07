@@ -172,6 +172,8 @@ void Importer::ModelImporter::Load(ResourceModel* resourceScene, char* buffer)
 			App->scene->root_object->AddChildren(tempGameObject);
 		}
 
+		tempGameObject->SetUID(model.GetNumber("UID"));
+
 		GameObjects[model.GetNumber("UID")] = tempGameObject;
 
 	
@@ -229,6 +231,7 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 
 		sceneConfig.SetString("Name", App->scene->game_objects[i]->name.c_str());
 		sceneConfig.SetNumber("UID", App->scene->game_objects[i]->GetUID());
+
 		sceneConfig.SetNumber("Parent UID", App->scene->game_objects[i]->parent == nullptr ? 0 : App->scene->game_objects[i]->parent->GetUID());
 		sceneConfig.SetBool("IsSelected", App->scene->game_objects[i]->IsSelected());
 
@@ -330,23 +333,23 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 			if(type == "Mesh") 
 			{
 				ComponentMesh* tempCompMesh = new ComponentMesh(gameObject);
-				uint32 UID = componentNode.GetNumber("Resource UID");
-				ResourceMesh* mesh = (ResourceMesh*)App->resources->GetResourceInMemory(UID);
-				tempCompMesh->SetMesh(mesh);
+				ResourceMesh* tempResourceMesh = (ResourceMesh*)App->resources->LoadResource(componentNode.GetNumber("Resource UID"));
+				tempCompMesh->SetMesh(tempResourceMesh);
 				gameObject->AddComponent(tempCompMesh);
 			}
 			else if (type == "Material") 
 			{
 				ComponentMaterial* tempCompMaterial = new ComponentMaterial(gameObject);
-				ResourceMaterial* material = (ResourceMaterial*)App->resources->GetResourceInMemory(componentNode.GetNumber("Resource UID"));
+				ResourceMaterial* material = (ResourceMaterial*)App->resources->LoadResource(componentNode.GetNumber("Resource UID"));
 
-				ResourceShader* shader = (ResourceShader*)App->resources->GetResourceInMemory(componentNode.GetNumber("Shader UID"));	
+				ResourceShader* shader = (ResourceShader*)App->resources->LoadResource(componentNode.GetNumber("Shader UID"));
+
 				material->SetShader(shader);
 
 				uint32 textureUID = componentNode.GetNumber("Texture UID");
 				if (textureUID != 0)
 				{
-					ResourceTexture* texture = (ResourceTexture*)App->resources->GetResourceInMemory(componentNode.GetNumber("Texture UID"));
+					ResourceTexture* texture = (ResourceTexture*)App->resources->LoadResource(componentNode.GetNumber("Texture UID"));
 					material->SetTexture(texture);
 				}
 
@@ -378,6 +381,6 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 		importedGameObjects.emplace(gameObject->GetUID(),gameObject);
 	}
 	App->scene->FillGameObjectsVector(importedGameObjects);
-
+	
 }
 

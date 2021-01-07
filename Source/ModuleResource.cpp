@@ -45,9 +45,12 @@ void ModuleResources::LoadAssets()
 {
 	std::vector<std::string> extension;
 	extension.push_back("meta");
+	extension.push_back("scene");
 	uint32 modelFolder = 0;
+	PathNode scenes = App->fileSystem->GetAllFiles("Assets/Scenes", nullptr, nullptr);
 	PathNode models = App->fileSystem->GetAllFiles("Assets", nullptr, &extension);
 	IterateAssets(models, modelFolder);
+	IterateScenes(scenes);
 	
 }
 
@@ -81,8 +84,8 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 				ResourceType type = GetTypefromString(jsonMeta.GetString("Type"));
 				Resource* resource = new Resource(type,node.path.c_str(), name.c_str(), UID);
 				resource->libraryFile = jsonMeta.GetString("Library file");
-				if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene) App->scene->sceneUID = resource->UID;
-				if(resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
+				if (resource->type == ResourceType::Model) App->scene->sceneUID = resource->UID;
+				if(resource->type == ResourceType::Model)
 				{
 					ArrayConfig resourceInModel = jsonMeta.GetArray("Resources in Models");
 					for (uint i = 0; i < resourceInModel.GetSize(); i++)
@@ -137,6 +140,56 @@ bool ModuleResources::IterateAssets(PathNode node, uint32 ID)
 	return isNew;
 }
 
+bool ModuleResources::IterateScenes(PathNode node, uint32 ID)
+{
+	if (App->fileSystem->Exists(node.path.c_str()))
+	{
+		char* buffer = nullptr;
+		uint size = App->fileSystem->Load(node.path.c_str(), &buffer);
+		if (size > 0)
+		{
+			JsonConfig jsonMeta(buffer);
+
+			std::map<uint32, Resource*>::iterator iterator = importedResources.find(jsonMeta.GetNumber("UID"));
+			if (iterator != importedResources.end())
+			{
+				ID = iterator->first;
+
+
+				uint32 LastMod = App->fileSystem->GetLastModTime(node.path.c_str());
+				uint32 configDate = jsonMeta.GetNumber("ModDate");
+				if (LastMod != configDate)
+					ImportFile(node.path.c_str());
+			}
+			else
+			{
+				string name = jsonMeta.GetString("Name");
+				uint32 UID = jsonMeta.GetNumber("UID");
+				ResourceType type = GetTypefromString(jsonMeta.GetString("Type"));
+				Resource* resource = new Resource(type, node.path.c_str(), name.c_str(), UID);
+				resource->libraryFile = jsonMeta.GetString("Library file");
+				importedResources[resource->UID] = resource;
+			}
+
+		}
+		RELEASE_ARRAY(buffer);
+	}
+	
+	if (!node.isFile && !node.isLeaf)
+	{
+		std::vector<uint32> newChildren;
+		for (uint i = 0; i < node.children.size(); i++)
+		{
+			uint32 childID = 0;
+			if (IterateScenes(node.children[i], childID))
+			{
+				newChildren.push_back(childID);
+			}
+		}
+	}
+	return true;
+}
+
 
 
 uint32 ModuleResources::Find(const char* file)
@@ -172,7 +225,8 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 	case ResourceType::Shader:
 		
 		LoadShader(buffer, fileSize, (ResourceShader*)resource);
-		
+	case ResourceType::Scene:
+		//resource = nullptr;
 		break;
 	}
 	
@@ -223,7 +277,6 @@ void ModuleResources::LoadModel(const char* buffer, uint size, ResourceModel* mo
 
 		Importer::MaterialsImporter::ImportMaterial(aiScene->mMaterials[i], resourceMaterial);
 		SaveResource(resourceMaterial);
-		//SaveResource(resourceMaterial->GetTexture());
 		materials.push_back(resourceMaterial->GetUID());
 		model->resourcesInModels.push_back(resourceMaterial->GetUID());
 	}
@@ -389,8 +442,11 @@ void ModuleResources::SaveMeta(Resource* resource)
 	uint64 modDate = App->fileSystem->GetLastModTime(resource->assetsFile.c_str());
 	jsonConfig.SetNumber("ModDate", modDate);
 
-	std::string path = resource->GetAssetsFile().append(".meta");
-	if (resource->type == ResourceType::Model || resource->type == ResourceType::Scene)
+	std::string path;
+	if (resource->type != ResourceType::Scene) path = resource->GetAssetsFile().append(".meta");
+	else path = resource->GetAssetsFile().append(".scene");
+
+	if (resource->type == ResourceType::Model)
 	{
 		
 		ArrayConfig resourceInModel = jsonConfig.SetArray("Resources in Models");
@@ -434,7 +490,10 @@ void ModuleResources::SaveResource(Resource* resource)
 		if(resource->type != ResourceType::Mesh && resource->type != ResourceType::Material) 
 			SaveMeta(resource);
 		App->fileSystem->Save(resource->GetLibraryFile().c_str(), buffer, size);
-
+		//if (resource->type == ResourceType::Scene)
+		//{
+		//	App->fileSystem->Save(resource->GetAssetsFile().c_str(), buffer, size);
+		//}
 		//RELEASE_ARRAY(buffer);
 	}
 }

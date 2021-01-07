@@ -34,8 +34,9 @@ Application::Application() : debug(false), renderPrimitives(true), dt(0.16f)
 	AddModule(fileSystem);
 
 	// Scenes
-	AddModule(scene);
+
 	AddModule(resources);
+	AddModule(scene);
 
 	AddModule(editor);
 	// Renderer last!

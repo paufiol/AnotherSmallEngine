@@ -736,42 +736,122 @@ void ModuleEditor::CallTextEditor(ResourceMaterial* resource)
 bool ModuleEditor::MainMenuBar()
 {
 	bool ret = true;
+	std::string menuAction = "";
 	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))	
 		{ 
 			if (ImGui::MenuItem("Save Scene"))
 			{
-				Resource* scene = App->resources->CreateNewResource("", ResourceType::Scene, "scene");
-				//std::map<uint32, Resource*>::iterator it = App->resources->resources.find(App->scene->sceneUID);
-				//if (it != App->resources->resources.end())
-				//{
-				//	scene = (ResourceScene*)it->second;
-				//}
-				//char* buffer;
-				//string path = SCENES_PATH;
-				//path.append(std::to_string(scene->UID));
-				//path.append(ASE_EXTENSION); 
-				//uint size = Importer::SceneImporter::Save(scene, &buffer);
-				//App->fileSystem->Save(path.c_str(), buffer, size);
-				App->resources->SaveResource(scene);
-
+				scene = App->resources->CreateNewResource("", ResourceType::Scene, "scene");
+				menuAction = "Save Scene";
 			}
 			if (ImGui::MenuItem("Load Scene"))
 			{
+				
 				std::map<uint32, Resource*>::iterator it = App->resources->importedResources.begin();
 				for (; it != App->resources->importedResources.end(); it++)
 				{
 					if (it->second->type == ResourceType::Scene)
 					{
-  						App->resources->LoadResource(it->second->UID);
+						scenesInMemory.push_back((ResourceScene*)it->second);
 					}
 				}
+
+				selectedScene = scenesInMemory.front()->name;
+
+				menuAction = "Load Scene";
 			}
 			if(ImGui::MenuItem("Exit")) ret = false;
-			
+
 			ImGui::EndMenu(); 
 		}
+		
+		//Set Next window Pos and Size
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter() , ImGuiCond_Appearing, ImVec2(0.5, 0.5));
+		ImGui::SetNextWindowSize(ImVec2(250.0f, 150.0f));
+
+		//Set next Pop based on a string
+		if (menuAction == "Save Scene") ImGui::OpenPopup("Save Scene Options");
+		
+
+		if (ImGui::BeginPopupModal("Save Scene Options", NULL, ImGuiWindowFlags_NoResize))
+		{
+			if (ImGui::InputText("Scene Name:", (char*)sceneName.c_str(), 64, ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				scene->libraryFile = SCENES_PATH ;
+				scene->libraryFile.append(sceneName.c_str());
+				scene->libraryFile.append(".scene");
+
+				scene->assetsFile = SCENES_FOLDER;
+				scene->assetsFile.append(sceneName.c_str());
+
+				scene->name = sceneName.c_str();
+
+				sceneTextColor = ImVec4(0, 0.8, 0, 1);
+			}
+			ImGui::Spacing();
+			ImGui::TextColored(sceneTextColor, scene->libraryFile.c_str());
+			ImGui::Spacing();
+			if (ImGui::Button("Save"))
+			{
+				App->resources->SaveResource(scene);
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			ImGui::Spacing();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5, 0.5));
+		ImGui::SetNextWindowSize(ImVec2(250.0f, 150.0f));
+
+		if (menuAction == "Load Scene") ImGui::OpenPopup("Load Scene Options");
+
+		if (ImGui::BeginPopupModal("Load Scene Options", NULL, ImGuiWindowFlags_NoResize))
+		{
+			ImGui::Text("Choose the secne to load");
+			ImGui::Spacing();
+			
+			if (ImGui::BeginCombo("Scenes", selectedScene.c_str(), ImGuiComboFlags_PopupAlignLeft))
+			{
+				for (uint i = 0; i < scenesInMemory.size(); i++)
+				{
+					const bool is_selected = (scenesInMemory[i]->name == selectedScene);
+					if (ImGui::Selectable(scenesInMemory[i]->name.c_str(), is_selected))
+					{	
+						sceneToLoad = scenesInMemory[i];
+						selectedScene = scenesInMemory[i]->name;
+					}
+
+				}
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::Button("Load"))
+			{
+				if(sceneToLoad) App->resources->LoadResource(sceneToLoad->UID);
+				sceneToLoad = nullptr;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			ImGui::Spacing();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel"))
+			{
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+
+
+
+		}
+
 		if (ImGui::BeginMenu("View"))
 		{
 			if (ImGui::MenuItem("Configuration")) show_configuration_window = !show_configuration_window;
