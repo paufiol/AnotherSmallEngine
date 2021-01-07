@@ -21,11 +21,11 @@ public:
 	~ModuleResources();
 
 	bool Start() override;
-	//update_status Update(float dt) override;
 	bool CleanUp() override;
 
 	void LoadAssets();
 	bool IterateAssets(PathNode node, uint32 ID = 0);
+	bool IterateScenes(PathNode node, uint32 ID = 0);
 
 	void LoadModel(const char* buffer, uint size, ResourceModel* scene);
 	void LoadShader(const char* buffer, uint size, ResourceShader* shader);

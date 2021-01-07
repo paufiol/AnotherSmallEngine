@@ -17,6 +17,7 @@ class Resource;
 class ResourceTexture;
 class ResourceShader;
 class ResourceMaterial;
+class ResourceScene;
 
 class ModuleEditor : public Module 
 {
@@ -86,6 +87,13 @@ public:
 	ResourceTexture* returnIcon = nullptr;
 
 	ResourceShader* shaderToRecompile = nullptr;
+
+	Resource* scene = nullptr;
+	ResourceScene* sceneToLoad = nullptr;
+	std::vector<ResourceScene*> scenesInMemory;
+	std::string sceneName;
+	std::string selectedScene;
+	ImVec4 sceneTextColor = ImVec4(0.8, 0, 0, 1);
 
 	PathNode nextFolder;
 	PathNode previousFolder;

@@ -168,8 +168,13 @@ void GameObject::UpdateAABB()
 
 bool GameObject::IsSelected()
 {
-	if (this->name == App->scene->selected_object->name) return true;
-	else return false;
+	if (App->scene->selected_object)
+	{
+		if (this->name == App->scene->selected_object->name) return true;
+		else return false;
+	}
+	else  return false;
+	
 }
 
 bool GameObject::IsRootObject()
