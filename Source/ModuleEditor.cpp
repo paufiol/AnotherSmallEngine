@@ -317,7 +317,7 @@ void ModuleEditor::PlayPauseWindow()
 		//App->scene->GameTime.running = !App->scene->GameTime.running;
 		
 		if (App->scene->GameTime.running == false)	App->scene->GameTime.Resume();
-		else if (App->scene->GameTime.running == true)	App->scene->GameTime.Stop();
+		else if (App->scene->GameTime.running == true)	App->scene->GameTime.Pause();
 	}
 	
 	ImGui::SameLine();
@@ -330,7 +330,7 @@ void ModuleEditor::PlayPauseWindow()
 		}
 	}
 	
-	ImGui::SameLine();
+	ImGui::SameLine(100);
 
 	ImGui::Text("GameTime:");
 	

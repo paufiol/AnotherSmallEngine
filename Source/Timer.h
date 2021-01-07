@@ -14,17 +14,20 @@ public:
 	void Start();
 	void Resume();
 	void Stop();
+	void Pause();
 	void Restart();
 
 
 
 	Uint32 Read();
 	float ReadSec();
-
-	bool	running;
+	
+	bool running;
 	Uint32	started_at;
 	Uint32	stopped_at;
-	float	time;
+	Uint32	paused_at;
+	Uint32	resumed_at;
+	Uint32	time;
 
 private:
 
