@@ -133,6 +133,11 @@ void Importer::MaterialsImporter::Load(ResourceMaterial* rMaterial, const char* 
 	ResourceTexture* texture = (ResourceTexture*)resource;
 	if (texture != nullptr)
 	{
+		//if (texture->id > 0 && texture->id < MAX_TEXTURES)
+		//{
+		//	uint64 size = App->fileSystem->Load(texture->libraryFile.c_str(), &tempBuffer);
+		//	Importer::TextureImporter::Load(rMaterial->GetTexture(), tempBuffer, size);
+		//}
 		rMaterial->SetTexture(texture);
 		uint64 size = App->fileSystem->Load(texture->libraryFile.c_str(), &tempBuffer);
 		Importer::TextureImporter::Load(rMaterial->GetTexture(), tempBuffer, size);
@@ -177,6 +182,7 @@ uint64 Importer::TextureImporter::Save(const ResourceTexture* rTexture, char** b
 
 void Importer::TextureImporter::Load(ResourceTexture* rTexture, char* buffer, uint size)
 {
+	
 	ILuint Il_Tex;
 
 	ilGenImages(1, &Il_Tex);

@@ -70,6 +70,8 @@ enum update_status
 #define FRAGMENT_SHADER "__Fragment_Shader__"
 
 #define MAX_SHADERS 1000
+#define MAX_TEXTURES 1000
+
 // Deletes a buffer
 #define RELEASE( x )\
     {\

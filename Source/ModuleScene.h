@@ -4,6 +4,7 @@
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
 #include "Dependencies/ImGuizmo/ImGuizmo.h"
 #include "Timer.h"
+#include <unordered_map>
 #include <map>
 
 class GameObject;
@@ -22,7 +23,7 @@ public:
 	bool CleanUp();
 
 	std::map<uint32, GameObject*> FillGameObjectsMap();
-	void FillGameObjectsVector(std::map<uint32, GameObject*> gameObjectsMap);
+	void FillGameObjectsVector(std::unordered_map<uint32, GameObject*> gameObjectsMap);
 
 	void AddGameObject(GameObject* object);
 	GameObject* CreateGameObject(std::string name, GameObject* parent = nullptr);

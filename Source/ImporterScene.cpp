@@ -23,6 +23,8 @@
 #include "ResourceScene.h"
 #include "ModuleCamera3D.h"
 
+#include <unordered_map>
+
 #include "Dependencies/Assimp/include/cimport.h"
 #include "Dependencies/Assimp/include/scene.h"
 #include "Dependencies/Assimp/include/postprocess.h"
@@ -293,7 +295,7 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 {
 	JsonConfig jsonFile(buffer);
-	std::map<uint32, GameObject*> importedGameObjects;
+	std::vector<GameObject*> importedGameObjects;
 	App->scene->DeleteAllGameObjects();
 	ArrayConfig arrayGameObjects = jsonFile.GetArray("GameObjects");
 
@@ -310,11 +312,20 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 		//Set Game Object Parent if it has one
 		GameObject* parent = nullptr;
 		uint32 parentUID = node.GetNumber("Parent UID");
-		std::map<uint32, GameObject*>::iterator it = importedGameObjects.find(node.GetNumber("Parent UID"));
-		if (it != importedGameObjects.end())
+
+		for (uint i = 0; i < importedGameObjects.size(); i++)
 		{
-			parent = it->second;
+			if (importedGameObjects[i]->GetUID() == node.GetNumber("Parent UID"))
+			{
+				parent = importedGameObjects[i];
+			}
 		}
+
+		//std::unordered_map<uint32, GameObject*>::iterator it = importedGameObjects.find(node.GetNumber("Parent UID"));
+		//if (it != importedGameObjects.end())
+		//{
+		//	parent = it->second;
+		//}
 		if (parent != nullptr)
 		{
 			gameObject->SetParent(parent);
@@ -378,9 +389,10 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 				gameObject->AddComponent(camera);
 			}
 		}
-		importedGameObjects.emplace(gameObject->GetUID(),gameObject);
+		importedGameObjects.push_back(gameObject);
 	}
-	App->scene->FillGameObjectsVector(importedGameObjects);
+	App->scene->game_objects = importedGameObjects;
+	//App->scene->FillGameObjectsVector(importedGameObjects);
 	
 }
 

@@ -225,14 +225,11 @@ uint32 ModuleResources::ImportFile(const char* assetsFile)
 	case ResourceType::Shader:
 		
 		LoadShader(buffer, fileSize, (ResourceShader*)resource);
-	case ResourceType::Scene:
-		//resource = nullptr;
 		break;
 	}
 	
 
 	RELEASE_ARRAY(buffer);
-	//UnloadResource(resource->GetUID());
 
 	return resource->GetUID();
 }
@@ -313,7 +310,7 @@ std::map<uint32, ResourceTexture*> ModuleResources::GetTexturesInMemory()
 		if (item->second->type == ResourceType::Texture)
 		{
 			tempTexture = (ResourceTexture*)item->second;
-
+			if (tempTexture->id > MAX_TEXTURES) tempTexture->id = 0;
 			texturesInMemory[tempTexture->UID] = tempTexture;
 		}
 
@@ -490,11 +487,6 @@ void ModuleResources::SaveResource(Resource* resource)
 		if(resource->type != ResourceType::Mesh && resource->type != ResourceType::Material) 
 			SaveMeta(resource);
 		App->fileSystem->Save(resource->GetLibraryFile().c_str(), buffer, size);
-		//if (resource->type == ResourceType::Scene)
-		//{
-		//	App->fileSystem->Save(resource->GetAssetsFile().c_str(), buffer, size);
-		//}
-		//RELEASE_ARRAY(buffer);
 	}
 }
 
@@ -503,13 +495,8 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 	
 	Resource* resource = nullptr;
 	resource = GetResource(UID);
-	/*if (resource) return resource;
-	else 
-	{
-		resource = GetResourceInMemory(UID);
-	}*/
-	if (!resource) resource = GetResourceInMemory(UID);
 
+	if (!resource) resource = GetResourceInMemory(UID);
 
 	Resource* tempResource = CreateNewResource(resource->assetsFile.c_str(),resource->GetType(),resource->name.c_str(),resource->UID);
 	char* buffer = nullptr;

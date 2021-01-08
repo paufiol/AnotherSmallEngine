@@ -15,8 +15,6 @@
 ComponentMaterial::ComponentMaterial(GameObject* owner) : Component(owner)
 {
 	rMaterial = new ResourceMaterial();
-	//rMaterial->SetId(-1);
-	//rMaterial->SetPath( "Default Path");
 	type = ComponentType::Material;
 };
 
@@ -57,7 +55,6 @@ void ComponentMaterial::DrawInspector() {
 
 	if (ImGui::CollapsingHeader("Component Material"), ImGuiTreeNodeFlags_DefaultOpen)
 	{
-
 		std::map<uint32, ResourceTexture*> texturesInMemory = App->resources->GetTexturesInMemory();
 
 		std::map<uint32, ResourceTexture*>::iterator nameIt = texturesInMemory.begin();
@@ -69,8 +66,8 @@ void ComponentMaterial::DrawInspector() {
 				const bool is_selected = (nameIt == item);
 				if (ImGui::Selectable(item->second->name.c_str(), is_selected))
 				{
-					
-					if (item->second->id > 1000)
+					//To delete
+					if (item->second->id == 0)
 					{
 						ResourceTexture* newTexture = (ResourceTexture*)App->resources->LoadResource(item->second->UID);
 						rMaterial->SetTexture(newTexture);

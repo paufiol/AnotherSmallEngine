@@ -316,9 +316,26 @@ void ModuleEditor::PlayPauseWindow()
 	{
 		//App->scene->GameTime.running = !App->scene->GameTime.running;
 		
-		if (App->scene->GameTime.running == false)	App->scene->GameTime.Resume();
-		else if (App->scene->GameTime.running == true)	App->scene->GameTime.Pause();
+		if (App->scene->GameTime.running == false)
+		{
+			scene = App->resources->CreateNewResource("", ResourceType::Scene, "tempScene");
+			scene->libraryFile = SCENES_PATH;
+			scene->libraryFile.append(scene->name.c_str());
+			scene->libraryFile.append(".scene");
+
+			scene->assetsFile = SCENES_FOLDER;
+			scene->assetsFile.append(scene->name.c_str());
+
+			App->resources->SaveResource(scene);
+			
+			App->scene->GameTime.Resume();
+		}
+		else if (App->scene->GameTime.running == true)
+		{
+			App->scene->GameTime.Pause();
+		}
 	}
+
 	
 	ImGui::SameLine();
 
@@ -326,6 +343,23 @@ void ModuleEditor::PlayPauseWindow()
 
 		if (ImGui::Button("Stop"))
 		{
+			std::map<uint32, Resource*>::iterator it = App->resources->importedResources.begin();
+			for (; it != App->resources->importedResources.end(); it++)
+			{
+				if (it->second->type == ResourceType::Scene && it->second->name == "tempScene")
+				{
+					App->resources->LoadResource(it->second->UID);
+
+					std::string sceneToDelete = it->second->assetsFile.append(".scene");
+					App->fileSystem->Remove(sceneToDelete.c_str());
+
+					sceneToDelete = SCENES_PATH;
+					sceneToDelete.append(scene->name.c_str());
+					sceneToDelete.append(".scene");
+					App->fileSystem->Remove(sceneToDelete.c_str());
+				}
+			}
+			
 			App->scene->GameTime.Restart();
 		}
 	}
@@ -509,9 +543,6 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			case ResourceType::Model:
 				ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
-			//case ResourceType::Scene:
-			//	ImGui::Image((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
-			//	break;
 			case ResourceType::Texture:
 				ImGui::Image((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 				break;
@@ -567,9 +598,6 @@ void ModuleEditor::DropTargetWindow()
 				case ResourceType::Model:
 					App->resources->LoadResource(UID);
 					break;
-				//case ResourceType::Scene:
-				//	App->resources->LoadResource(UID);
-				//	break;
 				case ResourceType::Texture:
 
 					compMaterial = (ComponentMaterial*)App->scene->selected_object->GetComponent(ComponentType::Material);
@@ -762,7 +790,7 @@ bool ModuleEditor::MainMenuBar()
 					}
 				}
 
-				selectedScene = scenesInMemory.front()->name;
+				if(!scenesInMemory.empty()) selectedScene = scenesInMemory.front()->name;
 
 				menuAction = "Load Scene";
 			}
@@ -834,6 +862,7 @@ bool ModuleEditor::MainMenuBar()
 					}
 
 				}
+				
 				ImGui::EndCombo();
 			}
 
@@ -841,6 +870,7 @@ bool ModuleEditor::MainMenuBar()
 			{
 				if(sceneToLoad) App->resources->LoadResource(sceneToLoad->UID);
 				sceneToLoad = nullptr;
+				scenesInMemory.clear();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -848,6 +878,7 @@ bool ModuleEditor::MainMenuBar()
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel"))
 			{
+				scenesInMemory.clear();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();

@@ -6,6 +6,9 @@ ResourceTexture::ResourceTexture(const char* assetsFile, const char* libraryFile
 	this->libraryFile = libraryFile;
 	this->assetsFile = assetsFile;
 	this->UID = UID;
+
+	id = 0;
+	path = "";
 }
 
 ResourceTexture::ResourceTexture(uint ID, std::string path) : Resource(ResourceType::Texture), id(ID), path(path)

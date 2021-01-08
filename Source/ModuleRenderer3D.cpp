@@ -169,12 +169,6 @@ update_status ModuleRenderer3D::PreUpdate(float dt)
 		frustum_corners = App->camera->gameCamera->GetFrustumPoints();
 		DrawCuboid(frustum_corners, App->editor->frustumColor);
 	}
-	
-	//for (uint i = 0; i < App->scene->game_objects.size(); i++)
-	//{
-	//	float distance = math::Length(App->camera->currentCamera->frustum.Pos() - App->scene->game_objects[i]->transform->GetPosition());
-	//	sorted[distance] = App->scene->game_objects[i];
-	//}
 
 	glColor4f(1,1,1,1);
 	glEnd();

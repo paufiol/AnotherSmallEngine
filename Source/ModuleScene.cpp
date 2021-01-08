@@ -20,8 +20,6 @@
 #include "ModuleEditor.h"
 #include "GameObject.h"
 
-#include <map>
-
 #include "Dependencies/MathGeoLib/include/Geometry/Triangle.h"
 //#include "Dependencies/ImGuizmo/ImGuizmo.h"
 
@@ -63,6 +61,9 @@ bool ModuleScene::Start()
 			App->resources->LoadResource(it->second->UID);
 		}
 	}
+
+
+
 
 	return ret;
 }
@@ -339,9 +340,9 @@ std::map<uint32, GameObject*> ModuleScene::FillGameObjectsMap()
 }
 
 //Store the Game Objects passed as reference in a Map into the GameObject vector in the scene
-void ModuleScene::FillGameObjectsVector(std::map<uint32, GameObject*> gameObjectsMap)
+void ModuleScene::FillGameObjectsVector(std::unordered_map<uint32, GameObject*> gameObjectsMap)
 {
-	std::map<uint32, GameObject*>::iterator it = gameObjectsMap.begin();
+	std::unordered_map<uint32, GameObject*>::iterator it = gameObjectsMap.begin();
 	for (; it != gameObjectsMap.end(); it++)
 	{
 		game_objects.push_back(it->second);
