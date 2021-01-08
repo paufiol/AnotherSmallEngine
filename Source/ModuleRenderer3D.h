@@ -36,6 +36,7 @@ public:
 	uint32 SetSkyboxShader();
 	void CreateSkyboxBuffers();
 
+	void DrawSkybox();
 	void UseCheckerTexture();
 	void IterateMeshDraw();
 	void DrawMesh(ComponentMesh* mesh, float4x4 transform, ComponentMaterial* rMaterial = nullptr, GameObject* meshOwner = nullptr);
@@ -79,12 +80,12 @@ private:
 	GLuint SkyboxTex_id = 0; //Initialise?
 	std::vector<std::string> faces
 	{
-			"s_back.dds",
-			"s_front.dds",
-			"s_down.dds",
-			"s_up.dds",
 			"s_left.dds",
-			"s_right.dds"
+			"s_right.dds",
+			"s_up.dds",
+			"s_down.dds",
+			"s_front.dds",
+			"s_back.dds"
 	}; //Add proper names
 
 	uint Skybox_VAO = 0;

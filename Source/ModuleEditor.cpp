@@ -1038,10 +1038,11 @@ void ModuleEditor::InspectorWindow()
 			}
 
 			ImGui::Separator();
-
-			for (uint m = 0; m < App->scene->selected_object->components.size(); m++)
-			{
-					App->scene->selected_object->components[m]->DrawInspector();
+			if (App->scene->selected_object != nullptr) {
+				for (uint m = 0; m < App->scene->selected_object->components.size(); m++)
+				{
+						App->scene->selected_object->components[m]->DrawInspector();
+				}
 			}
 
 			ImGui::Separator();

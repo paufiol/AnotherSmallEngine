@@ -212,6 +212,8 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (App->editor->drawWireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); glEnable(GL_TEXTURE_CUBE_MAP); }
 	else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glDisable(GL_TEXTURE_CUBE_MAP); }
 	
+
+
 	IterateMeshDraw();
 
 	ImGui::GetBackgroundDrawList();
@@ -309,7 +311,7 @@ uint32 ModuleRenderer3D::SetSkyboxShader()
 		if (item->second->name == "SkyBoxShader")
 		{
 			resource = (ResourceShader*)App->resources->LoadResource(item->second->UID);
-			return resource->shaderProgramID;
+			if(resource != nullptr) return resource->shaderProgramID;
 		}
 	}
 	return 0;
@@ -345,39 +347,6 @@ void ModuleRenderer3D::IterateMeshDraw()
 	}
 	else LOG("Error loading skybox shader program");
 	
-	/*
-	static float4x4 m;
-	//static mat4x4 m;
-
-	m = App->camera->currentCamera->frustum.ViewMatrix();
-	m.Transpose();
-
-
-	float3 position = float3::zero;
-	float3 scale = float3::one;
-	Quat   rotation = Quat::identity;
-
-	m.Decompose(position, rotation, scale);
-
-	float3 rot_axis;
-	float rot_angle;
-
-	rotation.ToAxisAngle(rot_axis, rot_angle);
-
-	vec3 rot_axis_asvec;
-	rot_axis_asvec.x = rot_axis.x;
-	rot_axis_asvec.y = rot_axis.y;
-	rot_axis_asvec.z = rot_axis.z;
-
-	mat4x4 a;
-	a.translate(position.x, position.y, position.z);
-	a.rotate(rot_angle, rot_axis_asvec);
-	a.scale(scale.x, scale.y, scale.z);
-
-	mat4x4 edited_viewMatrix = mat4x4(mat3x3(a));
-	
-	*/
-	
 	GLint old_cull_face_mode;
 	glGetIntegerv(GL_CULL_FACE_MODE, &old_cull_face_mode);
 	GLint old_depth_func_mode;
@@ -386,7 +355,6 @@ void ModuleRenderer3D::IterateMeshDraw()
 	glCullFace(GL_FRONT);
 	glDepthFunc(GL_LEQUAL);
 	
-
 	float3 translation = App->camera->currentCamera->frustum.worldMatrix.TranslatePart();
 	float4x4 modelMatrix = math::float4x4::identity;
 	modelMatrix.SetTranslatePart(translation);
@@ -399,8 +367,6 @@ void ModuleRenderer3D::IterateMeshDraw()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
-	
-	glUniform1i(glGetUniformLocation(Skybox_programid, "skybox"),3);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
@@ -413,8 +379,6 @@ void ModuleRenderer3D::IterateMeshDraw()
 	glCullFace(old_cull_face_mode);
 	glDepthFunc(old_depth_func_mode);
 	glUseProgram(0);
-	
-	//glDepthMask(GL_TRUE);
 
 	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{
@@ -497,6 +461,8 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", App->scene->GameTime.ReadSec());
 
+			componentMaterial->GetMaterial()->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->currentCamera->frustum.Pos());
+
 			Importer::ShaderImporter::SetShaderUniforms(componentMaterial->GetMaterial()->GetShader());
 		}
 
@@ -536,9 +502,11 @@ uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
 		}
 	}
 	return componentMaterial->GetMaterial()->GetShaderProgramID();
-
 }
 
+void ModuleRenderer3D::DrawSkybox()
+{
+}
 
 void ModuleRenderer3D::UseCheckerTexture() {
 

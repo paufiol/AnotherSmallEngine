@@ -467,7 +467,7 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 	if (size == 0)
 	{
 		LOG("ERROR The resource doen't have a library file");
-		RELEASE(resource);
+		//RELEASE(resource);
 		return nullptr;
 	}
 	switch (resource->GetType())
