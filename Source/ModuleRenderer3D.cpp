@@ -273,11 +273,6 @@ void ModuleRenderer3D::CreateSkybox()
 
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, info.Width, info.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, info.Data);
 
-				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 				ilDeleteImages(1, &id);
 			}
@@ -286,7 +281,11 @@ void ModuleRenderer3D::CreateSkybox()
 	}
 
 
-	
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	SkyboxTex_id = textureID;
 }
@@ -393,14 +392,10 @@ void ModuleRenderer3D::IterateMeshDraw()
 	modelMatrix.SetTranslatePart(translation);
 	modelMatrix.Scale(200, 200, 200);
 
-	int uinformLoc = glGetUniformLocation(Skybox_programid, "viewMatrix");
-	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, App->camera->GetRawViewMatrix());
+	math::float4x4 resultMatrix = modelMatrix.Transposed() * App->camera->currentCamera->GetAlternativeViewMatrix() * App->camera->currentCamera->GetAlternativeProjectionMatrix();
 
-	uinformLoc = glGetUniformLocation(Skybox_programid, "projectionMatrix");
-	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
-
-	uinformLoc = glGetUniformLocation(Skybox_programid, "modelMatrix");
-	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, *modelMatrix.Transposed().v);
+	GLint uinformLoc = glGetUniformLocation(Skybox_programid, "resultMatrix");
+	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, *resultMatrix.v);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
