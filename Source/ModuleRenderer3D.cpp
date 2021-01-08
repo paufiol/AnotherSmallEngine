@@ -12,6 +12,7 @@
 #include "ImporterMaterials.h"
 
 #include "GameObject.h"
+#include "ModuleFileSystem.h"
 
 #include "Component.h"
 #include "ComponentMesh.h"
@@ -19,6 +20,7 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 
+#include "Dependencies/MathGeoLib/include/Math/TransformOps.h"
 #include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
 
@@ -141,7 +143,14 @@ bool ModuleRenderer3D::Init()
 
 bool ModuleRenderer3D::Start()
 {
+	ilInit();
+	iluInit();
+	ilutInit();
+	ilutRenderer(ILUT_OPENGL);
+	
 	CreateSkybox();
+
+	CreateSkyboxBuffers();
 
 	return true;
 }
@@ -247,26 +256,37 @@ void ModuleRenderer3D::CreateSkybox()
 
 	for (unsigned int i = 0; i < faces.size(); i++)
 	{
-		std::map<uint32, ResourceTexture*> inmemory_tex = App->resources->GetTexturesInMemory();
+		char* buffer = nullptr;
+		std::string textureFile = SKYBOX_FOLDER;
+		textureFile.append(faces[i]);
+		unsigned int size = App->fileSystem->Load(textureFile.data(), &buffer);
 
-		for(std::map<uint32, ResourceTexture*>::iterator j = inmemory_tex.begin(); j != inmemory_tex.end(); j++)
+		if (size > 0)
 		{
-			ResourceTexture* newTexture = (ResourceTexture*)App->resources->LoadResource(j->second->UID);
-			if (j->second->name == faces[i])
+			ILuint id;
+			ilGenImages(1, &id);
+			ilBindImage(id);
+			if (ilLoadL(IL_DDS, (const void*)buffer, size))
 			{
-				glBindTexture(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, newTexture->id);
-				
+				ILinfo info;
+				iluGetImageInfo(&info);
+
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, info.Width, info.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, info.Data);
+
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+				ilDeleteImages(1, &id);
 			}
 		}
-		ILubyte* data = 	ilGetData();
+		delete[] buffer;
 	}
 
 
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	
 
 	SkyboxTex_id = textureID;
 }
@@ -313,9 +333,7 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 
 void ModuleRenderer3D::IterateMeshDraw()
 {
-	glDepthMask(GL_FALSE);
-	
-	CreateSkyboxBuffers();
+	//glDepthMask(GL_FALSE);
 	
 	if (Skybox_programid == 0)
 	{
@@ -361,16 +379,30 @@ void ModuleRenderer3D::IterateMeshDraw()
 	
 	*/
 	
+	GLint old_cull_face_mode;
+	glGetIntegerv(GL_CULL_FACE_MODE, &old_cull_face_mode);
+	GLint old_depth_func_mode;
+	glGetIntegerv(GL_DEPTH_FUNC, &old_depth_func_mode);
+
+	glCullFace(GL_FRONT);
+	glDepthFunc(GL_LEQUAL);
 	
 
+	float3 translation = App->camera->currentCamera->frustum.worldMatrix.TranslatePart();
+	float4x4 modelMatrix = math::float4x4::identity;
+	modelMatrix.SetTranslatePart(translation);
+	modelMatrix.Scale(200, 200, 200);
+
 	int uinformLoc = glGetUniformLocation(Skybox_programid, "viewMatrix");
-	//glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, edited_viewMatrix.M);
 	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, App->camera->GetRawViewMatrix());
 
 	uinformLoc = glGetUniformLocation(Skybox_programid, "projectionMatrix");
 	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, App->camera->GetProjectionMatrix());
 
-	glActiveTexture(GL_TEXTURE3);
+	uinformLoc = glGetUniformLocation(Skybox_programid, "modelMatrix");
+	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, *modelMatrix.Transposed().v);
+
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
 	
 	glUniform1i(glGetUniformLocation(Skybox_programid, "skybox"),3);
@@ -381,8 +413,13 @@ void ModuleRenderer3D::IterateMeshDraw()
 	// … bind and use other buffers
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDisableClientState(GL_VERTEX_ARRAY);
+
+
+	glCullFace(old_cull_face_mode);
+	glDepthFunc(old_depth_func_mode);
+	glUseProgram(0);
 	
-	glDepthMask(GL_TRUE);
+	//glDepthMask(GL_TRUE);
 
 	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{

@@ -1,17 +1,20 @@
 
 #ifdef __Vertex_Shader__
 
-layout(location = 0) uniform samplerCube skybox;
+layout (location = 0) in vec3 position;
+
 
 out vec3 TexCoord;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 modelMatrix;
 
 void main()
 {
-    TexCoord = texture(skybox, TexCoord);
-    gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);
+    vec4 fullMatrix = modelMatrix * projectionMatrix * viewMatrix * vec4(position, 1.0);
+    gl_Position = fullMatrix.xyww;
+    TexCoord = position;
 }
 
 #endif
@@ -28,8 +31,8 @@ uniform samplerCube skybox;
 void main()
 {
    
-   color =TexCoord;
-
+   //color = texture(skybox, TexCoord);
+    color = vec4(1,0,0,1);
 }
 
 #endif

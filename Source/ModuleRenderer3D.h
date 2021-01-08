@@ -79,12 +79,12 @@ private:
 	GLuint SkyboxTex_id = 0; //Initialise?
 	std::vector<std::string> faces
 	{
-			"0_GloriousPink_Right-X",
-			"1_GloriousPink_Left+X",
-			"2_GloriousPink_Up+Y",
-			"3_GloriousPink_Down-Y",
-			"4_GloriousPink_Back-Z",
-			"5_GloriousPink_Front+Z"
+			"s_back.dds",
+			"s_front.dds",
+			"s_down.dds",
+			"s_up.dds",
+			"s_left.dds",
+			"s_right.dds"
 	}; //Add proper names
 
 	uint Skybox_VAO = 0;
