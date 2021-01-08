@@ -1,13 +1,14 @@
 # AnotherSmallEngine
 AnotherSmallEngine is pretty self-explanatory, it is a basic 3D Engine developed by 2 students of the [CITM](<https://www.citm.upc.edu/>).
 This project is been created as part of CITM's Game Engine course under supervision of professor Marc Garrigó.
-* Repository: https://github.com/paufiol/AnotherSmallEngine 
+* Site: https://paufiol.github.io/AnotherSmallEngine/
+* Repository: https://github.com/paufiol/AnotherSmallEngine
 ****
 ## Developers
 ### Pau Fiol:
-[Github account](<https://github.com/paufiol>).
+[paufiol](<https://github.com/paufiol>).
 ### Aitor Luque:
-[Github account](<https://github.com/Aitorlb7>).
+[Aitorlb7](<https://github.com/Aitorlb7>).
 ****
 ## Engine Features
 * Window configuration options
@@ -56,7 +57,8 @@ Warning: The models won't load if Library folder is erased and the meta files no
 ## Libraries used
 * STL (Standard Template Library)
 * Dear ImGui
-    * ImGuizmo
+    * [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)
+    * [ImGuiColorTextEdit](https://github.com/BalazsJako/ImGuiColorTextEdit)
 * OpenGL 
 * Glew 
 * MatGeoLib
