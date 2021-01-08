@@ -26,7 +26,7 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 	if (size <= 0)
 	{
 		delete[] buffer;
-		LOG("Shader: %s not found or can't be loaded.", fullPath);
+		LOG("Shader File: %s not found or can't be loaded.", fullPath);
 		return;
 	}
 	
@@ -72,7 +72,7 @@ void Importer::ShaderImporter::Import(const char* fullPath, ResourceShader* shad
 	}
 	else
 	{
-		LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
+		LOG("ERROR, Vertex shader: %d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
 	}
 	
 
@@ -218,6 +218,12 @@ void Importer::ShaderImporter::GetShaderUniforms(ResourceShader* shader)
 
 void Importer::ShaderImporter::SetShaderUniforms(ResourceShader* shader)
 {
+	if (shader->uniforms.empty())
+	{
+		LOG("ERROR: The Shader (%s) has no uniforms values", shader->name.c_str() );
+		return;
+	}
+
 	for (uint i = 0; i < shader->uniforms.size(); i++)
 	{
 		switch (shader->uniforms[i].uniformType)
@@ -266,33 +272,7 @@ uint64 Importer::ShaderImporter::Save(const ResourceShader* shader, char** buffe
 
 
 	return size;
-	
-	/*char* binaryBuffer = nullptr;
-	GLint binarySize = 0;
-	int fullSize = 0;
 
-	glGetProgramiv(shader->shaderProgramID, GL_PROGRAM_BINARY_LENGTH, &binarySize);
-
-	if(binarySize > 0)
-	{
-		fullSize = sizeof(uint32) + binarySize;
-		*buffer = new char[fullSize];
-		binaryBuffer = new char[binarySize];
-
-		GLsizei lenght = 0;
-		GLenum binaryFormat;
-
-		glGetProgramBinary(shader->shaderProgramID, binarySize, &lenght, &binaryFormat, binaryBuffer);
-
-		char* cursor = *buffer;
-		memcpy(cursor, &binaryFormat, sizeof(uint32));
-		cursor += sizeof(uint32);
-
-		memcpy(cursor, binaryBuffer, binarySize);
-		RELEASE_ARRAY(binaryBuffer);
-	}
-		
-	return fullSize;*/
 }
 
 void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, uint size)
@@ -319,41 +299,10 @@ void Importer::ShaderImporter::Load(ResourceShader* shader, const char* buffer, 
 		case  UniformType::FLOAT_VEC4: uniform.vec4 = node.GetFloat4("Value"); break;
 		}
 		
-	/*	for (uint j = 0; j < shader->uniforms.size(); j++)
-		{
-			if (shader->uniforms[j].name == uniform.name)
-			{
-				shader->uniforms[j] = uniform;
-			}
-		}*/
-
 		shader->uniforms.push_back(uniform);
 	}
 
 	Recompile(shader);
-	
-	
-	//GLenum binaryFormat;
-
-	//const char* cursor = buffer;
-	//memcpy(&binaryFormat, cursor, sizeof(uint32));
-	//cursor += sizeof(uint32);
-
-	//shader->shaderProgramID = glCreateProgram();
-	//glProgramBinary(shader->shaderProgramID, binaryFormat, cursor, size - sizeof(uint32));
-
-
-	//GLint outcome = 0;
-	//GLchar info[512];
-	//glGetShaderiv(shader->shaderProgramID, GL_COMPILE_STATUS, &outcome);
-	//if (outcome == 0)
-	//{
-	//	glGetShaderInfoLog(shader->shaderProgramID, 512, NULL, info);
-
-	//	Recompile(shader);
-	//}
-
-
 
 }
 
