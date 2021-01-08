@@ -1,37 +1,37 @@
-## Welcome to GitHub Pages
+# Another Small Engine
 
-You can use the [editor on GitHub](https://github.com/paufiol/AnotherSmallEngine/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Another Small Engine (or ASE for short) is a simple, lightweight Game Engine created for academic purposes. Authors are [Pau Fiol](https://github.com/paufiol) and [Aitor Luque](https://github.com/Aitorlb7), working under the supervision of [Marc Garrigó](https://github.com/markitus18) for the 3D Engines subject coursed in [CITM](https://www.citm.upc.edu/).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Our main focus has been in implementing and showcasing a shader pipeline.
 
-### Markdown
+### The Team
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+- Pau Fiol Lorente - [paufiol](https://github.com/paufiol)
+  - Text Editor
+  - Shader Programming
+  - GUI
+  - Time Handling
+  
+- Aitor Luque Bodet - [Aitorlb7](https://github.com/Aitorlb7)
+  - Shader Pipeline
+  - Scene Management
+  - Resource Management
 
-```markdown
-Syntax highlighted code block
+### Showcase
 
-# Header 1
-## Header 2
-### Header 3
+Add Gifs and video here
 
-- Bulleted
-- List
+### Features
 
-1. Numbered
-2. List
+- Shader Pipeline: Geometry drawn via shaders, using Textures and/or materials.
+- In-Engine Text Editor and Shader Compilation: Open .shader files (which contain both fragment and vertex shaders) to edit them, and save them to automatically recompile them. If compilation fails, the console will display the compilation error. 
+- Shader Uniform edition: Uniform values show up in the inspector and can be edited while running. 
+- Mouse Picking & Gizmos: Click to select GameObjects and transform them with Gizmos. 
+- Custom File Format: Smaller files containing only the relevant data for our engine. Lighter files, faster execution.
+- Resource Management: Assets enter and leave memory as necessary.
+- Cameras: Camera culling with a modifiable render distances and FoV. Preview the inGameCamera
 
-**Bold** and _Italic_ and `Code` text
+### Links
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/paufiol/AnotherSmallEngine/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+- [Source Code](https://github.com/paufiol/AnotherSmallEngine)
+- [Releases](https://github.com/paufiol/AnotherSmallEngine/releases)
