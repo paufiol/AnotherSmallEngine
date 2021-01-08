@@ -88,7 +88,7 @@ void ResourceMesh::SetUpBuffers(ResourceMesh* mesh)
         glBindBuffer(GL_ARRAY_BUFFER, mesh->ID[ResourceMesh::normal]);
         glBufferData(GL_ARRAY_BUFFER, sizeof(uint) * mesh->size[ResourceMesh::normal] * 3, mesh->normals, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(2);
     }
 

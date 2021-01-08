@@ -50,6 +50,8 @@ public:
 	void OnUpdateTransform(const float4x4& global, const float4x4& parent_global) override;
 
 	float* GetRawViewMatrix();
+	math::float4x4 GetAlternativeViewMatrix() const;
+	math::float4x4 GetAlternativeProjectionMatrix() const;
 	mat4x4 GetViewMatrix();
 	float* GetProjectionMatrix();
 	

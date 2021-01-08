@@ -131,6 +131,18 @@ float* ComponentCamera::GetRawViewMatrix()
 	return (float*)m.v;
 }
 
+math::float4x4 ComponentCamera::GetAlternativeViewMatrix() const
+{
+	math::float4x4 matrix = frustum.ViewMatrix();
+	return matrix.Transposed();
+}
+math::float4x4 ComponentCamera::GetAlternativeProjectionMatrix() const
+{
+	math::float4x4 matrix = frustum.ProjectionMatrix();
+	matrix.Transpose();
+	return matrix;
+}
+
 mat4x4 ComponentCamera::GetViewMatrix()
 {
 	static float4x4 m;

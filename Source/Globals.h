@@ -59,6 +59,8 @@ enum update_status
 #define MODELS_FOLDER "Assets/Models/"
 #define TEXTURES_FOLDER "Assets/Textures/"
 #define SCENES_FOLDER "Assets/Scenes/"
+#define SKYBOX_FOLDER "Assets/Textures/Skybox/"
+
 
 #define MESH_EXTENSION ".asemesh"
 #define MATERIAL_EXTENSION	".asemat"
