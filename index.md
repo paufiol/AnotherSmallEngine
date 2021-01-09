@@ -11,11 +11,13 @@ Our main focus has been in implementing and showcasing a shader pipeline.
   - Shader Programming
   - GUI
   - Time Handling
+  - Skybox
   
 - Aitor Luque Bodet - [Aitorlb7](https://github.com/Aitorlb7)
   - Shader Pipeline
   - Scene Management
   - Resource Management
+  - Skybox
 
 ### Showcase
 
@@ -61,3 +63,4 @@ Our main focus has been in implementing and showcasing a shader pipeline.
 
 - [Source Code](https://github.com/paufiol/AnotherSmallEngine)
 - [Releases](https://github.com/paufiol/AnotherSmallEngine/releases)
+- [License](https://github.com/paufiol/AnotherSmallEngine/blob/master/LICENSE.txt)
