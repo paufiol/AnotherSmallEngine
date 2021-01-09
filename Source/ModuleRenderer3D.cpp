@@ -262,8 +262,9 @@ void ModuleRenderer3D::CreateSkybox()
 			ILuint id;
 			ilGenImages(1, &id);
 			ilBindImage(id);
-			if (ilLoadL(IL_DDS, (const void*)buffer, size))
+			if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 			{
+				ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 				ILinfo info;
 				iluGetImageInfo(&info);
 
@@ -275,7 +276,6 @@ void ModuleRenderer3D::CreateSkybox()
 		}
 		delete[] buffer;
 	}
-
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
