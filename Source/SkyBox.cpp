@@ -56,6 +56,7 @@ void Skybox::CreateSkybox()
 			ilBindImage(id);
 			if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
 			{
+				ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 				ILinfo info;
 				iluGetImageInfo(&info);
 
