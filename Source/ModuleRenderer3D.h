@@ -10,6 +10,7 @@
 #include "Dependencies/SDL/include/SDL.h"
 #include "Dependencies/MathGeoLib/include/Math/float4x4.h"
 #include "Dependencies/MathGeoLib/include/Math/float3x3.h"
+#include "SkyBox.h"
 
 #define MAX_LIGHTS 8
 
@@ -31,10 +32,6 @@ public:
 	bool CleanUp();
 
 	void OnResize(int width, int height);
-
-	void CreateSkybox();
-	uint32 SetSkyboxShader();
-	void CreateSkyboxBuffers();
 
 	void DrawSkybox();
 	void UseCheckerTexture();
@@ -68,7 +65,7 @@ public:
 
 	GLuint newTexture = 0;
 
-
+	Skybox defaultSkyBox;
 
 	bool drawboundingboxes = false;
 
@@ -77,63 +74,5 @@ public:
 	std::map<float, GameObject*> sortedGO;
 
 private:
-	GLuint SkyboxTex_id = 0; //Initialise?
-	std::vector<std::string> faces
-	{
-			"s_left.png",
-			"s_right.png",
-			"s_up.png",
-			"s_down.png",
-			"s_front.png",
-			"s_back.png"
-	}; //Add proper names
-
-	uint Skybox_VAO = 0;
-	uint Skybox_id = 0;
-	uint32 Skybox_programid = 0;
-
-	float Skybox_vertices[108] = {
-		// positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
-	};
+	
 };

@@ -338,6 +338,7 @@
     <ClInclude Include="ResourceScene.h" />
     <ClInclude Include="ResourceShader.h" />
     <ClInclude Include="ResourceTexture.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +431,7 @@
     <ClCompile Include="ResourceScene.cpp" />
     <ClCompile Include="ResourceShader.cpp" />
     <ClCompile Include="ResourceTexture.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

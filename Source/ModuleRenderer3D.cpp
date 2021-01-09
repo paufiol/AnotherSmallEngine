@@ -20,17 +20,8 @@
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
 
-#include "Dependencies/MathGeoLib/include/Math/TransformOps.h"
 #include "Dependencies/MathGeoLib/include/Geometry/Plane.h"
 #include "Dependencies/MathGeoLib/include/Geometry/LineSegment.h"
-
-#include "Dependencies/Devil/Include/ilut.h"
-#include "Dependencies/Devil/Include/ilu.h"
-#include "Dependencies/Devil/Include/il.h"
-
-#pragma comment (lib, "Dependencies/Devil/libx86/DevIL.lib")
-#pragma comment (lib, "Dependencies/Devil/libx86/ILU.lib")
-#pragma comment (lib, "Dependencies/Devil/libx86/ILUT.lib")
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -131,10 +122,10 @@ bool ModuleRenderer3D::Init()
 		glBlendEquation(GL_FUNC_ADD);
 		
 	}	
+
 	Importer::TextureImporter::InitDevil();
 
 	UseCheckerTexture();
-
 	
 	timer.Start();
 
@@ -142,15 +133,10 @@ bool ModuleRenderer3D::Init()
 }
 
 bool ModuleRenderer3D::Start()
-{
-	ilInit();
-	iluInit();
-	ilutInit();
-	ilutRenderer(ILUT_OPENGL);
-	
-	CreateSkybox();
+{	
+	defaultSkyBox.SetUpSkyBoxBuffers();
 
-	CreateSkyboxBuffers();
+	defaultSkyBox.CreateSkybox();
 
 	return true;
 }
@@ -206,8 +192,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 	if (App->editor->drawWireframe) { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); glEnable(GL_TEXTURE_CUBE_MAP); }
 	else { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); glDisable(GL_TEXTURE_CUBE_MAP); }
 	
-
-
 	IterateMeshDraw();
 
 	ImGui::GetBackgroundDrawList();
@@ -244,72 +228,6 @@ void ModuleRenderer3D::OnResize(int width, int height)
 
 }
 
-void ModuleRenderer3D::CreateSkybox()
-{
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-	for (unsigned int i = 0; i < faces.size(); i++)
-	{
-		char* buffer = nullptr;
-		std::string textureFile = SKYBOX_FOLDER;
-		textureFile.append(faces[i]);
-		unsigned int size = App->fileSystem->Load(textureFile.data(), &buffer);
-
-		if (size > 0)
-		{
-			ILuint id;
-			ilGenImages(1, &id);
-			ilBindImage(id);
-			if (ilLoadL(IL_TYPE_UNKNOWN, (const void*)buffer, size))
-			{
-				ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-				ILinfo info;
-				iluGetImageInfo(&info);
-
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, info.Width, info.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, info.Data);
-
-
-				ilDeleteImages(1, &id);
-			}
-		}
-		delete[] buffer;
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	SkyboxTex_id = textureID;
-}
-
-void ModuleRenderer3D::CreateSkyboxBuffers()
-{
-	
-	glGenBuffers(1, (GLuint*)&(Skybox_id));
-	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 36 * 3, Skybox_vertices, GL_STATIC_DRAW);
-}
-
-uint32 ModuleRenderer3D::SetSkyboxShader()
-{
-	uint32 program_id;
-
-	ResourceShader* resource;
-	std::map<uint32, ResourceShader*> shadersInMemory = App->resources->GetShadersInMemory();
-	for (std::map<uint32, ResourceShader*>::iterator item = shadersInMemory.begin(); item != shadersInMemory.end(); item++)
-	{
-		if (item->second->name == "SkyBoxShader")
-		{
-			resource = (ResourceShader*)App->resources->LoadResource(item->second->UID);
-			if(resource != nullptr) return resource->shaderProgramID;
-		}
-	}
-	return 0;
-}
 
 void ModuleRenderer3D::UpdateProjectionMatrix()
 {
@@ -328,51 +246,11 @@ void ModuleRenderer3D::UpdateProjectionMatrix()
 
 void ModuleRenderer3D::IterateMeshDraw()
 {
-	//glDepthMask(GL_FALSE);
+	//The Skybox needs to be rendered first in the scene
 	
-	if (Skybox_programid == 0)
-	{
-		Skybox_programid = SetSkyboxShader(); //skyboxShader.use();
-	}
+	defaultSkyBox.RenderSkybox();
 
-	if (Skybox_programid != 0)
-	{
-		glUseProgram(Skybox_programid);
-	}
-	else LOG("Error loading skybox shader program");
-	
-	GLint old_cull_face_mode;
-	glGetIntegerv(GL_CULL_FACE_MODE, &old_cull_face_mode);
-	GLint old_depth_func_mode;
-	glGetIntegerv(GL_DEPTH_FUNC, &old_depth_func_mode);
-
-	glCullFace(GL_FRONT);
-	glDepthFunc(GL_LEQUAL);
-	
-	float3 translation = App->camera->currentCamera->frustum.worldMatrix.TranslatePart();
-	float4x4 modelMatrix = math::float4x4::identity;
-	modelMatrix.SetTranslatePart(translation);
-	modelMatrix.Scale(200, 200, 200);
-
-	math::float4x4 resultMatrix = modelMatrix.Transposed() * App->camera->currentCamera->GetAlternativeViewMatrix() * App->camera->currentCamera->GetAlternativeProjectionMatrix();
-
-	GLint uinformLoc = glGetUniformLocation(Skybox_programid, "resultMatrix");
-	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, *resultMatrix.v);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, Skybox_id);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-	// … bind and use other buffers
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glDisableClientState(GL_VERTEX_ARRAY);
-
-
-	glCullFace(old_cull_face_mode);
-	glDepthFunc(old_depth_func_mode);
-	glUseProgram(0);
+	//Draw all the GameObjects in the scene
 
 	for (uint i = 0; i < App->scene->game_objects.size(); i++)
 	{
@@ -496,10 +374,6 @@ uint32 ModuleRenderer3D::SetDefaultShader(ComponentMaterial* componentMaterial)
 		}
 	}
 	return componentMaterial->GetMaterial()->GetShaderProgramID();
-}
-
-void ModuleRenderer3D::DrawSkybox()
-{
 }
 
 void ModuleRenderer3D::UseCheckerTexture() {
