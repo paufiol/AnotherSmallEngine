@@ -19,17 +19,8 @@ Our main focus has been in implementing and showcasing a shader pipeline.
 
 ### Showcase
 
-Add Gifs and video here
+[![Click to view Showcase in youtube](https://img.youtube.com/vi/lEuZxUyy7ys/0.jpg)](https://youtu.be/lEuZxUyy7ys)
 
-### Features
-
-- Shader Pipeline: Geometry drawn via shaders, using Textures and/or materials.
-- In-Engine Text Editor and Shader Compilation: Open .shader files (which contain both fragment and vertex shaders) to edit them, and save them to automatically recompile them. If compilation fails, the console will display the compilation error. 
-- Shader Uniform edition: Uniform values show up in the inspector and can be edited while running. 
-- Mouse Picking & Gizmos: Click to select GameObjects and transform them with Gizmos. 
-- Custom File Format: Smaller files containing only the relevant data for our engine. Lighter files, faster execution.
-- Resource Management: Assets enter and leave memory as necessary.
-- Cameras: Camera culling with a modifiable render distances and FoV. Preview the inGameCamera
 
 ## Engine Features
 * Window configuration options
