@@ -121,6 +121,8 @@ uniform float Kd = 4.5;
 uniform float Ks = 0.0;
 uniform float shininess = 100;
 
+uniform vec3 cameraPosition;
+uniform samplerCube skybox;
 
 uniform sampler2D ourTexture;
 
@@ -137,7 +139,13 @@ vec2 blinnPhongDir(vec3 lightDir, float lightInt, float Ka, float Kd, float Ks, 
 
 void main()
 {
-
+	
+	vec3 I = normalize(fPos - cameraPosition);
+   vec3 R = reflect(I, normalize(fNormal));
+   vec3 reflection = texture(skybox, R).rgb;
+   vec3 R2 = refract(I, normalize(fNormal), 1.0f / 1.33f);
+   vec3 refraction = texture(skybox, R2).rgb;
+	
 	vec3 lcolor;
 	vec3 dark_color = vec3(0, 0.2, 0.3);
 	vec3 blue = vec3(0,0.5,0.7);
@@ -153,35 +161,38 @@ void main()
     else
     {
     	float mixvalue = distance(fPos.z/2, -3)/3;
-    	//lcolor = mix(dark_color, blue, min(mixvalue, 1));
-    	lcolor = blue; 
-    	vec4 tex_color =  texture2D(ourTexture, TexCoord);
-    	lcolor +=  tex_color.rgb*(0, 0.7, 0.9)*0.4; 
+    	lcolor = mix(dark_color, blue, min(mixvalue, 1));
     	
+    	vec4 tex_color =  texture2D(ourTexture, TexCoord);
     	lcolor = mix(dark_color, lcolor, min(mixvalue, 1));
+    	lcolor = mix(refraction, lcolor, 0.8);
+    	//lcolor = refraction;
+    	
+    	lcolor +=  tex_color.rgb*vec3(0.0, 0.7, 1)*0.2; 
+    	lcolor +=  tex_color.rgb*reflection*0.7; 
 	}
 	
-	/*
-		lcolor = h > range 
-        ? mix(dark_color, blue, range/h) 
-        : mix(blue, foam_color, (range - h)/(1.0 - h));
-	
-	*/
 
+	//lcolor = lcolor * (1 - 0.3) + reflection * 0.3;
+	
 	vec2 inten = blinnPhongDir(vec3(1, 1, 0), 0.3, Ka, Kd, Ks, shininess);
 	
 	vec4 tex_color =  texture2D(ourTexture, TexCoord);
-	//tex_color =  vec4(1 - tex_color.r, 1 - tex_color.g,1 - tex_color.b, 1) * vec4(1,1,1,1);
-	
-	//lcolor +=  tex_color.rgb*foam_color*0.4; 
+	//vec3 mirror = reflection;
+	//lcolor = mix(lcolor, vec3(reflection.r , reflection.g, reflection.b), 0.5);
 	
 	color = vec4(lcolor*inten.x + vec3(1.0) * inten.y, 1.0); //* texture2D(ourTexture, TexCoord);
+	//color = vec4(reflection, 1.0) ;
 	
-	//color =  texture2D(ourTexture, TexCoord);
-	//color = vec4(fNormal.r, fNormal.g, fNormal.b, 1.0);
 }
 
 #endif
+
+
+
+
+
+
 
 
 

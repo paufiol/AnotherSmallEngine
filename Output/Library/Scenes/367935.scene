@@ -1,0 +1,2369 @@
+{
+    "GameObjects": [
+        {
+            "Name": "Scene",
+            "UID": 405663,
+            "Parent UID": 0,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Game Camera",
+            "UID": 94869,
+            "Parent UID": 405663,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        53.008778,
+                        3.124600,
+                        52.267120
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1,
+                        1.000000
+                    ],
+                    "GlobalRotation": [
+                        0.017402,
+                        0.912129,
+                        0.014787,
+                        -0.409267
+                    ]
+                },
+                {
+                    "Type": "Camera",
+                    "NearPlane": 1,
+                    "FarPlane": 1000,
+                    "FOV": 50,
+                    "Culling": false,
+                    "BoundingBoxes": true,
+                    "isActive": false
+                }
+            ]
+        },
+        {
+            "Name": "RootNode",
+            "UID": 338091,
+            "Parent UID": 405663,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Water",
+            "UID": 260814,
+            "Parent UID": 338091,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        0.100000,
+                        0.100000,
+                        0.100000
+                    ],
+                    "Rotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        35.292030,
+                        1.427145,
+                        35.624767
+                    ],
+                    "GlobalScale": [
+                        0.254000,
+                        0.254000,
+                        0.254000
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 304795
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 145789,
+                    "Shader UID": 135271,
+                    "Texture UID": 63957
+                }
+            ]
+        },
+        {
+            "Name": "RootNode",
+            "UID": 38570,
+            "Parent UID": 405663,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Sky001",
+            "UID": 218268,
+            "Parent UID": 38570,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        18.153732,
+                        0,
+                        58.960911
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        18.153732,
+                        0,
+                        58.960911
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        1,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Dummy001",
+            "UID": 91350,
+            "Parent UID": 38570,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "Rotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "City_building_004",
+            "UID": 408853,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -41.475891,
+                        21.014099,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        -41.475891,
+                        -0.000013,
+                        -21.014112
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 351085
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 220414,
+                    "Shader UID": 393039,
+                    "Texture UID": 151853
+                }
+            ]
+        },
+        {
+            "Name": "City_building_001",
+            "UID": 93859,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        17.707165,
+                        20.053276,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        17.707165,
+                        -0.000012,
+                        -20.053288
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 184545
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 303154,
+                    "Shader UID": 393039,
+                    "Texture UID": 234002
+                }
+            ]
+        },
+        {
+            "Name": "City_building_007",
+            "UID": 392992,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        16.010492,
+                        37.493286,
+                        -0.000002
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        16.010492,
+                        -0.000024,
+                        -37.493309
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 333540
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 214352,
+                    "Shader UID": 393039,
+                    "Texture UID": 350796
+                }
+            ]
+        },
+        {
+            "Name": "City_building_008",
+            "UID": 123967,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        40.979996,
+                        18.270824,
+                        -0.000002
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        40.979996,
+                        -0.000013,
+                        -18.270836
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.500000,
+                        0.500000,
+                        0.500000,
+                        0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 110937
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 5112,
+                    "Shader UID": 393039,
+                    "Texture UID": 248760
+                }
+            ]
+        },
+        {
+            "Name": "Line002",
+            "UID": 33680,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -2.159772,
+                        1.853838,
+                        0
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -2.159772,
+                        -0.000001,
+                        -1.853839
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 2277
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 92669,
+                    "Shader UID": 393039
+                }
+            ]
+        },
+        {
+            "Name": "Plane001",
+            "UID": 225893,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -0.028603,
+                        0.026032,
+                        0
+                    ],
+                    "Scale": [
+                        0.996635,
+                        0.970616,
+                        0.996635
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        -0.028603,
+                        -0.000000,
+                        -0.026032
+                    ],
+                    "GlobalScale": [
+                        0.996635,
+                        0.970617,
+                        0.996636
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 22657
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 416877,
+                    "Shader UID": 393039
+                }
+            ]
+        },
+        {
+            "Name": "City_building_010",
+            "UID": 262818,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        25.154011,
+                        -39.153721,
+                        0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        25.154011,
+                        0.000024,
+                        39.153744
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.500000,
+                        0.500000,
+                        0.500000,
+                        0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 91004
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 136993,
+                    "Shader UID": 393039,
+                    "Texture UID": 120854
+                }
+            ]
+        },
+        {
+            "Name": "City_building_011",
+            "UID": 179880,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        30.134541,
+                        37.493286,
+                        -0.000002
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        30.134541,
+                        -0.000024,
+                        -37.493309
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 333540
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 214352,
+                    "Shader UID": 393039,
+                    "Texture UID": 350796
+                }
+            ]
+        },
+        {
+            "Name": "City_building_013",
+            "UID": 158632,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -42.288055,
+                        33.201576,
+                        0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -42.288055,
+                        -0.000019,
+                        -33.201595
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.500000,
+                        0.500000,
+                        0.500000,
+                        0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 24719
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 117393,
+                    "Shader UID": 393039,
+                    "Texture UID": 132510
+                }
+            ]
+        },
+        {
+            "Name": "City_building_014",
+            "UID": 343354,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -19.439707,
+                        32.061729,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        -19.439707,
+                        -0.000019,
+                        -32.061749
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0.707107,
+                        0.707107,
+                        0
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 325098
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 220414,
+                    "Shader UID": 393039,
+                    "Texture UID": 151853
+                }
+            ]
+        },
+        {
+            "Name": "City_building_016",
+            "UID": 79211,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        34.270424,
+                        -41.972748,
+                        0.000001
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        34.270424,
+                        0.000026,
+                        41.972775
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0.707107,
+                        0.707107,
+                        0
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 91004
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 136993,
+                    "Shader UID": 393039,
+                    "Texture UID": 120854
+                }
+            ]
+        },
+        {
+            "Name": "City_building_017",
+            "UID": 210639,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        44.260082,
+                        -39.153721,
+                        0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        44.260082,
+                        0.000024,
+                        39.153744
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.500000,
+                        0.500000,
+                        0.500000,
+                        0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 91004
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 136993,
+                    "Shader UID": 393039,
+                    "Texture UID": 120854
+                }
+            ]
+        },
+        {
+            "Name": "City_building_022",
+            "UID": 14375,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -20.831324,
+                        -27.426489,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        -20.831324,
+                        0.000016,
+                        27.426506
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0.707107,
+                        0.707107,
+                        0
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 94101
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 374728,
+                    "Shader UID": 393039,
+                    "Texture UID": 127127
+                }
+            ]
+        },
+        {
+            "Name": "City_building_023",
+            "UID": 160248,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        42.130642,
+                        37.493286,
+                        -0.000002
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        42.130642,
+                        -0.000024,
+                        -37.493309
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 333540
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 214352,
+                    "Shader UID": 393039,
+                    "Texture UID": 350796
+                }
+            ]
+        },
+        {
+            "Name": "City_building_024",
+            "UID": 409605,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -20.572771,
+                        43.060829,
+                        -0.069194
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        -20.572771,
+                        -0.069220,
+                        -43.060856
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0.707107,
+                        0.707107,
+                        0
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 110937
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 5112,
+                    "Shader UID": 393039,
+                    "Texture UID": 248760
+                }
+            ]
+        },
+        {
+            "Name": "City_building_026",
+            "UID": 59720,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        31.511889,
+                        -16.446016,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        31.511889,
+                        0.000010,
+                        16.446026
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0.707107,
+                        0.707107,
+                        0
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 134673
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 374728,
+                    "Shader UID": 393039,
+                    "Texture UID": 127127
+                }
+            ]
+        },
+        {
+            "Name": "City_building_028",
+            "UID": 190,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        13.387990,
+                        -33.755039,
+                        -0.000001
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        13.387990,
+                        0.000019,
+                        33.755058
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 306509
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 353240,
+                    "Shader UID": 393039,
+                    "Texture UID": 136819
+                }
+            ]
+        },
+        {
+            "Name": "Object010",
+            "UID": 363535,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -2.503353,
+                        15.800846,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        -2.503353,
+                        -0.000009,
+                        -15.800856
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 362987
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 24215,
+                    "Shader UID": 393039
+                }
+            ]
+        },
+        {
+            "Name": "City_building_030",
+            "UID": 4113,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -42.807240,
+                        -41.835564,
+                        -0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -42.807240,
+                        0.000024,
+                        41.835590
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 306509
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 353240,
+                    "Shader UID": 393039,
+                    "Texture UID": 136819
+                }
+            ]
+        },
+        {
+            "Name": "City_building_031",
+            "UID": 96772,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -34.679482,
+                        -41.835564,
+                        -0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -34.679482,
+                        0.000024,
+                        41.835590
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 306509
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 353240,
+                    "Shader UID": 393039,
+                    "Texture UID": 136819
+                }
+            ]
+        },
+        {
+            "Name": "City_building_032",
+            "UID": 159540,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -29.478403,
+                        21.014099,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        -29.478403,
+                        -0.000013,
+                        -21.014112
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 351085
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 220414,
+                    "Shader UID": 393039,
+                    "Texture UID": 151853
+                }
+            ]
+        },
+        {
+            "Name": "City_building_033",
+            "UID": 36495,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -32.361496,
+                        42.370422,
+                        0.000001
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        -32.361496,
+                        -0.000024,
+                        -42.370449
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 19677
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 117393,
+                    "Shader UID": 393039,
+                    "Texture UID": 132510
+                }
+            ]
+        },
+        {
+            "Name": "City_building_034",
+            "UID": 111290,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        16.049517,
+                        -16.696884,
+                        0
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        16.049517,
+                        0.000010,
+                        16.696894
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 311165
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 374728,
+                    "Shader UID": 393039,
+                    "Texture UID": 127127
+                }
+            ]
+        },
+        {
+            "Name": "City_building_035",
+            "UID": 363318,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        13.387990,
+                        -40.802517,
+                        -0.000001
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        13.387990,
+                        0.000023,
+                        40.802540
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 306509
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 353240,
+                    "Shader UID": 393039,
+                    "Texture UID": 136819
+                }
+            ]
+        },
+        {
+            "Name": "City_building_036",
+            "UID": 188919,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -31.216331,
+                        33.201576,
+                        0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -31.216331,
+                        -0.000019,
+                        -33.201595
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 24719
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 117393,
+                    "Shader UID": 393039,
+                    "Texture UID": 132510
+                }
+            ]
+        },
+        {
+            "Name": "City_building_037",
+            "UID": 326990,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -20.317694,
+                        -16.163609,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        1,
+                        0
+                    ],
+                    "GlobalPosition": [
+                        -20.317694,
+                        0.000010,
+                        16.163618
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0.707107,
+                        0.707107,
+                        0
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 248649
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 374728,
+                    "Shader UID": 393039,
+                    "Texture UID": 127127
+                }
+            ]
+        },
+        {
+            "Name": "City_building_038",
+            "UID": 43587,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -41.649002,
+                        -16.495394,
+                        0
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -41.649002,
+                        0.000010,
+                        16.495403
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 348654
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 374728,
+                    "Shader UID": 393039,
+                    "Texture UID": 127127
+                }
+            ]
+        },
+        {
+            "Name": "City_building_039",
+            "UID": 359914,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -42.807240,
+                        -30.643888,
+                        -0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -42.807240,
+                        0.000017,
+                        30.643908
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 306509
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 353240,
+                    "Shader UID": 393039,
+                    "Texture UID": 136819
+                }
+            ]
+        },
+        {
+            "Name": "City_building_040",
+            "UID": 2929,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -34.679482,
+                        -30.643888,
+                        -0.000001
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        -0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -34.679482,
+                        0.000017,
+                        30.643908
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        0.500000,
+                        0.500000,
+                        0.500000,
+                        -0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 306509
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 353240,
+                    "Shader UID": 393039,
+                    "Texture UID": 136819
+                }
+            ]
+        },
+        {
+            "Name": "City_building_041",
+            "UID": 62996,
+            "Parent UID": 91350,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        30.695278,
+                        21.612646,
+                        0
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1.000001,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0.707107,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        30.695278,
+                        -0.000013,
+                        -21.612659
+                    ],
+                    "GlobalScale": [
+                        1.000001,
+                        1.000001,
+                        1.000001
+                    ],
+                    "GlobalRotation": [
+                        -0.500000,
+                        0.500000,
+                        0.500000,
+                        0.500000
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 184545
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 303154,
+                    "Shader UID": 393039,
+                    "Texture UID": 234002
+                }
+            ]
+        },
+        {
+            "Name": "Camera001",
+            "UID": 134487,
+            "Parent UID": 38570,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -78.312431,
+                        45.251217,
+                        -97.031113
+                    ],
+                    "Scale": [
+                        0.999998,
+                        1.000000,
+                        0.999998
+                    ],
+                    "Rotation": [
+                        0.049340,
+                        0.932287,
+                        0.139331,
+                        -0.330140
+                    ],
+                    "GlobalPosition": [
+                        -78.312431,
+                        45.251217,
+                        -97.031113
+                    ],
+                    "GlobalScale": [
+                        0.999998,
+                        1.000000,
+                        0.999998
+                    ],
+                    "GlobalRotation": [
+                        0.049340,
+                        0.932287,
+                        0.139331,
+                        -0.330140
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Camera001.Target",
+            "UID": 260516,
+            "Parent UID": 38570,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -28.132622,
+                        20.873329,
+                        -35.064213
+                    ],
+                    "Scale": [
+                        0.999998,
+                        1.000000,
+                        0.999998
+                    ],
+                    "Rotation": [
+                        0.049340,
+                        0.932287,
+                        0.139331,
+                        -0.330140
+                    ],
+                    "GlobalPosition": [
+                        -28.132622,
+                        20.873329,
+                        -35.064213
+                    ],
+                    "GlobalScale": [
+                        0.999998,
+                        1.000000,
+                        0.999998
+                    ],
+                    "GlobalRotation": [
+                        0.049340,
+                        0.932287,
+                        0.139331,
+                        -0.330140
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Spot001",
+            "UID": 93412,
+            "Parent UID": 38570,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -66.721268,
+                        141.934128,
+                        0.000006
+                    ],
+                    "Scale": [
+                        0.999999,
+                        0.999999,
+                        0.999999
+                    ],
+                    "Rotation": [
+                        0.690035,
+                        0.154439,
+                        0.690035,
+                        -0.154439
+                    ],
+                    "GlobalPosition": [
+                        -66.721268,
+                        141.934128,
+                        0.000006
+                    ],
+                    "GlobalScale": [
+                        0.999999,
+                        0.999999,
+                        0.999999
+                    ],
+                    "GlobalRotation": [
+                        0.690035,
+                        0.154439,
+                        0.690035,
+                        -0.154439
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Spot001.Target",
+            "UID": 360374,
+            "Parent UID": 38570,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        28.890945,
+                        -60.963882,
+                        -0.000003
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        28.890945,
+                        -60.963882,
+                        -0.000003
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "RootNode",
+            "UID": 225876,
+            "Parent UID": 405663,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Plane003",
+            "UID": 224709,
+            "Parent UID": 225876,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        -0.000002,
+                        98.700111,
+                        51.651413
+                    ],
+                    "Scale": [
+                        1.000001,
+                        1,
+                        1.000001
+                    ],
+                    "Rotation": [
+                        0,
+                        -0.707107,
+                        0,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -11.358149,
+                        31.304987,
+                        -26.021591
+                    ],
+                    "GlobalScale": [
+                        0.310000,
+                        0.310000,
+                        0.310000
+                    ],
+                    "GlobalRotation": [
+                        0.054027,
+                        -0.465843,
+                        -0.108612,
+                        0.876513
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 379926
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 321340,
+                    "Shader UID": 335459,
+                    "Texture UID": 16213
+                }
+            ]
+        },
+        {
+            "Name": "RootNode",
+            "UID": 337402,
+            "Parent UID": 405663,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Box001",
+            "UID": 78066,
+            "Parent UID": 337402,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        0.100000,
+                        0.100000,
+                        0.100000
+                    ],
+                    "Rotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        21.828041,
+                        30.038530
+                    ],
+                    "GlobalScale": [
+                        0.100000,
+                        0.100000,
+                        0.100000
+                    ],
+                    "GlobalRotation": [
+                        -0.706954,
+                        -0.014696,
+                        -0.190772,
+                        0.680886
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 124707
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 68763,
+                    "Shader UID": 381492
+                }
+            ]
+        },
+        {
+            "Name": "RootNode",
+            "UID": 337402,
+            "Parent UID": 405663,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "Rotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "GlobalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "GlobalScale": [
+                        1,
+                        1,
+                        1
+                    ],
+                    "GlobalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Box001",
+            "UID": 78066,
+            "Parent UID": 337402,
+            "IsSelected": false,
+            "Components": [
+                {
+                    "Type": "Transform",
+                    "Position": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "Scale": [
+                        0.100000,
+                        0.100000,
+                        0.100000
+                    ],
+                    "Rotation": [
+                        -0.707107,
+                        0,
+                        0,
+                        0.707107
+                    ],
+                    "GlobalPosition": [
+                        -16.404881,
+                        24.627384,
+                        0
+                    ],
+                    "GlobalScale": [
+                        0.100000,
+                        0.100000,
+                        0.100000
+                    ],
+                    "GlobalRotation": [
+                        -0.703615,
+                        0.008412,
+                        -0.070183,
+                        0.707057
+                    ]
+                },
+                {
+                    "Type": "Mesh",
+                    "Resource UID": 124707
+                },
+                {
+                    "Type": "Material",
+                    "Resource UID": 68763,
+                    "Shader UID": 381492
+                }
+            ]
+        }
+    ]
+} 

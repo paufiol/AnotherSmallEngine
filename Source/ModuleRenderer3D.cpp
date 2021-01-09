@@ -333,12 +333,15 @@ void ModuleRenderer3D::DrawMesh(ComponentMesh* componentMesh, float4x4 transform
 
 			componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", App->scene->GameTime.ReadSec());
 
+			componentMaterial->GetMaterial()->GetShader()->SetUniform1i("skybox", 11);
+
 			componentMaterial->GetMaterial()->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->currentCamera->frustum.Pos());
 
 			Importer::ShaderImporter::SetShaderUniforms(componentMaterial->GetMaterial()->GetShader());
 		}
 
 		//Update Each Time?
+		componentMaterial->GetMaterial()->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&App->camera->currentCamera->frustum.Pos());
 		componentMaterial->GetMaterial()->GetShader()->SetUniform1f("time", App->scene->GameTime.ReadSec());
 	}
 	

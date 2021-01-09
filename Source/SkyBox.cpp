@@ -104,7 +104,7 @@ void Skybox::RenderSkybox()
 	GLint uinformLoc = glGetUniformLocation(Skybox_programid, "resultMatrix");
 	glUniformMatrix4fv(uinformLoc, 1, GL_FALSE, *resultMatrix.v);
 
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE11);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, SkyboxTex_id);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -114,6 +114,7 @@ void Skybox::RenderSkybox()
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glDisableClientState(GL_VERTEX_ARRAY);
 
+	glActiveTexture(GL_TEXTURE0);
 	glUseProgram(0);
 }
 

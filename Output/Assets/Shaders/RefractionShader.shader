@@ -37,6 +37,7 @@ in vec3 ourPosition;
 
 uniform vec3 cameraPosition;
 uniform samplerCube skybox;
+uniform float refractionIndex = 1.33;
 
 out vec4 color;
 
@@ -44,14 +45,18 @@ uniform bool hasTexture;
 uniform sampler2D ourTexture;
 void main()
 {
+	
+	float ratio = 1.0f / refractionIndex;
    vec3 I = normalize(ourPosition - cameraPosition);
-   vec3 R = reflect(I, normalize(ourNormal));
+   vec3 R = refract(I, normalize(ourNormal), ratio);
    
    color = vec4(texture(skybox, R).rgb, 1.0);
 	//color = vec4(ourNormal, 1.0); 
 }
 
 #endif
+
+
 
 
 
