@@ -27,7 +27,7 @@ bool ModuleCamera3D::Start()
 
 	editorCamera = currentCamera = new ComponentCamera(nullptr);
 
-	editorCamera->frustum.SetPos(vec(30.0f, 30.0f, 30.0f));
+	editorCamera->frustum.SetPos(vec(120.0f, 120.0f, 120.0f));
 	editorCamera->Look(float3(0.0f, 0.0f, 0.0f));
 
 	gameCamera = nullptr;

@@ -346,16 +346,17 @@ void ModuleEditor::PlayPauseWindow()
 			std::map<uint32, Resource*>::iterator it = App->resources->importedResources.begin();
 			for (; it != App->resources->importedResources.end(); it++)
 			{
-				if (it->second->type == ResourceType::Scene && it->second->name == "tempScene")
+				if (it->second->type == ResourceType::Scene && it->second->name == "tempScene" && it->second->libraryFile == "Assets/Scenes/tempScene.scene")
 				{
 					App->resources->LoadResource(it->second->UID);
 
-					std::string sceneToDelete = it->second->assetsFile.append(".scene");
+					std::string sceneToDelete = it->second->assetsFile;
 					App->fileSystem->Remove(sceneToDelete.c_str());
 
 					sceneToDelete = SCENES_PATH;
 					sceneToDelete.append(scene->name.c_str());
 					sceneToDelete.append(".scene");
+
 					App->fileSystem->Remove(sceneToDelete.c_str());
 				}
 			}
@@ -465,15 +466,6 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 	ImVec2 flipH = ImVec2(1.0f, 0.0f);
 
 	ImGui::Text(assetFolder.localPath.c_str());
-	
-	/*
-	ImGui::SameLine(ImGui::GetWindowWidth() - 30);
-
-	ImGui::ImageButton((ImTextureID)returnIcon->id, ImVec2(iconSize / 5, iconSize / 5), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
-
-	if (ImGui::IsItemClicked()) 
-		nextFolder = previousFolder;
-	*/
 
 	ImGui::Separator();
 
@@ -506,10 +498,6 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			case ResourceType::Model:
 				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 				break;
-			case ResourceType::Scene:
-				ImGui::ImageButton((ImTextureID)modelIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, - 1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
-
-				break;
 			case ResourceType::Texture:
 				ImGui::ImageButton((ImTextureID)textureIcon->id, ImVec2(iconSize, iconSize), flipV, flipH);
 
@@ -523,16 +511,34 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 				break;
 			}
+
 		}
 		else
 		{
 			ImGui::ImageButton((ImTextureID)folderIcon->id, ImVec2(iconSize, iconSize), flipV, flipH, -1, ImVec4(0, 0, 0, 0), ExplorerIconsTint);
 		}
 
+
 		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)
 		{
 			nextFolder = assetFolder.children[i];
 		}
+
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+		if (io.MouseClicked[1]) ImGui::OpenPopup("ImportPopUp");
+
+		if (ImGui::BeginPopup("ImportPopUp"))
+		{
+			if (ImGui::Selectable("Import Asset"))
+			{
+				App->resources->LoadResource(UID);
+			}
+			ImGui::EndPopup();
+		}
+
+
+
 
 		if (ImGui::BeginDragDropSource())
 		{
@@ -810,6 +816,11 @@ bool ModuleEditor::MainMenuBar()
 
 		if (ImGui::BeginPopupModal("Save Scene Options", NULL, ImGuiWindowFlags_NoResize))
 		{
+			
+			//ImGui::Spacing();
+			//ImGui::TextColored(sceneTextColor, scene->libraryFile.c_str());
+			ImGui::Spacing();
+			
 			if (ImGui::InputText("Scene Name:", (char*)sceneName.c_str(), 64, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
 				scene->libraryFile = SCENES_PATH ;
@@ -821,23 +832,39 @@ bool ModuleEditor::MainMenuBar()
 
 				scene->name = sceneName.c_str();
 
-				sceneTextColor = ImVec4(0, 0.8, 0, 1);
-			}
-			ImGui::Spacing();
-			ImGui::TextColored(sceneTextColor, scene->libraryFile.c_str());
-			ImGui::Spacing();
-			if (ImGui::Button("Save"))
-			{
+				//sceneTextColor = ImVec4(0, 0.8, 0, 1);
+
 				App->resources->SaveResource(scene);
+
 				ImGui::CloseCurrentPopup();
+				//allowSaveOrLoad = true;
+
 			}
-			ImGui::SameLine();
+
+
 			ImGui::Spacing();
-			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(0.6, 0.6, 0.6, 1), "Press 'Enter' to save the scene.");
+			ImGui::Spacing();
+
+			//ImGui::Spacing();
+			//if (allowSaveOrLoad)
+			//{
+			//	if (ImGui::Button("Save"))
+			//	{
+			//		App->resources->SaveResource(scene);
+			//		allowSaveOrLoad = false;
+			//		ImGui::CloseCurrentPopup();
+			//	}
+			//}
+
+
 			if (ImGui::Button("Cancel"))
 			{
 				ImGui::CloseCurrentPopup();
 			}
+
+
+			
 			ImGui::EndPopup();
 		}
 
@@ -860,20 +887,25 @@ bool ModuleEditor::MainMenuBar()
 					{	
 						sceneToLoad = scenesInMemory[i];
 						selectedScene = scenesInMemory[i]->name;
+						allowSaveOrLoad = true;
 					}
 
 				}
 				
 				ImGui::EndCombo();
 			}
-
-			if (ImGui::Button("Load"))
+			if (allowSaveOrLoad)
 			{
-				if(sceneToLoad) App->resources->LoadResource(sceneToLoad->UID);
-				sceneToLoad = nullptr;
-				scenesInMemory.clear();
-				ImGui::CloseCurrentPopup();
+				if (ImGui::Button("Load"))
+				{
+					if (sceneToLoad) App->resources->LoadResource(sceneToLoad->UID);
+					sceneToLoad = nullptr;
+					scenesInMemory.clear();
+					allowSaveOrLoad = false;
+					ImGui::CloseCurrentPopup();
+				}
 			}
+			
 			ImGui::SameLine();
 			ImGui::Spacing();
 			ImGui::SameLine();

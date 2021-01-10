@@ -529,6 +529,8 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 		break;
 	}
 
+
+
 	return tempResource;
 }
 

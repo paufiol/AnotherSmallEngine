@@ -260,7 +260,9 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 				compConfig.SetString("Type", "Material");
 				compConfig.SetNumber("Resource UID", componentMat->GetMaterial()->GetUID());
 				compConfig.SetNumber("Shader UID", componentMat->GetMaterial()->GetShader()->GetUID());
+				if(componentMat->GetMaterial()->GetShader()->name != "DefaultShader") App->resources->SaveResource(componentMat->GetMaterial()->GetShader());
 				componentMat->GetMaterial()->GetTexture()->id != 0 ? compConfig.SetNumber("Texture UID", componentMat->GetMaterial()->GetTexture()->GetUID()) : 0 ;
+				
 				break;
 			case (ComponentType::Transform):
 				
