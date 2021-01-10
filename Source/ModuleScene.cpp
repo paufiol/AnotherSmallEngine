@@ -271,7 +271,7 @@ void ModuleScene::ImGuizmoHandling()
 	viewMatrix.Transpose();
 	float4x4 projectionMatrix = App->camera->currentCamera->frustum.ProjectionMatrix();
 	projectionMatrix.Transpose();
-	float4x4 modelProjection = selected_transform->GetGlobalTransform();
+	float4x4 modelProjection = selected_transform->GetLocalTransform();
 	modelProjection.Transpose();
 
 	//ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
@@ -298,8 +298,8 @@ void ModuleScene::ImGuizmoHandling()
 		
 		
 		//Set Global Transform
-		//selected_transform->SetLocalTransform(modelProjection);
-		selected_transform->SetGlobalTransform(modelProjection);
+		selected_transform->SetLocalTransform(modelProjection);
+		//selected_transform->SetGlobalTransform(modelProjection);
 	}
 }
 

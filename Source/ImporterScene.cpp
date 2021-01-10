@@ -275,6 +275,7 @@ uint32 Importer::SceneImporter::Save(const ResourceScene* scene, char**buffer )
 				compConfig.SetFloat3("GlobalPosition", componentTransform->GetGlobalPosition());
 				compConfig.SetFloat3("GlobalScale", componentTransform->GetGlobalScale());
 				compConfig.SetQuat("GlobalRotation", componentTransform->GetGlobalRotation());
+
 				break;
 			case(ComponentType::Camera):
 				compConfig.SetString("Type", "Camera");
@@ -322,12 +323,6 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 				parent = importedGameObjects[i];
 			}
 		}
-
-		//std::unordered_map<uint32, GameObject*>::iterator it = importedGameObjects.find(node.GetNumber("Parent UID"));
-		//if (it != importedGameObjects.end())
-		//{
-		//	parent = it->second;
-		//}
 		if (parent != nullptr)
 		{
 			gameObject->SetParent(parent);
@@ -371,11 +366,7 @@ void Importer::SceneImporter::Load(ResourceScene* resourceScene, char* buffer)
 			}
 			else if (type == "Transform") 
 			{
-				gameObject->transform->SetPosition(componentNode.GetFloat3("Position"));
-				gameObject->transform->SetScale(componentNode.GetFloat3("Scale"));
-				gameObject->transform->SetRotation(componentNode.GetQuat("Rotation"));
-
-				gameObject->transform->SetGlobalTransform(componentNode.GetFloat3("GlobalPosition"), componentNode.GetFloat3("GlobalScale"), componentNode.GetQuat("GlobalRotation"));
+				gameObject->transform->UpdateTransform(componentNode.GetFloat3("Position"), componentNode.GetFloat3("Scale"), componentNode.GetQuat("Rotation"));
 
 			}
 			else if (type == "Camera")

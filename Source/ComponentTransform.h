@@ -54,7 +54,7 @@ public:
 	void inline SetGlobalRotation(Quat rotation) { this->global_rotation = rotation; UpdateGlobalTransform(); };
 	void inline SetGlobalScale(float3 scale) { this->global_scale = scale; UpdateGlobalTransform(); };
 
-	void inline SetGlobalTransform(float3 position, float3 scale, Quat rotation) { global_transform = float4x4::FromTRS(position, rotation, scale); }
+	void inline SetGlobalTransform(float3 position, float3 scale, Quat rotation) { global_transform = float4x4::FromTRS(position, rotation, scale); UpdateGlobalTransform();}
 
 	void SetLocalEulerRotation(float3 euler_angles);
 	void SetGlobalEulerRotation(float3 euler_angles);

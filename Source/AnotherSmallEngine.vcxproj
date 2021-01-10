@@ -322,6 +322,7 @@
     <ClInclude Include="ComponentCamera.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="ResourceFolder.h" />
     <ClInclude Include="ResourceMaterial.h" />
     <ClInclude Include="ResourceMesh.h" />
@@ -450,6 +451,18 @@
     <None Include="Dependencies\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_SSE.inl" />
     <None Include="Dependencies\MathGeoLib\include\Math\float2.inl" />
     <None Include="Dependencies\MathGeoLib\include\Math\Matrix.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AnotherSmallEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\ASE_Icon.ico" />
+    <Image Include="..\..\descarga.ico" />
+    <Image Include="..\..\descarga.png" />
+    <Image Include="..\Output\Assets\Icons\ASE_Icon.ico" />
+    <Image Include="icon1.ico" />
+    <Image Include="icon2.ico" />
+    <Image Include="icon3.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

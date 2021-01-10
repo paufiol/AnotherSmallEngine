@@ -141,21 +141,8 @@ void ComponentTransform::SetGlobalEulerRotation(float3 eulerAngles)
 void ComponentTransform::SetGlobalTransform(float4x4 new_matrix)
 {
 	global_transform = new_matrix;
-
-	//TEST
-	/*
-	
-	GameObject* tempParent = owner->parent;
-	if (tempParent != nullptr)
-	{
-		local_transform = global_transform * tempParent->transform->global_transform.Inverted();
-	}
-	else local_transform = global_transform;
-
-	*/
 	
 	UpdateTRS();
-
 
 	if (owner->children.empty()) return;
 
@@ -173,16 +160,9 @@ void ComponentTransform::SetLocalTransform(float4x4 new_matrix)
 		local_transform = new_matrix;// *tempParent->transform->GetGlobalTransform().Inverted();
 	}
 
-	UpdateTRS();
-
-	/*
-	if (owner->children.empty()) return;
-
-	for (uint i = 0; i < owner->children.size(); i++)
-	{
-		owner->children.at(i)->transform->UpdateGlobalTransform();
-	}
-	*/
+	UpdateEulerAngles();
+	UpdateGlobalTransform();
+	updatedtransform = true;
 }
 
 void ComponentTransform::DrawInspector()

@@ -441,7 +441,7 @@ void ModuleResources::SaveMeta(Resource* resource)
 
 	std::string path;
 	if (resource->type != ResourceType::Scene) path = resource->GetAssetsFile().append(".meta");
-	else path = resource->GetAssetsFile().append(".scene");
+	else path = resource->GetAssetsFile();
 
 	if (resource->type == ResourceType::Model)
 	{

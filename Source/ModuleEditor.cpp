@@ -325,6 +325,7 @@ void ModuleEditor::PlayPauseWindow()
 
 			scene->assetsFile = SCENES_FOLDER;
 			scene->assetsFile.append(scene->name.c_str());
+			scene->assetsFile.append(".scene");
 
 			App->resources->SaveResource(scene);
 			
@@ -346,12 +347,11 @@ void ModuleEditor::PlayPauseWindow()
 			std::map<uint32, Resource*>::iterator it = App->resources->importedResources.begin();
 			for (; it != App->resources->importedResources.end(); it++)
 			{
-				if (it->second->type == ResourceType::Scene && it->second->name == "tempScene" && it->second->libraryFile == "Assets/Scenes/tempScene.scene")
+				if (it->second->type == ResourceType::Scene && it->second->name == "tempScene" && it->second->libraryFile == "Library/Scenes/tempScene.scene")
 				{
 					App->resources->LoadResource(it->second->UID);
 
 					std::string sceneToDelete = it->second->assetsFile;
-					sceneToDelete.append(".scene");
 					App->fileSystem->Remove(sceneToDelete.c_str());
 
 					sceneToDelete = SCENES_PATH;
@@ -913,6 +913,9 @@ bool ModuleEditor::MainMenuBar()
 				
 				ImGui::EndCombo();
 			}
+
+			ImGui::Spacing();
+
 			if (allowSaveOrLoad)
 			{
 				if (ImGui::Button("Load"))
@@ -924,16 +927,19 @@ bool ModuleEditor::MainMenuBar()
 					ImGui::CloseCurrentPopup();
 				}
 			}
-			
-			ImGui::SameLine();
+
+
 			ImGui::Spacing();
-			ImGui::SameLine();
+
 			if (ImGui::Button("Cancel"))
 			{
 				scenesInMemory.clear();
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
+
+			
+
 
 
 
