@@ -220,7 +220,6 @@ void Importer::ShaderImporter::SetShaderUniforms(ResourceShader* shader)
 {
 	if (shader->uniforms.empty())
 	{
-		LOG("ERROR: The Shader (%s) has no uniforms values", shader->name.c_str() );
 		return;
 	}
 

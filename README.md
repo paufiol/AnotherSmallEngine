@@ -93,5 +93,3 @@ Another Small Engine (or ASE for short) is a simple, lightweight Game Engine cre
 ## Innovations
 
 * **Skybox, Reflection and Refraction shaders** 
-
-* **Name the scenes to save and choose to load between all those scenes**
