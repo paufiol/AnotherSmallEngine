@@ -97,6 +97,7 @@ public:
 
 	PathNode nextFolder;
 	PathNode previousFolder;
+	uint32 Hovered_UID = 0;
 
 	Resource* resource = nullptr;
 	ResourceTexture* textureIcon = nullptr;

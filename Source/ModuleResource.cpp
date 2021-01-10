@@ -496,7 +496,7 @@ Resource* ModuleResources::LoadResource(uint32 UID)
 	Resource* resource = nullptr;
 	resource = GetResource(UID);
 
-	if (!resource) resource = GetResourceInMemory(UID);
+	if (resource == nullptr) resource = GetResourceInMemory(UID);
 
 	Resource* tempResource = CreateNewResource(resource->assetsFile.c_str(),resource->GetType(),resource->name.c_str(),resource->UID);
 	char* buffer = nullptr;
