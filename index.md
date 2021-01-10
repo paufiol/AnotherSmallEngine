@@ -6,6 +6,8 @@ Our main focus has been in implementing and showcasing a shader pipeline.
 
 ### The Team
 
+
+
 - Pau Fiol Lorente - [paufiol](https://github.com/paufiol)
   - GUI
   - GameObject and Components
@@ -34,10 +36,20 @@ Our main focus has been in implementing and showcasing a shader pipeline.
   - Uniforms Editor
   - Skybox
 
+Pau Fiol | Aitor Luque
+--------------------------------------------------------------------------- | -----------------------------------------
+<img src="https://github.com/paufiol/AnotherSmallEngine/blob/gh-pages/docs/Pau.jpeg" alt="Pau Fiol" height="150"> | <img src="https://github.com/paufiol/AnotherSmallEngine/blob/gh-pages/docs/Aitor.jpeg" alt="Aitor Luque" height="150">
+
+
 ### Showcase
 
 [![Click to view Showcase in youtube](https://img.youtube.com/vi/lEuZxUyy7ys/0.jpg)](https://youtu.be/lEuZxUyy7ys)
 
+![Cube GIF Showcase](https://github.com/paufiol/AnotherSmallEngine/blob/gh-pages/docs/cube_showcase.gif)
+
+![Reflection GIF Showcase](https://github.com/paufiol/AnotherSmallEngine/blob/gh-pages/docs/reflection_showcase.gif)
+
+![Water GIF Showcase](https://github.com/paufiol/AnotherSmallEngine/blob/gh-pages/docs/water_showcase.gif)
 
 ## Engine Features
 * Window configuration options
