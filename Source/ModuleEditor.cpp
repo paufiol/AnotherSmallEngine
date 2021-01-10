@@ -459,8 +459,8 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 	nextFolder = previousFolder;
 
 	uint row = 0;
-	uint column = 7;
 	uint offset = 50;
+	uint column = (float)(ImGui::GetWindowWidth() / (float)(iconSize + offset)); // Window.w / Item.w
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImVec2 flipV = ImVec2(0.0f, 1.0f);
 	ImVec2 flipH = ImVec2(1.0f, 0.0f);
@@ -471,7 +471,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::BeginChild(1);
 
-
+	
 	for(uint i = 0; i < assetFolder.children.size(); i++)
 	{
 		ImGui::PushID(i);
@@ -481,6 +481,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		char* buffer = nullptr;
 		uint size = App->fileSystem->Load(meta.c_str(), &buffer);
 		uint32 UID = 0;
+		
 
 		ImGui::SetCursorPosX((i - (row * column)) * (iconSize + offset) + offset);
 		ImGui::SetCursorPosY(row * (iconSize + offset));
@@ -496,7 +497,7 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 			if(resource->type == ResourceType::Texture && !textureIconLoaded) App->resources->LoadResource(UID);
 			
-			RELEASE_ARRAY(buffer);
+			
 
 			switch (resource->type)
 			{
@@ -517,6 +518,11 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 				break;
 			}
 
+			if (ImGui::IsItemHovered() && resource->type != ResourceType::Folder)
+			{
+				Hovered_UID = JsonConfig(buffer).GetNumber("UID");
+			}
+			RELEASE_ARRAY(buffer);
 		}
 		else
 		{
@@ -524,26 +530,25 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		}
 
 
+
+	
+
 		if (ImGui::IsItemClicked() && !assetFolder.children[i].isFile)
 		{
 			nextFolder = assetFolder.children[i];
 		}
 
-		//ImGuiIO& io = ImGui::GetIO(); (void)io;
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) ImGui::OpenPopup("ImportPopUp");
 
-		//if (io.MouseClicked[1]) ImGui::OpenPopup("ImportPopUp");
-
-		//if (ImGui::BeginPopup("ImportPopUp"))
-		//{
-		//	if (ImGui::Selectable("Import Asset"))
-		//	{
-		//		App->resources->LoadResource(UID);
-		//	}
-		//	ImGui::EndPopup();
-		//}
-
-
-
+		if (ImGui::BeginPopup("ImportPopUp"))
+		{
+			ImGui::IsItemHovered();
+			if (ImGui::Selectable("Import Asset"))
+			{
+				App->resources->LoadResource(Hovered_UID);
+			}
+			ImGui::EndPopup();
+		}
 
 		if (ImGui::BeginDragDropSource())
 		{
@@ -585,21 +590,30 @@ void ModuleEditor::DropTargetWindow()
 {
 	if (show_dropTarget_window)
 	{
-		ImGui::SetNextWindowSize({ 200, 200 });
-		ImGui::SetNextWindowPos({ 300, 310 });
+		ImGui::SetNextWindowSize({ 500, 400 });
+		ImGui::SetNextWindowPos({ 300, 50 });
 
-		ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar |ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground;
 
 		ImGui::Begin("DropTarget", &show_dropTarget_window, flags);
 		
-		ImGui::SetCursorPosX(50);
-		ImGui::SetCursorPosY(100);
+		//ImGui::Rect
+		//ImGui::
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
+		ImGui::SetCursorPosY(ImGui::GetWindowHeight() / 2);
 		ImGui::Text("Drop asset here:");
 
+		ImGui::SetCursorPosX(0);
+		ImGui::SetCursorPosY(0);
+		ImGui::InvisibleButton("Drop asset here:", ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight()));
+		
 		if (ImGui::BeginDragDropTarget())
 		{
 			ResourceMaterial* material = new ResourceMaterial();
 			ComponentMaterial* compMaterial;
+		
+			//ImGuiDragDropFlags_
+				
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("Asset", ImGuiDragDropFlags_AcceptBeforeDelivery))
 			{
 				uint32 UID = *(const uint32*)payload->Data;
