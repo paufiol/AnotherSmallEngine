@@ -351,6 +351,7 @@ void ModuleEditor::PlayPauseWindow()
 					App->resources->LoadResource(it->second->UID);
 
 					std::string sceneToDelete = it->second->assetsFile;
+					sceneToDelete.append(".scene");
 					App->fileSystem->Remove(sceneToDelete.c_str());
 
 					sceneToDelete = SCENES_PATH;
@@ -412,7 +413,6 @@ void ModuleEditor::AssetExplorerWindow()
 	{
 		UpdateAssetExplorer();
 		updateTimer.Start();
-		textureIconLoaded = true;
 	}
 	double time = timer.Read();
 	
@@ -489,8 +489,13 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 		{
 			UID = JsonConfig(buffer).GetNumber("UID");
 			resource = App->resources->GetResourceInMemory(UID);
-			if(resource->type == ResourceType::Texture && !textureIconLoaded) App->resources->LoadResource(UID);
+
 			textureIcon = (ResourceTexture*)resource;
+
+			if (textureIcon->id > MAX_TEXTURES) textureIconLoaded = false;
+
+			if(resource->type == ResourceType::Texture && !textureIconLoaded) App->resources->LoadResource(UID);
+			
 			RELEASE_ARRAY(buffer);
 
 			switch (resource->type)
@@ -524,18 +529,18 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 			nextFolder = assetFolder.children[i];
 		}
 
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		//ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-		if (io.MouseClicked[1]) ImGui::OpenPopup("ImportPopUp");
+		//if (io.MouseClicked[1]) ImGui::OpenPopup("ImportPopUp");
 
-		if (ImGui::BeginPopup("ImportPopUp"))
-		{
-			if (ImGui::Selectable("Import Asset"))
-			{
-				App->resources->LoadResource(UID);
-			}
-			ImGui::EndPopup();
-		}
+		//if (ImGui::BeginPopup("ImportPopUp"))
+		//{
+		//	if (ImGui::Selectable("Import Asset"))
+		//	{
+		//		App->resources->LoadResource(UID);
+		//	}
+		//	ImGui::EndPopup();
+		//}
 
 
 
@@ -572,8 +577,8 @@ void ModuleEditor::AssetsExplorer(PathNode& assetFolder)
 
 	ImGui::EndChild();
 
-	if (nextFolder.path != "")
-		assetFolder = nextFolder;
+	if (nextFolder.path != "") assetFolder = nextFolder;
+	else textureIconLoaded = true;
 }
 
 void ModuleEditor::DropTargetWindow()
