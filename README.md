@@ -1,6 +1,6 @@
 # AnotherSmallEngine
-AnotherSmallEngine is pretty self-explanatory, it is a basic 3D Engine developed by 2 students of the [CITM](<https://www.citm.upc.edu/>).
-This project is been created as part of CITM's Game Engine course under supervision of professor Marc Garrigó.
+Another Small Engine (or ASE for short) is a simple, lightweight Game Engine created for academic purposes. Authors are [Pau Fiol](https://github.com/paufiol) and [Aitor Luque](https://github.com/Aitorlb7), working under the supervision of [Marc Garrigó](https://github.com/markitus18) for the 3D Engines subject coursed in [CITM](https://www.citm.upc.edu/).
+
 * [Repository](https://github.com/paufiol/AnotherSmallEngine)
 * [Site](https://paufiol.github.io/AnotherSmallEngine/)
 
