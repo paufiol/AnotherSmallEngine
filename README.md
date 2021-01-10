@@ -31,7 +31,7 @@ This project is been created as part of CITM's Game Engine course under supervis
   * **Arrow Keys:** Navigation.
 * Importing options:
   * Right Click on an item in the explorer -> Import Asset
-  * Hoild Left Click on an item in the explorer and drag into the scene.
+  * Hold Left Click on an item in the explorer and drag into the scene.
 * Saving and Loading an Scene
   * File -> Save Scene -> Write the Name of scene -> Press Enter
   * File -> Load Scene -> Open the expandable select the scene -> Press Load
@@ -73,7 +73,7 @@ This project is been created as part of CITM's Game Engine course under supervis
   * Assign any shader / texture to any given Game Object.
 * Text Editor: Click on Edit Shader on the inspector to open a Text Editor. It has color higlighting, basic navigation and text edition commands (Ctrl+C,Ctrl+X,Ctrl+V,Ctrl+Z...). Saving will also recompile the shader to be able to see real-time the changes. Any compilation errors will be shown in the console.
 * Water Shader: Vertex shader uses 3 overlapping [Gerstner Waves](https://en.wikipedia.org/wiki/Trochoidal_wave) to achieve the desired shape, and the Fragment Shader uses Height and a Texture (in the showcase scene uses [Worley Noise](https://en.wikipedia.org/wiki/Worley_noise)) To combine colors as well as a bit of reflection.
-* Reflection & Reflaction Shader: These are very straightforward shaders once a Skybox is properly setup.
+* Reflection & Reflaction Shader: These are very straightforward shaders once a Skybox is properly setup, and adding them to other shaders is now quite fast
 
 
 ****
