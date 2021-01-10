@@ -87,7 +87,10 @@ Our main focus has been in implementing and showcasing a shader pipeline.
 * Guizmo modes can also be set via the Tool submenu in the main bar
 * Importing options:
   * Right Click on an item in the explorer -> Import Asset
-  * Hoild Left Click on an item in the explorer and drag into the scene.
+  * Hold Left Click on an item in the explorer and drag into the scene.
+* Saving and Loading an Scene
+  * File -> Save Scene -> Write the Name of scene -> Press Enter
+  * File -> Load Scene -> Open the expandable select the scene -> Press Load
 
 
 
